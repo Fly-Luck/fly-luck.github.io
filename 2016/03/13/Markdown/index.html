@@ -1,0 +1,763 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="title: Markdowndate: 2016-02-16tags: [technique, productivity]
+categories: [technique]
+去年经朋友介绍，发现了一种非常有意思的文本处理手段，markdown，随便学了学。其语法很简单，很适合coder思维，也很方便，总结如下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Luck's Cabin">
+<meta property="og:url" content="http://luck.luckyluck.info/2016/03/13/Markdown/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="title: Markdowndate: 2016-02-16tags: [technique, productivity]
+categories: [technique]
+去年经朋友介绍，发现了一种非常有意思的文本处理手段，markdown，随便学了学。其语法很简单，很适合coder思维，也很方便，总结如下。">
+<meta property="og:image" content="http://luck.luckyluck.info/img/new.png">
+<meta property="og:image" content="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png">
+<meta property="og:updated_time" content="2016-03-13T15:26:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Luck's Cabin">
+<meta name="twitter:description" content="title: Markdowndate: 2016-02-16tags: [technique, productivity]
+categories: [technique]
+去年经朋友介绍，发现了一种非常有意思的文本处理手段，markdown，随便学了学。其语法很简单，很适合coder思维，也很方便，总结如下。">
+<meta name="twitter:image" content="http://luck.luckyluck.info/img/new.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title>  | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-13T23:24:38+08:00" content="2016-03-13">
+              2016-03-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>title: Markdown<br>date: 2016-02-16<br>tags: [technique, productivity]</p>
+<h2 id="categories-technique"><a href="#categories-technique" class="headerlink" title="categories: [technique]"></a>categories: [technique]</h2><hr>
+<p>去年经朋友介绍，发现了一种非常有意思的文本处理手段，markdown，随便学了学。其语法很简单，很适合coder思维，也很方便，总结如下。<a id="more"></a></p>
+<h2 id="强调"><a href="#强调" class="headerlink" title="强调"></a>强调</h2><hr>
+<h3 id="斜体"><a href="#斜体" class="headerlink" title="斜体"></a>斜体</h3><pre><code class="markdown"><span class="emphasis">*斜体*</span>
+</code></pre>
+<p><em>斜体</em>  </p>
+<h3 id="粗体"><a href="#粗体" class="headerlink" title="粗体"></a>粗体</h3><pre><code class="markdown"><span class="strong">**粗体**</span>
+</code></pre>
+<p><strong>粗体</strong></p>
+<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h3><pre><code class="markdown">~~删除线~~
+</code></pre>
+<p><del>删除线</del></p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><pre><code class="markdown"><span class="quote">&gt; You can do anything, but not everything.</span>
+<span class="quote">&gt; － David Allen</span>
+&gt;&gt; - Are 
+&gt;&gt; - you 
+&gt;&gt; - sure?
+&gt;&gt; － visitor
+&gt;&gt;&gt; ##### Yes,
+&gt;&gt;&gt; ##### I am.
+&gt;&gt;&gt; － David
+</code></pre>
+<p><img src="/img/new.png" alt="引用效果"><br>这个效果就如常见文献中引用的字段一样，引用里还可以嵌套标题和列表。<br>＊hexo貌似不支持这么引用。</p>
+<h2 id="层级"><a href="#层级" class="headerlink" title="层级"></a>层级</h2><hr>
+<h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p>相当于html中h1到h6的标签，几个#号代表h几。</p>
+<pre><code class="markdown"><span class="section"># 标题1  </span>
+<span class="section">## 标题2  </span>
+<span class="section">### 标题3  </span>
+<span class="section">#### 标题4  </span>
+<span class="section">##### 标题5</span>
+<span class="section">###### 标题6</span>
+</code></pre>
+<h1 id="标题1"><a href="#标题1" class="headerlink" title="标题1"></a>标题1</h1><h2 id="标题2"><a href="#标题2" class="headerlink" title="标题2"></a>标题2</h2><h3 id="标题3"><a href="#标题3" class="headerlink" title="标题3"></a>标题3</h3><h4 id="标题4"><a href="#标题4" class="headerlink" title="标题4"></a>标题4</h4><h5 id="标题5"><a href="#标题5" class="headerlink" title="标题5"></a>标题5</h5><h6 id="标题6"><a href="#标题6" class="headerlink" title="标题6"></a>标题6</h6><p>其次，还可以在标题下加一根灰色的细线来美化：</p>
+<pre><code class="markdown"><span class="section">###### 标题6</span>
+---
+</code></pre>
+<h6 id="标题6-1"><a href="#标题6-1" class="headerlink" title="标题6"></a>标题6</h6><hr>
+<p>“-“的数量只要不少于3个即可。<br>另外，有些不那么严格的编辑器可以接受”#”与标题名之间没有空格(e.g. maxiang.io)，但为保险起见或移植方便，尽量加空格。</p>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><h4 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a>有序列表</h4><pre><code class="markdown"><span class="bullet">1. </span>item 1
+<span class="bullet">2. </span>item 2
+<span class="bullet">3. </span>item 3
+</code></pre>
+<ol>
+<li>item 1</li>
+<li>item 2</li>
+<li>item 3</li>
+</ol>
+<p>＊为避免有序列表的顺序错乱，表项下的代码要顶格不缩进，且子列表要严格缩进。当然这取决于编辑器对语法要求的严格程度。</p>
+<h4 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a>无序列表</h4><pre><code class="markdown"><span class="bullet">- </span>item a
+<span class="bullet">- </span>item b
+<span class="bullet">- </span>item c
+</code></pre>
+<ul>
+<li>item a</li>
+<li>item b </li>
+<li>item c </li>
+</ul>
+<p>＊无序列表的表项符号可以是”+”, “-“, “*”。</p>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><hr>
+<pre><code class="markdown">| Column 1 | Column 2 | Column 3 |
+| :- | :-: | -: |
+| a | b | c |
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column 1</th>
+<th style="text-align:center">Column 2</th>
+<th style="text-align:right">Column 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">a</td>
+<td style="text-align:center">b</td>
+<td style="text-align:right">c</td>
+</tr>
+</tbody>
+</table>
+<p>其中第二行定义每一列的对齐格式，“:-”, “:-:”, “-:”分别为左对齐，居中和右对齐，“-”符号的个数可以是不少于1的任意数目。<br>＊为免不同解析器对表格的解析造成兼容性问题，表格应与其上面的文字空一行。</p>
+<h2 id="外部资源"><a href="#外部资源" class="headerlink" title="外部资源"></a>外部资源</h2><hr>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><pre><code class="markdown">[<span class="string">Go to Google</span>](<span class="link">http://google.com</span>)
+</code></pre>
+<p><a href="http://google.com" target="_blank" rel="external">Go to Google</a>  </p>
+<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><pre><code class="markdown">![<span class="string">img</span>](<span class="link">http://imgpath</span>)
+</code></pre>
+<p><img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="img"><br>因为图片相当于HTML的img标签，因此需要使用图床，本地图片使用前需上传。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><hr>
+<p>非常优雅的代码块插入方式。<br>对于一行代码，可以用如下语法，其中“`”的个数不少于1个。</p>
+<pre><code class="markdown"><span class="code">`System.out.println("Hello World!");`</span>
+</code></pre>
+<p><code>System.out.println(&quot;Hello World!&quot;);</code><br>对于多行代码，可以用如下语法，其中”`”的个数不少于3个，且在代码开头处可以指明代码语言，以让解析器根据语言的关键字添加合适的高亮。</p>
+<p>```java<br>public static void main(String args[]){<br>    System.out.println(“Hello World!”);<br>}<br>```</p>
+<p>效果：</p>
+<pre><code class="java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>{  
+    System.out.println(<span class="string">"Hello World!"</span>);  
+}
+</code></pre>
+<h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><hr>
+<p>Markdown语法完全兼容HTML，你可以在需要的地方插入HTML标签，比如常用的center, br, table, ul, ol, font等等。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><hr>
+<p>其他诸如LaTex公式，流程图之类的黑科技暂时用不到，就不在此列举了。<br>PK <br>     �mH�����<br>  �<br>                   categories: [technique].mdPK      H       </p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/14/Java基础/" rel="next" title="Java Basics">
+                <i class="fa fa-chevron-left"></i> Java Basics
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#categories-technique"><span class="nav-number">1.</span> <span class="nav-text">categories: [technique]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#强调"><span class="nav-number">2.</span> <span class="nav-text">强调</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#斜体"><span class="nav-number">2.1.</span> <span class="nav-text">斜体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#粗体"><span class="nav-number">2.2.</span> <span class="nav-text">粗体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除线"><span class="nav-number">2.3.</span> <span class="nav-text">删除线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">2.4.</span> <span class="nav-text">引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#层级"><span class="nav-number">3.</span> <span class="nav-text">层级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标题"><span class="nav-number">3.1.</span> <span class="nav-text">标题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#标题1"><span class="nav-number"></span> <span class="nav-text">标题1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#标题2"><span class="nav-number">1.</span> <span class="nav-text">标题2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标题3"><span class="nav-number">1.1.</span> <span class="nav-text">标题3</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标题4"><span class="nav-number">1.1.1.</span> <span class="nav-text">标题4</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#标题5"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">标题5</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#标题6"><span class="nav-number">1.1.1.1.1.</span> <span class="nav-text">标题6</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#标题6-1"><span class="nav-number">1.1.1.1.2.</span> <span class="nav-text">标题6</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表"><span class="nav-number">1.2.</span> <span class="nav-text">列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#有序列表"><span class="nav-number">1.2.1.</span> <span class="nav-text">有序列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#无序列表"><span class="nav-number">1.2.2.</span> <span class="nav-text">无序列表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表格"><span class="nav-number">2.</span> <span class="nav-text">表格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外部资源"><span class="nav-number">3.</span> <span class="nav-text">外部资源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链接"><span class="nav-number">3.1.</span> <span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片"><span class="nav-number">3.2.</span> <span class="nav-text">图片</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML"><span class="nav-number">5.</span> <span class="nav-text">HTML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
