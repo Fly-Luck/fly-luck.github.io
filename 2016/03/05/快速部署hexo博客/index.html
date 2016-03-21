@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2016/03/05/快速部署hexo博客/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="之前在VPS上使用Hexo自带的nodejs server部署博客，总觉得不便，每次更新文章的步骤较为繁琐，需要ftp或scp发送文章到VPS，再登录ssh进行手动部署；同时发现github.io上的免费hosting可以用来作为备份，步骤又多了一步。因此琢磨着如何一步到位，写就此文记录探索过程。">
-<meta property="og:updated_time" content="2016-03-21T14:04:44.000Z">
+<meta property="og:updated_time" content="2016-03-21T14:14:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo博客部署">
 <meta name="twitter:description" content="之前在VPS上使用Hexo自带的nodejs server部署博客，总觉得不便，每次更新文章的步骤较为繁琐，需要ftp或scp发送文章到VPS，再登录ssh进行手动部署；同时发现github.io上的免费hosting可以用来作为备份，步骤又多了一步。因此琢磨着如何一步到位，写就此文记录探索过程。">
@@ -374,10 +374,8 @@
 <h4 id="github"><a href="#github" class="headerlink" title="github"></a>github</h4><ul>
 <li><p>ssh key</p>
 <ol>
-<li><p>添加<br>在github的<a href="https://github.com/settings/keys" target="_blank" rel="external">个人设置</a>里选择New SSH key，复制key内容到’key’框里保存即可</p>
-</li>
-<li><p>验证</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh github.com</span><br><span class="line"></span><br><span class="line"># 显示以下内容说明配置正确</span><br><span class="line">Hi [github username]! You&apos;ve successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line">Connection to github.com closed.</span><br></pre></td></tr></table></figure>
+<li>添加<br>在github的<a href="https://github.com/settings/keys" target="_blank" rel="external">个人设置</a>里选择New SSH key，复制key内容到’key’框里保存即可</li>
+<li>验证<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh github.com</span><br><span class="line"></span><br><span class="line"># 显示以下内容说明配置正确</span><br><span class="line">Hi [github username]! You&apos;ve successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line">Connection to github.com closed.</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 </li>
@@ -416,7 +414,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd</span><br><span class="line">hexo init [文件夹名]</span><br><span class="line">cd [文件夹名]</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>修改_config.yml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nano _config.yml</span><br><span class="line">#配置内容</span><br><span class="line">deploy:</span><br><span class="line">- type: git</span><br><span class="line">  repo: git@github.com:[用户名]/[用户名].github.io.git</span><br><span class="line">  branch: master</span><br><span class="line">- type: git</span><br><span class="line">  repo: ssh://[user]@[domain]:[ssh port]/[git仓库路径,此例为&quot;~/blog.git&quot;]</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nano _config.yml</span><br><span class="line"># 配置内容</span><br><span class="line">deploy:</span><br><span class="line">- type: git</span><br><span class="line">  repo: git@github.com:[用户名]/[用户名].github.io.git</span><br><span class="line">  branch: master</span><br><span class="line">- type: git</span><br><span class="line">  repo: ssh://[user]@[domain]:[ssh port]/[git仓库路径,此例为&quot;~/blog.git&quot;]</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>本地测试<br>  文章摘要由内容为”more”的html注释界定，但是如下注释会解析错误：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--more--&gt;</span></span><br></pre></td></tr></table></figure>
