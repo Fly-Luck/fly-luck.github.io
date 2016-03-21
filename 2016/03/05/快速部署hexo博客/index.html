@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2016/03/05/快速部署hexo博客/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="之前在VPS上使用Hexo自带的nodejs server部署博客，总觉得不便，每次更新文章的步骤较为繁琐，需要ftp或scp发送文章到VPS，再登录ssh进行手动部署；同时发现github.io上的免费hosting可以用来作为备份，步骤又多了一步。因此琢磨着如何一步到位，写就此文记录探索过程。">
-<meta property="og:updated_time" content="2016-03-21T14:14:36.000Z">
+<meta property="og:updated_time" content="2016-03-21T14:30:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo博客部署">
 <meta name="twitter:description" content="之前在VPS上使用Hexo自带的nodejs server部署博客，总觉得不便，每次更新文章的步骤较为繁琐，需要ftp或scp发送文章到VPS，再登录ssh进行手动部署；同时发现github.io上的免费hosting可以用来作为备份，步骤又多了一步。因此琢磨着如何一步到位，写就此文记录探索过程。">
@@ -364,13 +364,15 @@
 </li>
 <li><p>ssh key</p>
 <ol>
-<li>添加<br>ssh key是认用户的，用户之间不共享key，因此在对应用户home路径下的.ssh隐藏文件夹中，将key内容复制到authorized_keys文件中，如果没有这个文件则先创建<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nano ~/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"># 拷贝key内容</span><br><span class="line">ssh-rsa [key content] [user]@[domain]</span><br></pre></td></tr></table></figure>
+<li><p>添加<br>ssh key是认用户的，用户之间不共享key，因此在对应用户home路径下的.ssh隐藏文件夹中，将key内容复制到authorized_keys文件中，如果没有这个文件则先创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nano ~/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"># 拷贝key内容</span><br><span class="line">ssh-rsa [key content] [user]@[domain]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;-p [port]&#125; [user]@[domain]</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 </li>
 </ul>
-<pre><code>2. 验证
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;-p [port]&#125; [user]@[domain]</span><br></pre></td></tr></table></figure>
 <h4 id="github"><a href="#github" class="headerlink" title="github"></a>github</h4><ul>
 <li><p>ssh key</p>
 <ol>
@@ -379,12 +381,22 @@
 </li>
 </ol>
 </li>
-<li><p>github.io仓库<br>  在<a href="https://github.com/new" target="_blank" rel="external">github</a>上新建一个名为[用户名],github.io的仓库即可</p>
+<li><p>github.io仓库<br>  在<a href="https://github.com/new" target="_blank" rel="external">github</a>上新建一个名为[用户名].github.io的仓库即可</p>
 </li>
 </ul>
 <h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="VPS-1"><a href="#VPS-1" class="headerlink" title="VPS"></a>VPS</h4><ul>
 <li><p>ssh配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"># 配置内容</span><br><span class="line">port [非21端口]</span><br><span class="line">RSAAuthentication yes</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line">#AuthorizedKeysFile %h/.ssh/authorized_keys 不需uncomment，默认就是此路径</span><br><span class="line">PasswordAuthentication no</span><br><span class="line"></span><br><span class="line"># 重启sshd</span><br><span class="line">/etc/init.d/ssh restart</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">port [非21端口]</span><br><span class="line">RSAAuthentication yes</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line">#AuthorizedKeysFile %h/.ssh/authorized_keys 不需uncomment，默认就是此路径</span><br><span class="line">PasswordAuthentication no</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启sshd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/ssh restart</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 </li>
 <li><p>NginX配置</p>
 <ol>
@@ -405,8 +417,20 @@
 </li>
 </ol>
 </li>
-<li><p>git仓库及git hook配置<br>  内容经由本机-&gt;blog.git-&gt;blog_tmp-&gt;blog_public</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd</span><br><span class="line">mkdir blog.git</span><br><span class="line">mkdir blog_tmp</span><br><span class="line">mkdir blog_public</span><br><span class="line">cd blog.git</span><br><span class="line">git init --bare</span><br><span class="line">cd hooks</span><br><span class="line">nano post-receive</span><br><span class="line"></span><br><span class="line"># 脚本内容</span><br><span class="line"># 1. 删除blog_tmp文件夹中的内容</span><br><span class="line"># 2. blog.git git clone到blog_tmp文件夹</span><br><span class="line"># 3. copy blog_tmp文件夹中的内容到blog_public</span><br><span class="line">#!/bin/bash -l</span><br><span class="line">GIT_REPO=/home/[user]/blog.git</span><br><span class="line">TMP_GIT_CLONE=/home/[user]/blog_tmp</span><br><span class="line">PUBLIC_WWW=/home/[user]/blog_public</span><br><span class="line">rm -rf $&#123;TMP_GIT_CLONE&#125;</span><br><span class="line">git clone $GIT_REPO $TMP_GIT_CLONE</span><br><span class="line">rm -rf $&#123;PUBLIC_WWW&#125;/*</span><br><span class="line">cp -rf $&#123;TMP_GIT_CLONE&#125;/* $&#123;PUBLIC_WWW&#125;</span><br></pre></td></tr></table></figure>
+<li><p>git仓库及git hook配置</p>
+<ul>
+<li><p>内容经由本机-&gt;blog.git-&gt;blog_tmp-&gt;blog_public</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd</span><br><span class="line">mkdir blog.git</span><br><span class="line">mkdir blog_tmp</span><br><span class="line">mkdir blog_public</span><br><span class="line">cd blog.git</span><br><span class="line">git init --bare</span><br><span class="line">cd hooks</span><br><span class="line">nano post-receive</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>脚本内容</p>
+<ol>
+<li>删除blog_tmp文件夹中的内容</li>
+<li>blog.git git clone到blog_tmp文件夹</li>
+<li>copy blog_tmp文件夹中的内容到blog_public<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -l</span><br><span class="line">GIT_REPO=/home/[user]/blog.git</span><br><span class="line">TMP_GIT_CLONE=/home/[user]/blog_tmp</span><br><span class="line">PUBLIC_WWW=/home/[user]/blog_public</span><br><span class="line">rm -rf $&#123;TMP_GIT_CLONE&#125;</span><br><span class="line">git clone $GIT_REPO $TMP_GIT_CLONE</span><br><span class="line">rm -rf $&#123;PUBLIC_WWW&#125;/*</span><br><span class="line">cp -rf $&#123;TMP_GIT_CLONE&#125;/* $&#123;PUBLIC_WWW&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
 </li>
 </ul>
 <h4 id="本机-1"><a href="#本机-1" class="headerlink" title="本机"></a>本机</h4><ul>
