@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2016/03/30/纵云梯/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="武当的轻功绝技，堪称轻功中的轻功，其注重身法的轻灵，不以步法多变来迷惑对手，要旨是身形轻巧，高低进退自如。— 金庸《倚天屠龙记》之纵云梯">
-<meta property="og:updated_time" content="2016-08-10T10:55:18.000Z">
+<meta property="og:updated_time" content="2016-08-10T10:57:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="纵云梯">
 <meta name="twitter:description" content="武当的轻功绝技，堪称轻功中的轻功，其注重身法的轻灵，不以步法多变来迷惑对手，要旨是身形轻巧，高低进退自如。— 金庸《倚天屠龙记》之纵云梯">
@@ -267,18 +267,20 @@
 <li><p>添源</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;deb http://shadowsocks.org/debian squeeze main&quot; &gt;&gt; /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>安装</p>
+<li><p>更新</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
+<li><p>安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install shadowsocks</span><br></pre></td></tr></table></figure>
-<ol>
-<li>配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
+<li><p>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	&quot;server&quot;:&quot;[your_host_ip]&quot;,</span><br><span class="line">	&quot;server_port&quot;:8388,</span><br><span class="line">	&quot;local_address&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">	&quot;local_port&quot;:1080,</span><br><span class="line">	&quot;password&quot;:&quot;[your_password]&quot;,</span><br><span class="line">	&quot;timeout&quot;:60,</span><br><span class="line">	&quot;method&quot;:&quot;aes-256-cfb&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/shadowsocks stop</span><br><span class="line">/etc/init.d/shadowsocks start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/shadowsocks stop</span><br><span class="line">/etc/init.d/shadowsocks start</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h3 id="扶手-Client"><a href="#扶手-Client" class="headerlink" title="扶手(Client)"></a>扶手(Client)</h3><p>扶手的教程比较多，花点心思能找到不少。这里只概括一下。</p>
