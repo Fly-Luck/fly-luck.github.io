@@ -1,0 +1,737 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="technique,RESTFUL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="RESTful@(publish)
+RESTful是Representational State Transfer的缩写，直译为表现层状态转换。它不是一种标准或要求，而是一种设计风格和原则。如果一个API或架构符合REST的原则，我们就可以称之为RESTful API或RESTful Architecture。作为一种流行、成熟的设计原则，RESTful接口是目前不同端 (e.g. Mobile-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RESTful接口设计指南">
+<meta property="og:url" content="http://luck.luckyluck.info/2016/03/18/RESTful/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="RESTful@(publish)
+RESTful是Representational State Transfer的缩写，直译为表现层状态转换。它不是一种标准或要求，而是一种设计风格和原则。如果一个API或架构符合REST的原则，我们就可以称之为RESTful API或RESTful Architecture。作为一种流行、成熟的设计原则，RESTful接口是目前不同端 (e.g. Mobile-">
+<meta property="og:updated_time" content="2016-08-10T08:49:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RESTful接口设计指南">
+<meta name="twitter:description" content="RESTful@(publish)
+RESTful是Representational State Transfer的缩写，直译为表现层状态转换。它不是一种标准或要求，而是一种设计风格和原则。如果一个API或架构符合REST的原则，我们就可以称之为RESTful API或RESTful Architecture。作为一种流行、成熟的设计原则，RESTful接口是目前不同端 (e.g. Mobile-">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> RESTful接口设计指南 | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RESTful接口设计指南
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-18T00:00:00+08:00" content="2016-03-18">
+              2016-03-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/technique/" itemprop="url" rel="index">
+                    <span itemprop="name">technique</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="RESTful"><a href="#RESTful" class="headerlink" title="RESTful"></a>RESTful</h1><p>@(publish)</p>
+<p>RESTful是Representational State Transfer的缩写，直译为表现层状态转换。它不是一种标准或要求，而是一种设计风格和原则。如果一个API或架构符合REST的原则，我们就可以称之为RESTful API或RESTful Architecture。作为一种流行、成熟的设计原则，RESTful接口是目前不同端 (e.g. Mobile-Backend, Web-Backend)之间广泛利用的交互格式。<br><a id="more"></a></p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>要理解Representational State Transfer的含义，我们需要把REST拆开，首先要明白什么是资源(Resource)，其次是表现层(Representation)，最后是状态转换(State Transfer)。厘清了基本概念，才能更好地设计接口。</p>
+<h3 id="Representation-of-Resource"><a href="#Representation-of-Resource" class="headerlink" title="Representation of Resource"></a>Representation of Resource</h3><p>表现层实际指的是Resource的表现层，因此严格来说REST的全称应为The Representational State Transfer of Resource。Resource指的是一个具体的实例对象，比如一段文本，一个JSON对象，一张图片等，某个URI指向这个对象。而表现层就是Resource的表现形式，比如文本的JSON或XML格式。因此在具体的处理上，URI应该仅仅表示资源位置，而其表现形式应该在HTTP的请求头里指定。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/some_text</span><br><span class="line">Content-Type text/plain</span><br></pre></td></tr></table></figure></p>
+<h3 id="Transfer-of-State"><a href="#Transfer-of-State" class="headerlink" title="Transfer of State"></a>Transfer of State</h3><p>当客户端与服务器通信时，需要操作Resource使之状态发生变化，即State Transfer。而这种transfer需要通过表现层来实现，通常借助于HTTP协议。参与此过程的各个角色的作用如下：<br>URI：定位Resource<br>HTTP动词：Resource将如何进行State Transfer<br>HTTP请求头：Resource的表现形式</p>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><h3 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h3><p>接口的开发免不了迭代，因此版本的划分是第一件要考虑的事情。版本的迭代应该尽量做到平滑(smoothed)，更新旧接口时不应直接把它干掉，而应该以版本编号来区分。<br>以下两种方案是处理API版本的常见策略，各有优劣。</p>
+<ul>
+<li>由URL区分<br>这个方案直接将版本指定在URL里，比较直观，但是会增加URL的复杂度。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/api/v1/...</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>示例<br>Request<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /api/v1/...</span><br></pre></td></tr></table></figure></p>
+<p>Response<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTP 1.1 200 OK</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>置于请求/响应头<br>这个方案将版本信息放在header里，会增加交互双方的处理成本，但是能保持URL的一致。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/api/...</span><br><span class="line">请求头包含：</span><br><span class="line">Accept application/myapp[.version]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>示例<br>Request<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET /api/...</span><br><span class="line">请求头包含:</span><br><span class="line">Accept application/myapp.v2</span><br></pre></td></tr></table></figure></p>
+<p>Response<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HTTP 1.1 200 OK</span><br><span class="line">响应头包含:</span><br><span class="line">X-MyApp-Media-Type: myapp.v2</span><br></pre></td></tr></table></figure></p>
+<h3 id="根URL"><a href="#根URL" class="headerlink" title="根URL"></a>根URL</h3><p>根URL相当于功夫的起手势，是所有API的根路径，与版本一样通常也有两套方案。</p>
+<ul>
+<li><p>根域名下的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://myapp.com/api/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>子域名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.myapp.com/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此外，访问根URL的时候应该返回Endpoint的列表(Endpoint在下文描述)，这样当Developer需要使用你的API时，在文档未完善前，可以访问根URL获取API的基本信息；文档完善时，也可以返回给Developer获取API文档的办法，同时返回的信息本身可以作为一个快速、简要的文档。</p>
+<h3 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h3><p>在没有RESTful的混沌时期，你可能见过这种“似乎”一目了然的URL：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://example.com/myapp/getStudent?id=2</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST http://example.com/myapp/deleteStudent (id=2)</span><br><span class="line">POST http://example.com/myapp/saveStudent (id=2, name=rob)</span><br></pre></td></tr></table></figure></p>
+<p>然而，这种动宾搭配太啰嗦了，而且完全没有利用HTTP的动词(HTTP动词将在下文解释)，估计API的使用者会吐槽得很厉害，其实这是缺乏对Endpoint进行设计的严肃问题。<br>Endpoint紧随根URL，代表一个Resource或Resource的集合，应当只使用名词，且与数据库表对应起来。此外，应该尽量使用复数形式，因为在英文中，单复数混合作宾语时宾语被认为是复数的。<br>所以对比起来，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /students</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /getStudents</span><br></pre></td></tr></table></figure>
+<p>前者显然比后者简洁。</p>
+<h3 id="HTTP动词"><a href="#HTTP动词" class="headerlink" title="HTTP动词"></a>HTTP动词</h3><p>根URL和Endpoint共同定位了Resource，而如何操作Resource, 由HTTP动词和参数（如有）共同决定。参数的格式通常比较简单(key-value, JSON, 或位于URL路径中)，而HTTP动词包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET [SELECT] 获取resource</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST [CREATE] 新建resource</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT [UPDATE] 更新resource, 客户端提供完整的新资源</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PATCH [UPDATE] 更新resource, 客户端只需要提供改变的属性</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE [DELETE] 删除resource</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HEAD 获取resource的元数据(metadata)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPTIONS 获取关于resource的哪些属性可以被客户端更改的信息</span><br></pre></td></tr></table></figure>
+<p>最常见的是GET, POST, PUT以及DELETE。<br>e.g.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">GET /classes 获取所有classes</span><br><span class="line">POST /classes (name=x) 新建class</span><br><span class="line">GET /classes/&#123;id&#125; 根据id获取class</span><br><span class="line">PUT /classes/&#123;id&#125; (name=y, teacher=rob) 更新指定id的class</span><br><span class="line">PATCH /classes/&#123;id&#125; (name=z) 更新指定id的class</span><br><span class="line">DELETE /classes/&#123;id&#125; 根据id删除class</span><br><span class="line">GET /classes/id/students 获取属于指定id的class的所有students</span><br><span class="line"></span><br><span class="line">GET /students 获取所有students</span><br><span class="line">POST /students 新建student</span><br><span class="line">GET /students/&#123;id&#125; 根据id获取student</span><br><span class="line">PUT /students/&#123;id&#125; (name=tom, gender=male) 更新指定id的student</span><br><span class="line">PATCH /students/&#123;id&#125; (gender=female) 更新指定id的student</span><br><span class="line">DELETE /students/id 根据id删除指定的student</span><br><span class="line"></span><br><span class="line">GET /teachers 获取所有teacher</span><br><span class="line">GET /teachers/&#123;id&#125; 根据id获取teacher</span><br><span class="line"></span><br><span class="line">GET /classes/&#123;id&#125;/teachers 获取任教于指定id的class的所有teachers</span><br><span class="line">POST /classes/&#123;cid&#125;/teachers (tid=2) 指派某个teacher(tid)到指定id(cid)的class任教</span><br><span class="line">DELETE /classes/&#123;cid&#125;/teachers (tid=2) 解除某个teacher(tid)在指定id(cid)的class的任职</span><br></pre></td></tr></table></figure></p>
+<h3 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering"></a>Filtering</h3><p>有时我们需要对返回的数据进行过滤，最常见的是在GET请求里，根据请求URL的参数过滤返回结果。<br>e.g.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">?limit=10</span><br><span class="line">?offset=3</span><br><span class="line">?page=3&amp;rows=10</span><br><span class="line">?sortBy=name&amp;order=desc</span><br><span class="line">?gender=female</span><br><span class="line">?q=searchvalue</span><br></pre></td></tr></table></figure></p>
+<p>API路径和过滤参数的冗余是可以存在的，e.g.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /classes/2/students</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /students?classId=2</span><br></pre></td></tr></table></figure>
+<h3 id="Status-Codes"><a href="#Status-Codes" class="headerlink" title="Status Codes"></a>Status Codes</h3><p>HTTP响应信息的状态码同样是RESTful API设计的重要一环，对于成功的请求，不应该偷懒只用200状态码来表示；对于失败的请求，同样不应只用500来表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">200 OK - [GET] 新建成功</span><br><span class="line">201 CREATED - [POST/PUT/PATCH] 更新成功</span><br><span class="line">202 Accepted - [*] 异步任务, 请求已排队</span><br><span class="line">204 NO CONTENT - [DELETE] 删除成功</span><br><span class="line"></span><br><span class="line">400 INVALID REQUEST - [POST/PUT/PATCH] 请求有误</span><br><span class="line">401 Unauthorized - [所有] 无权限(token, 用户名/密码错误等权限认证问题)</span><br><span class="line">403 Forbidden - [所有] 已得到权限, 但访问禁止(权限不够)</span><br><span class="line">404 NOT FOUND - [所有] resource不存在</span><br><span class="line">406 Not Acceptable - [GET] 请求格式不可得, e.g. 请求JSON, 只有XML可用</span><br><span class="line">410 Gone - [GET] resource被永久删除</span><br><span class="line">500 INTERNAL SERVER ERROR - [所有] 服务器内部错误</span><br><span class="line"></span><br><span class="line">100-199关于HTTP协议的底层信息，一般不会手动发送。</span><br><span class="line">200-299是请求成功(操作成功或成功获取到所需的数据)的标志。</span><br><span class="line">300-399是为流量重定向准备的，在超媒体相关的API中会使用到。</span><br><span class="line">400-499表示错误信息，比如请求的参数有误，请求的数据不存在等等。</span><br><span class="line">500-599表示服务器错误。</span><br></pre></td></tr></table></figure></p>
+<p>一旦出错(Status Code=4xx)，应该返回出错信息，通常使用下面的格式，让API的请求端可以利用（如弹出框提示出错信息）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	error: &quot;Invalid API key&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="响应数据"><a href="#响应数据" class="headerlink" title="响应数据"></a>响应数据</h3><p>根据请求的Resource和动词的不同，响应数据的内容也会不同：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /collection</span><br><span class="line">返回数组</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /collection/resource</span><br><span class="line">返回单个resource对象</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /collection</span><br><span class="line">返回新生产的resource对象</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PUT /collection/resource</span><br><span class="line">返回完整的resource对象</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PATCH /collection/resource</span><br><span class="line">返回完整的resource对象</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DELETE /collection/resource</span><br><span class="line">返回空</span><br></pre></td></tr></table></figure>
+<h3 id="Protocol"><a href="#Protocol" class="headerlink" title="Protocol"></a>Protocol</h3><p>为了安全，应当只使用HTTPS协议。</p>
+<h3 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h3><p>身份认证就拥抱OAuth 2.0框架(e.g. Facebook)吧，这块了解不多就不瞎说了。</p>
+<h3 id="Hypermedia-API"><a href="#Hypermedia-API" class="headerlink" title="Hypermedia API"></a>Hypermedia API</h3><p><a href="https://api.github.com" target="_blank" rel="external">Github</a>的API就是这种新套路，了解得不够深，不敢妄言。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="http://codeplanet.io/principles-good-restful-api-design/" target="_blank" rel="external">Principles of Good RESTful API Design - Thomas Hunter II</a><br><a href="http://www.ruanyifeng.com/blog/2011/09/restful.html" target="_blank" rel="external">理解RESTful架构 - 阮一峰</a></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/technique/" rel="tag">#technique</a>
+          
+            <a href="/tags/RESTFUL/" rel="tag">#RESTFUL</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/05/快速部署hexo博客/" rel="next" title="Hexo博客部署">
+                <i class="fa fa-chevron-left"></i> Hexo博客部署
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RESTful"><span class="nav-number">1.</span> <span class="nav-text">RESTful</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Representation-of-Resource"><span class="nav-number">1.1.1.</span> <span class="nav-text">Representation of Resource</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transfer-of-State"><span class="nav-number">1.1.2.</span> <span class="nav-text">Transfer of State</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计原则"><span class="nav-number">1.2.</span> <span class="nav-text">设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#版本"><span class="nav-number">1.2.1.</span> <span class="nav-text">版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根URL"><span class="nav-number">1.2.2.</span> <span class="nav-text">根URL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Endpoint"><span class="nav-number">1.2.3.</span> <span class="nav-text">Endpoint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP动词"><span class="nav-number">1.2.4.</span> <span class="nav-text">HTTP动词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Filtering"><span class="nav-number">1.2.5.</span> <span class="nav-text">Filtering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Status-Codes"><span class="nav-number">1.2.6.</span> <span class="nav-text">Status Codes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#响应数据"><span class="nav-number">1.2.7.</span> <span class="nav-text">响应数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Protocol"><span class="nav-number">1.2.8.</span> <span class="nav-text">Protocol</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Authentication"><span class="nav-number">1.2.9.</span> <span class="nav-text">Authentication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hypermedia-API"><span class="nav-number">1.2.10.</span> <span class="nav-text">Hypermedia API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">1.3.</span> <span class="nav-text">Reference</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
