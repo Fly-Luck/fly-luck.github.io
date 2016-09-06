@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2016/04/10/Java基础2/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="Must-know-things for Java Developers.">
-<meta property="og:updated_time" content="2016-09-06T14:50:27.000Z">
+<meta property="og:updated_time" content="2016-09-06T15:13:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java Basics Part II">
 <meta name="twitter:description" content="Must-know-things for Java Developers.">
@@ -260,7 +260,6 @@
 
       
         <p>Must-know-things for Java Developers.<br><a id="more"></a></p>
-<p>@(publish)</p>
 <h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><ul>
 <li><p>构建<br>数组的声明有以下几种方式，可以选择声明的同时进行定义。</p>
   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> [] array = <span class="keyword">new</span> <span class="keyword">double</span>[<span class="number">3</span>];</span><br><span class="line"><span class="keyword">double</span> array [] = <span class="keyword">new</span> <span class="keyword">double</span>[<span class="number">3</span>];</span><br><span class="line"><span class="keyword">double</span> [] array = &#123;<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>&#125;;</span><br><span class="line"><span class="keyword">double</span> array [] = &#123;<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>&#125;;</span><br></pre></td></tr></table></figure>
@@ -270,7 +269,8 @@
 <li>数组是一个对象，上例中的array是引用，但原生类型数组中的每一个元素均为原生类型。</li>
 </ul>
 </li>
-<li>长度<ul>
+<li><p>长度</p>
+<ul>
 <li>数组一旦声明，长度是固定的，无法改变。</li>
 <li>长度不能在声明中定义，如<code>int arr[5];</code>或<code>int[5] arr;</code>均无法通过编译。</li>
 <li>数组对象有一个成员变量<code>public final int length;</code>，可以读取数组长度。</li>
@@ -360,7 +360,7 @@
   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String str1 = <span class="string">"HeLlO wOrLd"</span>;</span><br><span class="line">String str2 = str1.toLowerCase(); <span class="comment">//hello world，转小写，并返回</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>split<br>以指定字符串为界分割字符串，分割后的每个子字符串组成一个字符串数组的元素。</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="string">"John|male|28"</span>;</span><br><span class="line">String[] temp =  split(<span class="string">"|"</span>); </span><br><span class="line"><span class="comment">//temp[]=&#123;"John","male","28"&#125;</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="string">"John|male|28"</span>;</span><br><span class="line">String[] temp = split(<span class="string">"|"</span>); </span><br><span class="line"><span class="comment">//temp[]=&#123;"John","male","28"&#125;</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h3 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h3><p>相较于String，StringBuffer可直接对原字符串进行更改，而不生成新的字符串，便于更新。</p>
@@ -410,23 +410,25 @@
 <h4 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h4><ul>
 <li>err<br>一个PrintStream对象，用于输出系统错误信息，默认目的地为STDERR：<code>System.err.println();</code>。</li>
 <li>out<br>一个PrintStream对象，用于输出系统普通信息，默认目的地为STDOUT：<code>System.out.println();</code>。</li>
-<li>in<br>一个InputStream对象，用于获取系统输入，默认源为STDIN设备：<code>System.in.println();</code>。<h4 id="常用方法-2"><a href="#常用方法-2" class="headerlink" title="常用方法"></a>常用方法</h4></li>
+<li>in<br>一个InputStream对象，用于获取系统输入，默认源为STDIN设备：<code>System.in.println();</code>。</li>
+</ul>
+<h4 id="常用方法-2"><a href="#常用方法-2" class="headerlink" title="常用方法"></a>常用方法</h4><ul>
 <li><p>currentTimeMills<br>  获取时间，返回此时距1970年1月1日0点整的毫秒数。</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long currentTimeMillis(); //start from 1970-1-1 00:00:00 in mill seconds</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">currentTimeMillis</span><span class="params">()</span></span>; <span class="comment">//start from 1970-1-1 00:00:00 in mill seconds</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>exit<br>  停止JVM。</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void System.exit(0);//0-正常退出</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> System.exit(<span class="number">0</span>);<span class="comment">//0-正常退出</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>setErr / setOut / setIn<br>手动指定err/out/in成员变量，这样当执行<code>System.out.println();</code>等代码时会往指定的输入源/输出目的地进行输入/输出。</p>
 </li>
 <li><p>环境变量<br>  对系统环境变量的操作。</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">static Map&lt;String, String&gt; getenv();</span><br><span class="line">static String getenv(String name);</span><br><span class="line">static Properties getProperties();</span><br><span class="line">static void setProperties(Properties props);</span><br><span class="line">static String getProperty(String key);</span><br><span class="line">static void setProperty(String key, String value);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Map&lt;String, String&gt; <span class="title">getenv</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getenv</span><span class="params">(String name)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> Properties <span class="title">getProperties</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setProperties</span><span class="params">(Properties props)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getProperty</span><span class="params">(String key)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setProperty</span><span class="params">(String key, String value)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h3 id="Runtime"><a href="#Runtime" class="headerlink" title="Runtime"></a>Runtime</h3><p>JVM运行时相关信息，对象是单例，只能通过<code>Runtime r = Runtime.getRuntime();</code>获取对象。</p>
 <ul>
 <li><p>exec<br>新起进程，调用指定的外部命令。</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Process exec(&quot;xxx.exe&quot;);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Process <span class="title">exec</span><span class="params">(<span class="string">"xxx.exe"</span>)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>freeMemory / totalMemory / maxMemory / availableProcessors<br>查看JVM的系统资源信息。</p>
 </li>
@@ -434,60 +436,60 @@
 <h3 id="Date"><a href="#Date" class="headerlink" title="Date"></a>Date</h3><p>简单的日期时间类，用于获取日期信息。在Java SE 8中，有一个替代这个类的更方便的java.time包。</p>
 <ul>
 <li><p>构造</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Date date = new Date();//date当前时间：Weekday Month Day hh:mm:ss CST year</span><br><span class="line">Date date = new Date(long mills);//自1970年1月1日08:00分开始往后指定毫秒的日期时间</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Date date = <span class="keyword">new</span> Date();<span class="comment">//date当前时间：Weekday Month Day hh:mm:ss CST year</span></span><br><span class="line">Date date = <span class="keyword">new</span> Date(<span class="keyword">long</span> mills);<span class="comment">//自1970年1月1日08:00分开始往后指定毫秒的日期时间</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h3 id="Calendar"><a href="#Calendar" class="headerlink" title="Calendar"></a>Calendar</h3><p>可以替代Date类的复杂日期时间类，是一个抽象类，其唯一实现子类为GregorianCalendar。</p>
 <ul>
 <li><p>构造</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Calendar c = Calendar.getInstance(); //父类构造，返回的是当前时间的GregorianCalendar对象</span><br><span class="line">GregorianCalendar g = new GregorianCalendar();</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Calendar c = Calendar.getInstance(); <span class="comment">//父类构造，返回的是当前时间的GregorianCalendar对象</span></span><br><span class="line">GregorianCalendar g = <span class="keyword">new</span> GregorianCalendar();</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>读取</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c.get(Calendar.YEAR);</span><br><span class="line">c.get(Calendar.MONTH);</span><br><span class="line">c.get(Calendar.DAY_OF_MONTH);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c.get(Calendar.YEAR);</span><br><span class="line">c.get(Calendar.MONTH);</span><br><span class="line">c.get(Calendar.DAY_OF_MONTH);</span><br></pre></td></tr></table></figure>
 <p>  静态变量还包括：WEEK_OF_MONTH、WEEK_OF_YEAR、DATE（同DAY_OF_MONTH）、DAY_OF_WEEK、DAY_OF_YEAR、HOUR（12小时制）、HOUR_OF_DAY（24小时制）、MINUTE、SECOND等等。</p>
 </li>
 <li><p>add</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.add(Calendar.YEAR,1); //明年此时</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.add(Calendar.YEAR,<span class="number">1</span>); <span class="comment">//明年此时</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>set</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.set(Calendar.YEAR, Calendar.YEAR+1); //明年此时</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.set(Calendar.YEAR, Calendar.YEAR+<span class="number">1</span>); <span class="comment">//明年此时</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h3 id="DateFormat："><a href="#DateFormat：" class="headerlink" title="DateFormat："></a>DateFormat：</h3><p>将Date类对象格式规整，并能将Date与String互转的抽象父类，子类为SimpleDateFormat。</p>
+<h3 id="DateFormat"><a href="#DateFormat" class="headerlink" title="DateFormat"></a>DateFormat</h3><p>将Date类对象格式规整，并能将Date与String互转的抽象父类，子类为SimpleDateFormat。</p>
 <ul>
 <li><p>构造</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd E HH:mm:ss:SSS&quot;);</span><br><span class="line">//年-月-日 星期几 时:分:秒:毫秒</span><br><span class="line">//HH-24小时制,hh-12小时制,a-am/pm</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SimpleDateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd E HH:mm:ss:SSS"</span>);</span><br><span class="line"><span class="comment">//年-月-日 星期几 时:分:秒:毫秒</span></span><br><span class="line"><span class="comment">//HH-24小时制,hh-12小时制,a-am/pm</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Date转字符串</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String dateStr = sdf.format(date);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String dateStr = sdf.format(date);</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>字符串转Date</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdf.parse(dateStr);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdf.parse(dateStr);</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h3 id="Math"><a href="#Math" class="headerlink" title="Math"></a>Math</h3><p>几何、三角相关运算方法，均为静态。</p>
 <ul>
 <li>取绝对值</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int abs(int value);</span><br><span class="line">double abs(double value);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">abs</span><span class="params">(<span class="keyword">int</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">abs</span><span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>三角函数</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">double acos(double a);</span><br><span class="line">double asin(double a);</span><br><span class="line">double atan(double a);</span><br><span class="line">double cos(double a);</span><br><span class="line">double sin(double a);</span><br><span class="line">double tan(double a);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">acos</span><span class="params">(<span class="keyword">double</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">asin</span><span class="params">(<span class="keyword">double</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">atan</span><span class="params">(<span class="keyword">double</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">cos</span><span class="params">(<span class="keyword">double</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">sin</span><span class="params">(<span class="keyword">double</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">tan</span><span class="params">(<span class="keyword">double</span> a)</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>取对数</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">double log(double value);</span><br><span class="line">double log10(double value);</span><br><span class="line">double log1p(double value);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">log</span><span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">log10</span><span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">log1p</span><span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>求幂</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">double pow(double a, double b);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">pow</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>比大小</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">double max(double a, double b);</span><br><span class="line">float max(float a, float b);</span><br></pre></td></tr></table></figure>
-<h3 id="Random"><a href="#Random" class="headerlink" title="Random"></a>Random</h3><p>产生基于时间的随机数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int nextInt(); //随机整数</span><br><span class="line">int nextInt(int upperLimit); //0 - upperLimit的随机整数</span><br><span class="line">long nextLong(); //随机长整数</span><br><span class="line">double nextDouble(); //随机double</span><br><span class="line">float nextFloat(); //随机float</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">max</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">max</span><span class="params">(<span class="keyword">float</span> a, <span class="keyword">float</span> b)</span></span>;</span><br></pre></td></tr></table></figure>
+<h3 id="Random"><a href="#Random" class="headerlink" title="Random"></a>Random</h3><p>产生基于时间的伪随机数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nextInt</span><span class="params">()</span></span>; <span class="comment">//随机整数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nextInt</span><span class="params">(<span class="keyword">int</span> upperLimit)</span></span>; <span class="comment">//0 - upperLimit的随机整数</span></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">nextLong</span><span class="params">()</span></span>; <span class="comment">//随机长整数</span></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">nextDouble</span><span class="params">()</span></span>; <span class="comment">//随机double</span></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">nextFloat</span><span class="params">()</span></span>; <span class="comment">//随机float</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -638,7 +640,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包装类"><span class="nav-number">2.</span> <span class="nav-text">包装类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String"><span class="nav-number">3.</span> <span class="nav-text">String</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用方法"><span class="nav-number">3.1.</span> <span class="nav-text">常用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuffer"><span class="nav-number">3.2.</span> <span class="nav-text">StringBuffer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用方法-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">常用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuilder"><span class="nav-number">3.3.</span> <span class="nav-text">StringBuilder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String-vs-StringBuffer-vs-StringBuilder"><span class="nav-number">3.4.</span> <span class="nav-text">String vs. StringBuffer vs. StringBuilder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用类"><span class="nav-number">4.</span> <span class="nav-text">常用类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#System"><span class="nav-number">4.1.</span> <span class="nav-text">System</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#成员变量"><span class="nav-number">4.1.1.</span> <span class="nav-text">成员变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用方法-2"><span class="nav-number">4.1.2.</span> <span class="nav-text">常用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Runtime"><span class="nav-number">4.2.</span> <span class="nav-text">Runtime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Date"><span class="nav-number">4.3.</span> <span class="nav-text">Date</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Calendar"><span class="nav-number">4.4.</span> <span class="nav-text">Calendar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DateFormat："><span class="nav-number">4.5.</span> <span class="nav-text">DateFormat：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math"><span class="nav-number">4.6.</span> <span class="nav-text">Math</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Random"><span class="nav-number">4.7.</span> <span class="nav-text">Random</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包装类"><span class="nav-number">2.</span> <span class="nav-text">包装类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String"><span class="nav-number">3.</span> <span class="nav-text">String</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用方法"><span class="nav-number">3.1.</span> <span class="nav-text">常用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuffer"><span class="nav-number">3.2.</span> <span class="nav-text">StringBuffer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用方法-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">常用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuilder"><span class="nav-number">3.3.</span> <span class="nav-text">StringBuilder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String-vs-StringBuffer-vs-StringBuilder"><span class="nav-number">3.4.</span> <span class="nav-text">String vs. StringBuffer vs. StringBuilder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用类"><span class="nav-number">4.</span> <span class="nav-text">常用类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#System"><span class="nav-number">4.1.</span> <span class="nav-text">System</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#成员变量"><span class="nav-number">4.1.1.</span> <span class="nav-text">成员变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用方法-2"><span class="nav-number">4.1.2.</span> <span class="nav-text">常用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Runtime"><span class="nav-number">4.2.</span> <span class="nav-text">Runtime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Date"><span class="nav-number">4.3.</span> <span class="nav-text">Date</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Calendar"><span class="nav-number">4.4.</span> <span class="nav-text">Calendar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DateFormat"><span class="nav-number">4.5.</span> <span class="nav-text">DateFormat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math"><span class="nav-number">4.6.</span> <span class="nav-text">Math</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Random"><span class="nav-number">4.7.</span> <span class="nav-text">Random</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
