@@ -1,0 +1,859 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,JVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM初探">
+<meta property="og:url" content="http://luck.luckyluck.info/2016/04/17/JVM初探/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
+<meta property="og:updated_time" content="2016-10-25T03:15:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM初探">
+<meta name="twitter:description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> JVM初探 | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-17T00:00:00+08:00" content="2016-04-17">
+              2016-04-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。<br><a id="more"></a></p>
+<h2 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h2><p>Java程序的基本单元是一个个类(Class)及类实例(Class Instance)，在使用类之前，必须先将类加载进JVM的内存中。<br>当发生以下情况时，相关的类如果之前没有被加载，此时将被加载到JVM内存中：</p>
+<ol>
+<li>创建类实例，这包括使用new关键字以及使用Class.forName反射方法来创建实例。</li>
+<li>调用类的静态方法。</li>
+<li>给类的静态变量赋值。</li>
+<li>访问非final的静态变量。因为常量在被写进类的字节码之前，会被编译器优化为value而不是field，因此编译器并不会生成字节码来从实例中载入field的值，而是直接把这个value插入到字节码中。</li>
+<li>初始化类时，若其父类尚未加载，则先初始化其父类。这种情形会递归加载所有之前未被加载的父类。</li>
+<li>JVM启动时，用户指定的包含main方法的类。<br>而当发生以下情况时，类不会被加载：</li>
+<li>子类调用父类的静态方法，子类不会被加载，只有父类被初始化。对于静态字段，只有直接定义这个字段的类才会被初始化。</li>
+<li>作为数组元素被引用的类。</li>
+<li>访问类的final静态变量，即常量。</li>
+</ol>
+<h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><ol>
+<li>Load：加载类到内存，在堆区建立一个Class对象。<ol>
+<li>通过类的全限定名获取该类的二进制字节流。</li>
+<li>将该字节流代表的静态存储结构转换为运行时的数据结构。</li>
+<li>在静态区生成java.lang.Class对象。</li>
+</ol>
+</li>
+<li>Link：把Class的二进制数据合并到JRE，具体包括验证、准备及解析三步。<ul>
+<li>验证：Class文件中类结构、语义、操作等的合法性。</li>
+<li>准备：为类的静态变量分配内存，并将非final的静态变量初始化默认值（零值），final的静态变量初始化为其指定值。</li>
+<li>解析：将常量池中的符号引用替换成直接引用。符号引用指向的目标不一定加载到了内存中，而直接引用指向的目标一定已经加载到了内存中。</li>
+</ul>
+</li>
+<li>Initialization：赋予静态变量程序员指定的值，初始化静态代码块。</li>
+</ol>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><ul>
+<li>Bootstrap ClassLoader<ol>
+<li>$JAVA_HOME/lib中的类库。</li>
+<li>JVM的-Xbootclasspath参数指定的类库。</li>
+</ol>
+</li>
+<li>Extension ClassLoader<ol>
+<li>$JAVA_HOME/lib/ext中的类库。</li>
+<li>java.ext.dirs系统变量指定的类库。</li>
+</ol>
+</li>
+<li>Application ClassLoader<ol>
+<li>加载Classpath下的类库。</li>
+</ol>
+</li>
+</ul>
+<h2 id="JVM内存划分"><a href="#JVM内存划分" class="headerlink" title="JVM内存划分"></a>JVM内存划分</h2><p>JVM大体将其掌控的内存划分为下述几个区域：</p>
+<ol>
+<li>程序计数器 Program Counter Register</li>
+<li>虚拟机栈 JVM Stack</li>
+<li>本地方法栈 Native Method Stack</li>
+<li>堆 Heap</li>
+<li>方法区 Method Area</li>
+</ol>
+<h3 id="程序计数器-Program-Counter-Register"><a href="#程序计数器-Program-Counter-Register" class="headerlink" title="程序计数器 Program Counter Register"></a>程序计数器 Program Counter Register</h3><ol>
+<li>当前线程的字节码行号指示器，指示执行哪条指令，分支、循环、跳转、异常等情况均依赖其指示来实现。</li>
+<li>由于Java多线程由时间片轮转实现，因此每个线程私有程序计数器，以便切换后线程内的代码能恢复执行。</li>
+</ol>
+<h3 id="虚拟机栈-JVM-Stack"><a href="#虚拟机栈-JVM-Stack" class="headerlink" title="虚拟机栈 JVM Stack"></a>虚拟机栈 JVM Stack</h3><ol>
+<li>考虑到可能的多线程环境，虚拟机栈是每个线程私有的。</li>
+<li>方法执行时创建栈帧，压入虚拟机栈，返回时弹栈。每个栈帧包含局部变量表、操作数栈以及帧数据。栈帧中只保存原生数据类型和对象的引用。<h4 id="Local-Variables-局部变量表"><a href="#Local-Variables-局部变量表" class="headerlink" title="Local Variables 局部变量表"></a>Local Variables 局部变量表</h4>局部变量表是一个以一个字长为单位、从0开始计数的数组。short、byte、char和boolean等类型的变量值在存入数组前要被转换成int值，而long和double在数组中占据连续的两项，在访问局部变量中的long或double时，只需取出连续两项的第一项的索引值即可，如某个long值在局部变量区中占据的索引为3、4项，取值时，指令只需取索引为3的long值即可。<h4 id="Operand-Stack-操作数栈"><a href="#Operand-Stack-操作数栈" class="headerlink" title="Operand Stack 操作数栈"></a>Operand Stack 操作数栈</h4>结构与局部变量表一致，但对它的访问是通过push和pop操作来进行的，而不是通过索引。操作数栈可以看成是栈帧所对应的方法的计算过程中，数据的临时存储区域。<h4 id="Frame-Data-帧数据"><a href="#Frame-Data-帧数据" class="headerlink" title="Frame Data 帧数据"></a>Frame Data 帧数据</h4>这个区域的作用主要有以下几个：</li>
+</ol>
+<ul>
+<li>解析方法内引用的常量池中的数据。</li>
+<li>保存Return Address，用于方法执行完后返回，恢复调用方的现场。</li>
+<li>保存异常表，用于方法执行过程中抛出异常时的异常处理，当出现异常时虚拟机查找相应的异常表看是否有对应的catch语句，如果没有就抛出异常终止这个方法调用。</li>
+</ul>
+<h3 id="本地方法栈-Native-Method-Stack"><a href="#本地方法栈-Native-Method-Stack" class="headerlink" title="本地方法栈 Native Method Stack"></a>本地方法栈 Native Method Stack</h3><p>与虚拟机栈作用类似，但是为执行本地方法服务。</p>
+<h3 id="堆-Heap"><a href="#堆-Heap" class="headerlink" title="堆 Heap"></a>堆 Heap</h3><ol>
+<li>JVM只有一个堆区，被所有线程共享，存储对象（包括数组，因为数组也是一种对象）。</li>
+<li>分为新生代(Y)、老年代(O)以及永久区(P)。<ul>
+<li>新生代=Eden(8/10) + From Survivor(1/10) + To Survivor(1/10)，Eden空间不足时，存活的对象转移到Survivor，多个Survivor用于交换。</li>
+<li>老年代存放生命周期长的对象。</li>
+<li>永久区存放Class和Meta信息等，GC时一般不清理。</li>
+</ul>
+</li>
+<li>JVM GC算法为分代收集，设计为频繁地收集新生代，较少地收集老年代，更地收集永久区。</li>
+<li>Minor GC<ul>
+<li>收集新生代的垃圾，存活对象转移到了Survivor区，清空Eden。</li>
+<li>若Survivor区满，则将Survivor区内的存活对象转移到老年代。</li>
+<li>若老年代满，则抛出OutOfMemoryException。</li>
+</ul>
+</li>
+<li>Major GC<ul>
+<li>收集老年代的垃圾。</li>
+<li>在Major GC的过程中，至少进行了一次Minor GC。</li>
+</ul>
+</li>
+</ol>
+<h4 id="方法区-静态区-PermGen-MetaSpace"><a href="#方法区-静态区-PermGen-MetaSpace" class="headerlink" title="方法区/静态区/PermGen/MetaSpace"></a>方法区/静态区/PermGen/MetaSpace</h4><ol>
+<li>Java 7-为PermGen永久区，分配在JVM堆中，大小固定；Java 8+改为MetaSpace，分配在本地内存，大小可以动态调整。</li>
+<li>所有线程共享。</li>
+<li>包含所有的Class信息、static变量以及Meta信息，包含的都是整个程序中唯一的元素。</li>
+<li>每一个加载的类型会在方法区中保存：<ul>
+<li>类及其父类的全限定名 (java.lang.Object除外，它没有父类)。</li>
+<li>类的类型 (class or interface)。</li>
+<li>访问修饰符 (public / abstract / final)。</li>
+<li>实现的接口的全限定名的列表。</li>
+<li>常量池。</li>
+<li>字段信息。</li>
+<li>方法信息。</li>
+<li>除常量外的静态变量。</li>
+<li>ClassLoader引用。</li>
+<li>Class引用。</li>
+</ul>
+</li>
+<li>每一个字段会在方法区中保存：<ul>
+<li>字段声明顺序。</li>
+<li>字段名。</li>
+<li>字段的类型。</li>
+<li>字段的修饰符(public, private , protected, static, final, volatile, transient)。</li>
+</ul>
+</li>
+<li>每一个方法会在方法区中保存：<ul>
+<li>方法声明顺序。</li>
+<li>方法名。</li>
+<li>方法返回类型或void。</li>
+<li>参数信息。</li>
+<li>方法修饰符(public, private, protected, static, final, synchronized, native, abstract)。</li>
+<li>如果方法不是抽象方法或本地方法（Native Method），还会保存方法的字节码、本地变量表及操作数栈的大小以及异常表。</li>
+</ul>
+</li>
+</ol>
+<h4 id="常量池-Constant-Pool"><a href="#常量池-Constant-Pool" class="headerlink" title="常量池 Constant Pool"></a>常量池 Constant Pool</h4><ol>
+<li>Java 6-位于方法区，Java 7+位于堆中。</li>
+<li>每个原子类型和String都有自己的常量池。</li>
+<li>类加载期间就把常量加载进了常量池。</li>
+<li>byte, short, int, long, char, boolean类型的常量池范围除boolean(true/false)、char[0-127]外全部为[-128, 127]；float和double类型没有常量池。</li>
+<li>原子类型的包装类和String作为方法参数时，是值传递。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Integer i1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line">Integer i2 = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="comment">//i1 != i2, 位于堆中非常量池的不同内存</span></span><br><span class="line"><span class="keyword">int</span> int3 = <span class="number">1</span>;</span><br><span class="line"><span class="comment">//i1 == int3, i2 == int3，比较时会自动拆箱</span></span><br><span class="line">Integer i3 = -<span class="number">128</span>;</span><br><span class="line">Integer i4 = -<span class="number">128</span>;</span><br><span class="line"><span class="comment">//i3 == i4, 指向常量池中同一内存(-128~127)</span></span><br><span class="line"><span class="comment">//自动装箱，Integer i3 = Integer.valueOf(-128);</span></span><br><span class="line"><span class="comment">//valueOf会返回常量池中的对象或新生成堆中对象，此处返回常量池对象</span></span><br><span class="line">Integer i5 = <span class="number">128</span>;</span><br><span class="line">Integer i6 = <span class="number">128</span>;</span><br><span class="line"><span class="comment">//i5 != i6, 指向不在常量池中</span></span><br><span class="line"><span class="comment">//自动装箱，Integer i5 = Integer.valueOf(128);</span></span><br><span class="line"><span class="comment">//valueOf会返回常量池中的对象或新生成堆中对象，此处返回堆中对象</span></span><br><span class="line">Boolean b1 = <span class="keyword">true</span>;</span><br><span class="line">Boolean b2 = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">//b1 == b2, 常量池</span></span><br><span class="line">Double d1 = <span class="number">1.0</span>;</span><br><span class="line">Double d2 = <span class="number">1.0</span>;</span><br><span class="line"><span class="comment">//d1 != d2, double/float未实现常量池</span></span><br><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">"hello"</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">"hello"</span>);</span><br><span class="line"><span class="comment">//s1 != s2, 位于堆中非常量池的不同内存</span></span><br><span class="line">String s3 = <span class="string">"hello"</span>;</span><br><span class="line">String s4 = <span class="string">"hello"</span>;</span><br><span class="line"><span class="comment">//s3 == s4, 调用String.valueOf()，指向常量池中同一内存</span></span><br><span class="line">String hello = <span class="string">"hello"</span>, hel = <span class="string">"hel"</span>, lo = <span class="string">"lo"</span>;</span><br><span class="line"><span class="comment">//hello == "hello", 指向常量池中同一内存</span></span><br><span class="line"><span class="comment">//hello == "hel" + "lo", 编译器自动优化右边</span></span><br><span class="line"><span class="comment">//hello != "hel" + lo, 编译器不会优化变量，过程相当于</span></span><br><span class="line">	<span class="comment">//new StringBuilder().append("hel").append(lo).toString();</span></span><br><span class="line">	<span class="comment">//StringBuilder::toString()中返回new String();</span></span><br><span class="line"><span class="comment">//hello != hel + lo, 变量拼接不可预料无法优化</span></span><br><span class="line"><span class="comment">//hello == (hel + lo).intern()，手动载入常量池</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><p>JVM的垃圾回收机制包括在程序运行过程中标记垃圾对象，以及在GC过程中回收被标记的垃圾对象。</p>
+<h4 id="标记垃圾"><a href="#标记垃圾" class="headerlink" title="标记垃圾"></a>标记垃圾</h4><h5 id="计数法"><a href="#计数法" class="headerlink" title="计数法"></a>计数法</h5><ul>
+<li>新建一个对象或有引用指向该对象时计数器+1。</li>
+<li>当一个对象引用超过生存期限或指向新对象时计数器-1。</li>
+<li>计数器对应的对象变为0时回收该对象。</li>
+<li>快，简单，但无法检测循环引用：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;<span class="keyword">public</span> B b;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span></span>&#123;<span class="keyword">public</span> A a;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	A a = <span class="keyword">new</span> A();</span><br><span class="line">	B b = <span class="keyword">new</span> B();</span><br><span class="line">	a.b = b;</span><br><span class="line">	b.a = a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="跟踪法-根搜索法"><a href="#跟踪法-根搜索法" class="headerlink" title="跟踪法/根搜索法"></a>跟踪法/根搜索法</h5><ul>
+<li>以GC roots为起点形成引用链，每个对象为有向图的顶点，GC roots不可达的对象将被回收。</li>
+<li>GC roots包括：<ul>
+<li>虚拟机栈中引用的对象, e.g. <code>User user = new User();</code></li>
+<li>静态属性引用的对象, e.g. <code>private static User user = new User();</code></li>
+<li>常量引用的对象, e.g. <code>private static final  User user = new User();</code></li>
+<li>本地方法(native method)栈中引用的对象。<h6 id="强引用-Strong-Reference"><a href="#强引用-Strong-Reference" class="headerlink" title="强引用 Strong Reference"></a>强引用 Strong Reference</h6>当使用<code>Object obj = new Object();</code>将obj指向了new Object()在堆中创建的对象时，obj就是一个强引用。当<code>obj = null;</code>时，new Object()代表的对象不被任何引用所指向，该对象就没有强引用了。<br>在垃圾回收的过程中，就算内存不足，一个有强引用的对象也是不会被标记/回收的，此时JVM会抛出OutOfMemoryError。<h6 id="软引用-Soft-Reference"><a href="#软引用-Soft-Reference" class="headerlink" title="软引用 Soft Reference"></a>软引用 Soft Reference</h6>软引用的对象是指某个对象没有被强引用所指向(e.g. 前文中的obj = null之后new Object()代表的对象)，而被软引用所指向。<br>在垃圾回收的过程中，如果内存仍然充足，则不回收只有软引用的对象，否则回收。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">	Integer id;</span><br><span class="line">	String name;</span><br><span class="line">&#125;</span><br><span class="line">public class Test &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		User user = new User(); //对象创建, 且有强引用</span><br><span class="line">		user.id = 1;</span><br><span class="line">		user.name = &quot;Luck&quot;;</span><br><span class="line">		SoftReference&lt;User&gt; softRef = new SoftReference&lt;User&gt;(user); //添加软引用</span><br><span class="line">		user = null; //移除强引用</span><br><span class="line">		User sameUser;</span><br><span class="line">		if(null != (sameUser = softRef.get())) &#123;</span><br><span class="line">			//只有软引用的对象未被垃圾回收</span><br><span class="line">			System.out.println(&quot;recovered &quot; + sameUser.name + &quot;(&quot; + sameUser.id + &quot;) from SoftReference!&quot;);</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			//只有软引用的对象被垃圾回收，内存较为稀缺</span><br><span class="line">			System.out.println(&quot;user object GCed!&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h6 id="弱引用-Weak-Reference"><a href="#弱引用-Weak-Reference" class="headerlink" title="弱引用 Weak Reference"></a>弱引用 Weak Reference</h6><p>与软引用类似，但是当GC发生时，不论内存是否充足，只有弱引用的对象都会被回收。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">	User user = new User(); //对象创建, 且有强引用</span><br><span class="line">	user.id = 1;</span><br><span class="line">	user.name = &quot;Luck&quot;;</span><br><span class="line">	WeakReference&lt;User&gt; weakRef = new WeakReference&lt;User&gt;(user); //添加软引用</span><br><span class="line">	user = null; //移除强引用</span><br><span class="line">	User sameUser;</span><br><span class="line">	if(null != (sameUser = weakRef.get())) &#123;</span><br><span class="line">		//只有弱引用的对象未被垃圾回收</span><br><span class="line">		System.out.println(&quot;recovered &quot; + sameUser.name + &quot;(&quot; + sameUser.id + &quot;) from WeakReference!&quot;);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		//只有弱引用的对象被垃圾回收</span><br><span class="line">		System.out.println(&quot;user object GCed!&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h6 id="虚引用-Phantom-Reference"><a href="#虚引用-Phantom-Reference" class="headerlink" title="虚引用 Phantom Reference"></a>虚引用 Phantom Reference</h6><p>虚引用“形同虚设”，对象有没有虚引用与对象会不会被GC没有关系。虚引用(PhantomReference)必须和引用队列(ReferenceQueue)联合使用，通常用来跟踪对象垃圾回收的活动。</p>
+<h4 id="回收垃圾"><a href="#回收垃圾" class="headerlink" title="回收垃圾"></a>回收垃圾</h4><h5 id="标记-清除算法-Mark-Sweep"><a href="#标记-清除算法-Mark-Sweep" class="headerlink" title="标记-清除算法 Mark-Sweep"></a>标记-清除算法 Mark-Sweep</h5><ul>
+<li>首先遍历有向图，标记所有可达的对象，然后扫描堆栈回收未被标记的对象。</li>
+<li>效率低，产生大量不连续空间。<h5 id="标记-压缩算法-Mark-Compact"><a href="#标记-压缩算法-Mark-Compact" class="headerlink" title="标记-压缩算法 Mark-Compact"></a>标记-压缩算法 Mark-Compact</h5></li>
+<li>第一阶段与标记-清除算法相同，第二阶段把被标记的对象移动到内存的一端，从而形成连续内存，并回收边界以外的内存。</li>
+<li>提高了内存利用率，可用于老年代。<h5 id="标记-复制算法-Copying"><a href="#标记-复制算法-Copying" class="headerlink" title="标记-复制算法 Copying"></a>标记-复制算法 Copying</h5></li>
+<li>将内存分为等大小的两块，每次只使用其中一块，GC时把存活的对象复制到另一块，把前一块的内存回收。</li>
+<li>简单高效，内存利用率较低，可用于新生代（8：1：1）的GC。<h5 id="分代收集算法-Generational-Collection"><a href="#分代收集算法-Generational-Collection" class="headerlink" title="分代收集算法 Generational Collection"></a>分代收集算法 Generational Collection</h5></li>
+<li>新生代采用标记-复制算法。</li>
+<li>老年代采用标记-压缩算法。</li>
+</ul>
+<h4 id="内存泄露"><a href="#内存泄露" class="headerlink" title="内存泄露"></a>内存泄露</h4><p>对于JVM内存的控制，虽然有较为科学的防范措施(垃圾回收)，但有时仍免不了再也访问不到的对象占据内存空间，降低了内存的使用效率。以下是几种常见的内存“泄露”场景。</p>
+<ol>
+<li><p>静态集合中的元素失去外部引用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> HashMap&lt;String, Object&gt; map;</span><br><span class="line">Object o = <span class="keyword">new</span> Object();</span><br><span class="line">map.put(<span class="string">"o"</span>, o);</span><br><span class="line">o = <span class="keyword">null</span>; <span class="comment">//集合仍然持有该对象的引用，不能被GC</span></span><br><span class="line">System.out.println(<span class="keyword">null</span> == map.get(<span class="string">"o"</span>)); <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>集合中的元素被修改后，remove原引用失效：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;Person&gt; set = <span class="keyword">new</span> HashSet&lt;Person&gt;();</span><br><span class="line">Person p1 = <span class="keyword">new</span> Person();</span><br><span class="line">Person p2 = <span class="keyword">new</span> Person();</span><br><span class="line">set.add(p1);</span><br><span class="line">set.add(p2);</span><br><span class="line">p2.setAge(<span class="number">2</span>);</span><br><span class="line">set.remove(p2); <span class="comment">//失败</span></span><br><span class="line">System.out.println(set.size()); <span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	    <span class="comment">//Person类需实现hashCode方法，且hashCode方法的返回值与age属性相关</span></span><br><span class="line">    	<span class="keyword">return</span> <span class="keyword">super</span>.hashCode()+age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>监听器/各种连接：</li>
+</ol>
+<ul>
+<li>调用addListener()后忘记释放。</li>
+<li>建立DB Connection，Socket Connection，I/O Stream后忘记调用相应的close()方法。</li>
+<li>使用DB连接时不仅需要调用Connection::close()，还需要关闭ResultSet和Statement。</li>
+</ul>
+<ol>
+<li>单例对象HAS-A另外一个对象的引用：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;...&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">B</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> B INSTANCE = <span class="keyword">new</span> B();</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> B <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> INSTANCE;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> A a;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setA</span><span class="params">(A a)</span></span>&#123;<span class="keyword">this</span>.a = a;&#125;</span><br><span class="line">	<span class="comment">//对象a不能被垃圾回收</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/JVM/" rel="tag">#JVM</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/10/Java基础2/" rel="next" title="Java Basics Part II">
+                <i class="fa fa-chevron-left"></i> Java Basics Part II
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载"><span class="nav-number">1.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#过程"><span class="nav-number">1.1.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">1.2.</span> <span class="nav-text">类加载器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM内存划分"><span class="nav-number">2.</span> <span class="nav-text">JVM内存划分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器-Program-Counter-Register"><span class="nav-number">2.1.</span> <span class="nav-text">程序计数器 Program Counter Register</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机栈-JVM-Stack"><span class="nav-number">2.2.</span> <span class="nav-text">虚拟机栈 JVM Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Local-Variables-局部变量表"><span class="nav-number">2.2.1.</span> <span class="nav-text">Local Variables 局部变量表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Operand-Stack-操作数栈"><span class="nav-number">2.2.2.</span> <span class="nav-text">Operand Stack 操作数栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Frame-Data-帧数据"><span class="nav-number">2.2.3.</span> <span class="nav-text">Frame Data 帧数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈-Native-Method-Stack"><span class="nav-number">2.3.</span> <span class="nav-text">本地方法栈 Native Method Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆-Heap"><span class="nav-number">2.4.</span> <span class="nav-text">堆 Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区-静态区-PermGen-MetaSpace"><span class="nav-number">2.4.1.</span> <span class="nav-text">方法区/静态区/PermGen/MetaSpace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量池-Constant-Pool"><span class="nav-number">2.4.2.</span> <span class="nav-text">常量池 Constant Pool</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收"><span class="nav-number">2.5.</span> <span class="nav-text">垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记垃圾"><span class="nav-number">2.5.1.</span> <span class="nav-text">标记垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#计数法"><span class="nav-number">2.5.1.1.</span> <span class="nav-text">计数法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#跟踪法-根搜索法"><span class="nav-number">2.5.1.2.</span> <span class="nav-text">跟踪法/根搜索法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#强引用-Strong-Reference"><span class="nav-number">2.5.1.2.1.</span> <span class="nav-text">强引用 Strong Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#软引用-Soft-Reference"><span class="nav-number">2.5.1.2.2.</span> <span class="nav-text">软引用 Soft Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#弱引用-Weak-Reference"><span class="nav-number">2.5.1.2.3.</span> <span class="nav-text">弱引用 Weak Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#虚引用-Phantom-Reference"><span class="nav-number">2.5.1.2.4.</span> <span class="nav-text">虚引用 Phantom Reference</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回收垃圾"><span class="nav-number">2.5.2.</span> <span class="nav-text">回收垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-清除算法-Mark-Sweep"><span class="nav-number">2.5.2.1.</span> <span class="nav-text">标记-清除算法 Mark-Sweep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-压缩算法-Mark-Compact"><span class="nav-number">2.5.2.2.</span> <span class="nav-text">标记-压缩算法 Mark-Compact</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-复制算法-Copying"><span class="nav-number">2.5.2.3.</span> <span class="nav-text">标记-复制算法 Copying</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分代收集算法-Generational-Collection"><span class="nav-number">2.5.2.4.</span> <span class="nav-text">分代收集算法 Generational Collection</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存泄露"><span class="nav-number">2.5.3.</span> <span class="nav-text">内存泄露</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
