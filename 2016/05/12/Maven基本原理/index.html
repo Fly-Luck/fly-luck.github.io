@@ -55,19 +55,16 @@
 
 
 
-<meta name="description" content="Maven来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。
-Repository通常，我们的仓库(Repository)来源是官方Maven仓库；有时为了更快的访问速度，使用其mirror作为来源；而有时需要搭建私有仓库，如由于网络环境限制无法直">
+<meta name="description" content="Maven来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建Maven本地仓库">
 <meta property="og:url" content="http://luck.luckyluck.info/2016/05/12/Maven基本原理/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
-<meta property="og:description" content="Maven来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。
-Repository通常，我们的仓库(Repository)来源是官方Maven仓库；有时为了更快的访问速度，使用其mirror作为来源；而有时需要搭建私有仓库，如由于网络环境限制无法直">
-<meta property="og:updated_time" content="2017-01-09T09:21:30.000Z">
+<meta property="og:description" content="Maven来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。">
+<meta property="og:updated_time" content="2017-01-09T09:27:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建Maven本地仓库">
-<meta name="twitter:description" content="Maven来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。
-Repository通常，我们的仓库(Repository)来源是官方Maven仓库；有时为了更快的访问速度，使用其mirror作为来源；而有时需要搭建私有仓库，如由于网络环境限制无法直">
+<meta name="twitter:description" content="Maven来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。">
 
 
 
@@ -262,7 +259,7 @@ Repository通常，我们的仓库(Repository)来源是官方Maven仓库；有�
       
 
       
-        <p><a href="http://maven.apache.org" target="_blank" rel="external">Maven</a>来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。</p>
+        <p><a href="http://maven.apache.org" target="_blank" rel="external">Maven</a>来自Apache，是一种软件项目管理工具，可以很便捷地管理软件项目的依赖处理、构建、文档化等过程，被广泛应用于各类软件项目。由于其出色的包依赖管理功能，许多Java项目都采用了Maven来进行项目管理。<br><a id="more"></a></p>
 <h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository"></a>Repository</h3><p>通常，我们的仓库(Repository)来源是官方<a href="http://mvnrepository.com" target="_blank" rel="external">Maven仓库</a>；有时为了更快的访问速度，使用其mirror作为来源；而有时需要搭建私有仓库，如由于网络环境限制无法直连到官方Maven仓库或其mirror，可以使用Nexus Repository Manager OSS等“私服”，这里不详细描述，侧重探讨在本地的使用。</p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ul>
 <li>由于Maven的运行需要JDK，因此先安装好JDK，并配置好$JAVA_HOME环境变量。</li>
