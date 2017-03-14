@@ -65,7 +65,7 @@
 <meta property="og:image" content="http://luck.luckyluck.info/img/jcf-simple.jpg">
 <meta property="og:image" content="http://luck.luckyluck.info/img/HashMap_1.7.jpg">
 <meta property="og:image" content="http://luck.luckyluck.info/img/HashMap_1.8.jpg">
-<meta property="og:updated_time" content="2017-03-14T09:27:28.000Z">
+<meta property="og:updated_time" content="2017-03-14T09:32:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合总结">
 <meta name="twitter:description" content="集合(Collection)是Java代码中的”Backbone”，其对各种数据类型的抽象为Java Developer的开发提供了极大的便利，因此熟悉集合的使用及了解集合的原理是Java Developer的基本功之一。">
@@ -491,7 +491,65 @@
 <p>TreeSet的元素保证有序，按照自然顺序或指定的Comparator的排序规则排序。<br>TreeSet中的descendingSet, headSet, tailSet, subSet, ceiling, floor, higher, lower, pollFirst, pollLast等方法与TreeMap（NavigableMap）中类似名称的方法起着类似作用。</p>
 <h3 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h3><p>Queue接口继承自Collection接口，其声明了如下方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//往队列尾添加元素, 成功返回true，否则抛出异常</span><br><span class="line">boolean add(E e);</span><br><span class="line">//往队列尾添加元素，成功返回true，否则返回false或抛出异常</span><br><span class="line">boolean offer(E e);</span><br><span class="line">//移除队列头元素，并返回该元素，如果为空则抛出异常</span><br><span class="line">E remove(); </span><br><span class="line">//移除队列头元素，并返回该元素，如果为空则返回null</span><br><span class="line">E poll();</span><br><span class="line">//返回队列头元素，如果为空则抛出异常</span><br><span class="line">E element();</span><br><span class="line">//返回队列头元素，如果为空则返回null</span><br><span class="line">E peek();</span><br></pre></td></tr></table></figure></p>
 <p><a href="http://tutorials.jenkov.com/java-collections/queue.html" target="_blank" rel="external">http://tutorials.jenkov.com/java-collections/queue.html</a></p>
-<h3 id="Deque"><a href="#Deque" class="headerlink" title="Deque"></a>Deque</h3><p>Deque接口继承自Queue接口，全称是Double ended queue，即双端队列，允许在队列两端入队（offer）及出队（poll），这使得Deque的实现类既可以是栈，也可以是队列。<br>当Deque的实现类是FIFO的队列时，元素被插入在Deque的尾部，而Deque头部的元素先被删除。以下是Queue接口中声明的方法在Deque作为队列时对应的方法。<br>| Queue | Deque |<br>| :-: | :-: |<br>| add(e) | addLast(e) |<br>| offer(e) | offerLast(e) |<br>| remove() | removeFirst() |<br>| poll() | pollFirst() |<br>| element() | getFirst() |<br>| peek() | peekFirst() |<br>Deque的实现类也可以作为LIFO的栈使用，作为旧集合类Stack的替代，此时元素被插入在Deque头部，而Deque头部的元素也最先被删除。以下是Stack类中定义的方法在Deque作为栈时对应的方法。<br>| Stack | Deque |<br>| :-: | :-: |<br>| push(e) | addFirst(e) |<br>| pop() | removeFirst() |<br>| peek() | peekFirst() |<br>无论Deque作为队列或栈使用时，peek方法都返回头部元素。<br>与List接口不同，Deque不提供对元素的索引访问。<br>虽然Deque允许插入null元素，但其实现类不应允许，因为有时null是某些方法的特殊返回值。<br>Deque有两个通用实现类LinkedList及ArrayDeque。</p>
+<h3 id="Deque"><a href="#Deque" class="headerlink" title="Deque"></a>Deque</h3><p>Deque接口继承自Queue接口，全称是Double ended queue，即双端队列，允许在队列两端入队（offer）及出队（poll），这使得Deque的实现类既可以是栈，也可以是队列。<br>当Deque的实现类是FIFO的队列时，元素被插入在Deque的尾部，而Deque头部的元素先被删除。以下是Queue接口中声明的方法在Deque作为队列时对应的方法。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Queue</th>
+<th style="text-align:center">Deque</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">add(e)</td>
+<td style="text-align:center">addLast(e)</td>
+</tr>
+<tr>
+<td style="text-align:center">offer(e)</td>
+<td style="text-align:center">offerLast(e)</td>
+</tr>
+<tr>
+<td style="text-align:center">remove()</td>
+<td style="text-align:center">removeFirst()</td>
+</tr>
+<tr>
+<td style="text-align:center">poll()</td>
+<td style="text-align:center">pollFirst()</td>
+</tr>
+<tr>
+<td style="text-align:center">element()</td>
+<td style="text-align:center">getFirst()</td>
+</tr>
+<tr>
+<td style="text-align:center">peek()</td>
+<td style="text-align:center">peekFirst()</td>
+</tr>
+</tbody>
+</table>
+<p>Deque的实现类也可以作为LIFO的栈使用，作为旧集合类Stack的替代，此时元素被插入在Deque头部，而Deque头部的元素也最先被删除。以下是Stack类中定义的方法在Deque作为栈时对应的方法。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Stack</th>
+<th style="text-align:center">Deque</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">push(e)</td>
+<td style="text-align:center">addFirst(e)</td>
+</tr>
+<tr>
+<td style="text-align:center">pop()</td>
+<td style="text-align:center">removeFirst()</td>
+</tr>
+<tr>
+<td style="text-align:center">peek()</td>
+<td style="text-align:center">peekFirst()</td>
+</tr>
+</tbody>
+</table>
+<p>无论Deque作为队列或栈使用时，peek方法都返回头部元素。<br>与List接口不同，Deque不提供对元素的索引访问。<br>虽然Deque允许插入null元素，但其实现类不应允许，因为有时null是某些方法的特殊返回值。<br>Deque有两个通用实现类LinkedList及ArrayDeque。</p>
 <h4 id="LinkedList-amp-ArrayDeque"><a href="#LinkedList-amp-ArrayDeque" class="headerlink" title="LinkedList &amp; ArrayDeque"></a>LinkedList &amp; ArrayDeque</h4><p>LinkedList类实现了List接口及Deque接口，其内部实现是一个双向链表。<br>ArrayDeque类继承自AbstractCollection类并实现了Deque接口，其内部实现是一个数组。<br>这两个Deque实现类的使用方法类似，但由于同时暴露了Deque的FIFO方法及LIFO方法，因此如果我们想要实现一个“纯粹”的队列或栈，还需要亲自动手封装。</p>
 <h4 id="Deque队列-amp-Deque栈"><a href="#Deque队列-amp-Deque栈" class="headerlink" title="Deque队列 &amp; Deque栈"></a>Deque队列 &amp; Deque栈</h4><p>以下是一个手动封装Deque的简单示例。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class MyQueue &lt;T&gt;&#123;</span><br><span class="line">	private Deque&lt;T&gt; elements;</span><br><span class="line">	public MyQueue()&#123;</span><br><span class="line">		elements = new ArrayDeque&lt;&gt;();</span><br><span class="line">	&#125;</span><br><span class="line">	/**</span><br><span class="line">	 * 添加至队尾</span><br><span class="line">	 * @param e</span><br><span class="line">	 */</span><br><span class="line">	public void enqueue(T e) &#123;</span><br><span class="line">		elements.addLast(e);;</span><br><span class="line">	&#125;</span><br><span class="line">	/**</span><br><span class="line">	 * 队头元素先出队列</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public T dequeue() &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			return elements.removeFirst();</span><br><span class="line">		&#125; catch (NoSuchElementException e) &#123;</span><br><span class="line">			return null;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	public T peek() &#123;</span><br><span class="line">		return elements.peekFirst();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class MyStack &lt;T&gt;&#123;</span><br><span class="line">	private Deque&lt;T&gt; elements;</span><br><span class="line">	public MyStack() &#123;</span><br><span class="line">		elements = new ArrayDeque&lt;&gt;();</span><br><span class="line">	&#125;</span><br><span class="line">	/**</span><br><span class="line">	 * 添加至头部</span><br><span class="line">	 * @param e</span><br><span class="line">	 */</span><br><span class="line">	public void push(T e) &#123;</span><br><span class="line">		elements.addFirst(e);</span><br><span class="line">	&#125;</span><br><span class="line">	/**</span><br><span class="line">	 * 头部元素先出栈</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public T pop() &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			return elements.removeFirst();</span><br><span class="line">		&#125; catch (NoSuchElementException e) &#123;</span><br><span class="line">			return null;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	public void peek() &#123;</span><br><span class="line">		elements.peekFirst();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
