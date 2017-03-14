@@ -65,7 +65,7 @@
 <meta property="og:image" content="http://luck.luckyluck.info/img/jcf-simple.jpg">
 <meta property="og:image" content="http://luck.luckyluck.info/img/HashMap_1.7.jpg">
 <meta property="og:image" content="http://luck.luckyluck.info/img/HashMap_1.8.jpg">
-<meta property="og:updated_time" content="2017-03-14T09:32:37.000Z">
+<meta property="og:updated_time" content="2017-03-14T09:34:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合总结">
 <meta name="twitter:description" content="集合(Collection)是Java代码中的”Backbone”，其对各种数据类型的抽象为Java Developer的开发提供了极大的便利，因此熟悉集合的使用及了解集合的原理是Java Developer的基本功之一。">
@@ -287,7 +287,54 @@
 <li>针对数组的工具类，严格来讲这些类不算JCF的一部分。</li>
 </ol>
 <h4 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h4><p>接口可以分为两组，一组继承自java.util.Collection接口，包括：<br><code>java.util.Set</code><br><code>java.util.SortedSet</code><br><code>java.util.NavigableSet</code><br><code>java.util.Queue</code><br><code>java.util.concurrent.BlockingQueue</code><br><code>java.util.concurrent.TransferQueue</code><br><code>java.util.Deque</code><br><code>java.util.concurrent.BlockingDeque</code><br>另一组继承自java.util.Map，包括：<br><code>java.util.SortedMap</code><br><code>java.util.NavigableMap</code><br><code>java.util.concurrent.ConcurrentMap</code><br><code>java.util.concurrent.ConcurrentNavigableMap</code></p>
-<h4 id="通用实现"><a href="#通用实现" class="headerlink" title="通用实现"></a>通用实现</h4><p>下面这张表展示了集合的通用实现类，第一列代表接口，后面几列代表具体实现了哪些功能，每一行代表既继承了对应行的接口又实现了对应列的功能的实现类。<br>| Interface | 哈希表 | 可变数组 | 平衡树 | 链表 | 哈希表 + 链表 |<br>| :-: | :-: | :-: | :-: | :-: | :-: |<br>| Set | HashSet | - | TreeSet | - | LinkedHashSet |<br>| List | - | ArrayList | - | LinkedList | - |<br>| Deque | - | ArrayDeque | - | LinkedDeque | - |<br>| Map | HashMap | - | TreeMap | - | LinkedHashMap |<br>除此之外，还有<code>PriorityQueue</code>，由于平时接触较少，就不介绍了。</p>
+<h4 id="通用实现"><a href="#通用实现" class="headerlink" title="通用实现"></a>通用实现</h4><p>下面这张表展示了集合的通用实现类，第一列代表接口，后面几列代表具体实现了哪些功能，每一行代表既继承了对应行的接口又实现了对应列的功能的实现类。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Interface</th>
+<th style="text-align:center">哈希表</th>
+<th style="text-align:center">可变数组</th>
+<th style="text-align:center">平衡树</th>
+<th style="text-align:center">链表</th>
+<th style="text-align:center">哈希表 + 链表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Set</td>
+<td style="text-align:center">HashSet</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">TreeSet</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">LinkedHashSet</td>
+</tr>
+<tr>
+<td style="text-align:center">List</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">ArrayList</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">LinkedList</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">Deque</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">ArrayDeque</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">LinkedDeque</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">Map</td>
+<td style="text-align:center">HashMap</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">TreeMap</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">LinkedHashMap</td>
+</tr>
+</tbody>
+</table>
+<p>除此之外，还有<code>PriorityQueue</code>，由于平时接触较少，就不介绍了。</p>
 <h4 id="抽象实现"><a href="#抽象实现" class="headerlink" title="抽象实现"></a>抽象实现</h4><p>集合接口的抽象实现类包括<code>AbstractCollection</code>、<code>AbstractSet</code>、<code>AbstractList</code>、<code>AbstractQueue</code>、 <code>AbstractSequentialList</code>以及<code>AbstractMap</code>等抽象类，它们提供了一些基本实现，同时让它们的继承类在最小限度地进行基本实现的同时进行定制。</p>
 <h4 id="包装类实现"><a href="#包装类实现" class="headerlink" title="包装类实现"></a>包装类实现</h4><p>包装类实现提供了增强功能，与其他实现配合使用，其只能通过静态工厂方法调用。</p>
 <ul>
