@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2018/05/01/线程同步之volatile/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="volatile是一个Java语言的关键字，在线程同步上有一席之地。相较于其他线程同步方法，volatile的使用简单，性能较好，同时也有其局限性。">
-<meta property="og:updated_time" content="2018-05-09T07:01:12.291Z">
+<meta property="og:updated_time" content="2018-05-09T07:41:35.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程同步之volatile">
 <meta name="twitter:description" content="volatile是一个Java语言的关键字，在线程同步上有一席之地。相较于其他线程同步方法，volatile的使用简单，性能较好，同时也有其局限性。">
@@ -295,12 +295,12 @@
 <h3 id="Volatile与并发"><a href="#Volatile与并发" class="headerlink" title="Volatile与并发"></a>Volatile与并发</h3><h4 id="可见性-1"><a href="#可见性-1" class="headerlink" title="可见性"></a>可见性</h4><p>volatile可保证可见性：对变量的修改立即写回主内存；读取变量值时会从主内存读取。</p>
 <h4 id="原子性-1"><a href="#原子性-1" class="headerlink" title="原子性"></a>原子性</h4><p>volatile无法保证原子性：当面对非原子操作时，单句代码会被拆解执行。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> inc = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">1000</span>;i++) &#123;</span><br><span class="line">	inc++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 10个线程均执行以上循环，结果可能小于1000*10</span></span><br></pre></td></tr></table></figure>
-<p>inc++包含两步：从主内存读inc，写主内存inc=inc+1，以下情况会出错：</p>
+<p>inc++包含两步：从主内存读inc，计算inc’=inc+1，写主内存inc=inc’，以下情况会出错：</p>
 <ol>
 <li>T1从主内存读inc=10，写入T1工作内存。</li>
 <li>T2从主内存读inc=10，写入T2工作内存。</li>
-<li>T1写工作内存及主内存inc=11。</li>
-<li>T2写工作内存及主内存inc=11。</li>
+<li>T1计算inc’=11并写工作内存及主内存inc=11。</li>
+<li>T2计算inc’=11并写工作内存及主内存inc=11。</li>
 </ol>
 <h4 id="有序性-1"><a href="#有序性-1" class="headerlink" title="有序性"></a>有序性</h4><p>volatile可保证有序性：禁止指令重排序。<br>原则：</p>
 <ol>
