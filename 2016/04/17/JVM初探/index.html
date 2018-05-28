@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2016/04/17/JVM初探/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
-<meta property="og:updated_time" content="2016-10-25T03:29:00.000Z">
+<meta property="og:updated_time" content="2018-05-28T09:18:15.841Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM初探">
 <meta name="twitter:description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
@@ -336,16 +336,15 @@
 <li>永久区存放Class和Meta信息等，GC时一般不清理。</li>
 </ul>
 </li>
-<li>JVM GC算法为分代收集，设计为频繁地收集新生代，较少地收集老年代，更地收集永久区。</li>
+<li>JVM GC算法为分代收集，设计为频繁地收集新生代，较少地收集老年代，更少地收集永久区。</li>
 <li>Minor GC<ul>
-<li>收集新生代的垃圾，存活对象转移到了Survivor区，清空Eden。</li>
-<li>若Survivor区满，则将Survivor区内的存活对象转移到老年代。</li>
-<li>若老年代满，则抛出OutOfMemoryException。</li>
+<li>收集新生代的垃圾，Eden区及From Survivor区的存活对象转移到To Survivor区，清空Eden及From Survivor。</li>
+<li>若To Survivor区满，则将To Survivor区内的存活对象转移到老年代；若To Survivor区内的对象</li>
+<li>若老年代满，则进行Major GC抛出OutOfMemoryException。</li>
 </ul>
 </li>
 <li>Major GC<ul>
 <li>收集老年代的垃圾。</li>
-<li>在Major GC的过程中，至少进行了一次Minor GC。</li>
 </ul>
 </li>
 </ol>
