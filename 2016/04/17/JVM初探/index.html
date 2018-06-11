@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2016/04/17/JVM初探/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
-<meta property="og:updated_time" content="2018-05-29T09:53:55.177Z">
+<meta property="og:updated_time" content="2018-06-08T01:31:03.809Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM初探">
 <meta name="twitter:description" content="JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。">
@@ -260,7 +260,7 @@
 
       
         <p>JVM作为Java程序的容器，是所有Java程序依赖的平台。涉猎JVM的原理有助于Java Developer避开开发过程中的许多陷阱。<br><a id="more"></a></p>
-<h2 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h2><p>Java程序的基本单元是一个个类(Class)及类实例(Class Instance)，在使用类之前，必须先将类加载进JVM的内存中。<br>当发生以下情况时，相关的类如果之前没有被加载，此时将被加载到JVM内存中：</p>
+<h2 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h2><p>Java程序的基本单元是一个个类(Class)及类实例(Class Instance)，在运行期间使用某个类之前，必须先将类加载进JVM的内存中，而暂时没有使用的类则不会加载。<br>当发生以下情况时，相关的类如果之前没有被加载，此时将被加载到JVM内存中：</p>
 <ol>
 <li>创建类实例，这包括使用new关键字以及使用Class.forName反射方法来创建实例。</li>
 <li>调用类的静态方法。</li>
@@ -273,7 +273,7 @@
 <li>访问类的final静态变量，即常量。</li>
 </ol>
 <h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><ol>
-<li>Load：加载类到内存，在堆区建立一个Class对象。<ol>
+<li>Load：类加载器将类加载到内存。<ol>
 <li>通过类的全限定名获取该类的二进制字节流。</li>
 <li>将该字节流代表的静态存储结构转换为运行时的数据结构。</li>
 <li>在静态区生成java.lang.Class对象。</li>
@@ -282,7 +282,7 @@
 <li>Link：把Class的二进制数据合并到JRE，具体包括验证、准备及解析三步。<ul>
 <li>验证：Class文件中类结构、语义、操作等的合法性。</li>
 <li>准备：为类的静态变量分配内存，并将非final的静态变量初始化默认值（零值），final的静态变量初始化为其指定值。</li>
-<li>解析：将常量池中的符号引用替换成直接引用。符号引用指向的目标不一定加载到了内存中，而直接引用指向的目标一定已经加载到了内存中。</li>
+<li>解析：将常量池中的符号引用替换成直接引用。符号引用指类名、方法名、字段名，具有人类可读性；直接引用是内存的偏移量，指示内存真实地址。</li>
 </ul>
 </li>
 <li>Initialization：赋予静态变量程序员指定的值，初始化静态代码块。</li>
@@ -291,18 +291,34 @@
 <li>Bootstrap ClassLoader<ol>
 <li>$JAVA_HOME/lib中的类库。</li>
 <li>JVM的-Xbootclasspath参数指定的类库。</li>
+<li>由C++ native code编写，随JVM启动而启动，构造时同时构造Extension ClassLoader。</li>
 </ol>
 </li>
 <li>Extension ClassLoader<ol>
 <li>$JAVA_HOME/lib/ext中的类库。</li>
 <li>java.ext.dirs系统变量指定的类库。</li>
+<li>构造时同时构造Application ClassLoader。</li>
 </ol>
 </li>
 <li>Application ClassLoader<ol>
-<li>加载Classpath下的类库。</li>
+<li>加载Classpath下的类。</li>
+</ol>
+</li>
+<li>Custom ClassLoader<ol>
+<li>用户自己编写的自定义类加载器，常用于代码的加解密。</li>
 </ol>
 </li>
 </ul>
+<h4 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h4><p>当某类加载器收到类加载请求，首先将请求递归委派给“父类”（组合而非继承关系），只有当“父类”无法完成时才由其完成。<br>例如，当自定义加载器接到加载某个类的请求：</p>
+<ol>
+<li>检查是否已经被加载，否则委派Application ClassLoader来加载。</li>
+<li>检查是否已经被加载，委派Extension ClassLoader来加载。</li>
+<li>检查是否已经被加载，委派Bootstrap ClassLoader来加载。</li>
+<li>Bootstrap ClassLoader无父类，因此自己尝试加载，但失败，交还Extension ClassLoader来加载。</li>
+<li>Extension ClassLoader加载失败，交还Application ClassLoader来加载。</li>
+<li>Application ClassLoader加载失败，交还自定义ClassLoader来加载。</li>
+<li>自定义ClassLoader找到类，进行加载。</li>
+</ol>
 <h2 id="JVM内存划分"><a href="#JVM内存划分" class="headerlink" title="JVM内存划分"></a>JVM内存划分</h2><p>JVM大体将其掌控的内存划分为下述几个区域：</p>
 <ol>
 <li>程序计数器 Program Counter Register</li>
@@ -615,7 +631,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载"><span class="nav-number">1.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#过程"><span class="nav-number">1.1.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">1.2.</span> <span class="nav-text">类加载器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM内存划分"><span class="nav-number">2.</span> <span class="nav-text">JVM内存划分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器-Program-Counter-Register"><span class="nav-number">2.1.</span> <span class="nav-text">程序计数器 Program Counter Register</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机栈-JVM-Stack"><span class="nav-number">2.2.</span> <span class="nav-text">虚拟机栈 JVM Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Local-Variables-局部变量表"><span class="nav-number">2.2.1.</span> <span class="nav-text">Local Variables 局部变量表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Operand-Stack-操作数栈"><span class="nav-number">2.2.2.</span> <span class="nav-text">Operand Stack 操作数栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Frame-Data-帧数据"><span class="nav-number">2.2.3.</span> <span class="nav-text">Frame Data 帧数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈-Native-Method-Stack"><span class="nav-number">2.3.</span> <span class="nav-text">本地方法栈 Native Method Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆-Heap"><span class="nav-number">2.4.</span> <span class="nav-text">堆 Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区-静态区-PermGen-MetaSpace"><span class="nav-number">2.4.1.</span> <span class="nav-text">方法区/静态区/PermGen/MetaSpace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量池-Constant-Pool"><span class="nav-number">2.4.2.</span> <span class="nav-text">常量池 Constant Pool</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#静态常量池"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">静态常量池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#运行时常量池"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">运行时常量池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其他"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收"><span class="nav-number">2.5.</span> <span class="nav-text">垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记垃圾"><span class="nav-number">2.5.1.</span> <span class="nav-text">标记垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#计数法"><span class="nav-number">2.5.1.1.</span> <span class="nav-text">计数法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#跟踪法-根搜索法"><span class="nav-number">2.5.1.2.</span> <span class="nav-text">跟踪法/根搜索法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#强引用-Strong-Reference"><span class="nav-number">2.5.1.2.1.</span> <span class="nav-text">强引用 Strong Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#软引用-Soft-Reference"><span class="nav-number">2.5.1.2.2.</span> <span class="nav-text">软引用 Soft Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#弱引用-Weak-Reference"><span class="nav-number">2.5.1.2.3.</span> <span class="nav-text">弱引用 Weak Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#虚引用-Phantom-Reference"><span class="nav-number">2.5.1.2.4.</span> <span class="nav-text">虚引用 Phantom Reference</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回收垃圾"><span class="nav-number">2.5.2.</span> <span class="nav-text">回收垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-清除算法-Mark-Sweep"><span class="nav-number">2.5.2.1.</span> <span class="nav-text">标记-清除算法 Mark-Sweep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-压缩算法-Mark-Compact"><span class="nav-number">2.5.2.2.</span> <span class="nav-text">标记-压缩算法 Mark-Compact</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-复制算法-Copying"><span class="nav-number">2.5.2.3.</span> <span class="nav-text">标记-复制算法 Copying</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分代收集算法-Generational-Collection"><span class="nav-number">2.5.2.4.</span> <span class="nav-text">分代收集算法 Generational Collection</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存泄露"><span class="nav-number">2.5.3.</span> <span class="nav-text">内存泄露</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载"><span class="nav-number">1.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#过程"><span class="nav-number">1.1.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">1.2.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#双亲委派"><span class="nav-number">1.2.1.</span> <span class="nav-text">双亲委派</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM内存划分"><span class="nav-number">2.</span> <span class="nav-text">JVM内存划分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器-Program-Counter-Register"><span class="nav-number">2.1.</span> <span class="nav-text">程序计数器 Program Counter Register</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机栈-JVM-Stack"><span class="nav-number">2.2.</span> <span class="nav-text">虚拟机栈 JVM Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Local-Variables-局部变量表"><span class="nav-number">2.2.1.</span> <span class="nav-text">Local Variables 局部变量表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Operand-Stack-操作数栈"><span class="nav-number">2.2.2.</span> <span class="nav-text">Operand Stack 操作数栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Frame-Data-帧数据"><span class="nav-number">2.2.3.</span> <span class="nav-text">Frame Data 帧数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈-Native-Method-Stack"><span class="nav-number">2.3.</span> <span class="nav-text">本地方法栈 Native Method Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆-Heap"><span class="nav-number">2.4.</span> <span class="nav-text">堆 Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区-静态区-PermGen-MetaSpace"><span class="nav-number">2.4.1.</span> <span class="nav-text">方法区/静态区/PermGen/MetaSpace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量池-Constant-Pool"><span class="nav-number">2.4.2.</span> <span class="nav-text">常量池 Constant Pool</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#静态常量池"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">静态常量池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#运行时常量池"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">运行时常量池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其他"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收"><span class="nav-number">2.5.</span> <span class="nav-text">垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记垃圾"><span class="nav-number">2.5.1.</span> <span class="nav-text">标记垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#计数法"><span class="nav-number">2.5.1.1.</span> <span class="nav-text">计数法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#跟踪法-根搜索法"><span class="nav-number">2.5.1.2.</span> <span class="nav-text">跟踪法/根搜索法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#强引用-Strong-Reference"><span class="nav-number">2.5.1.2.1.</span> <span class="nav-text">强引用 Strong Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#软引用-Soft-Reference"><span class="nav-number">2.5.1.2.2.</span> <span class="nav-text">软引用 Soft Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#弱引用-Weak-Reference"><span class="nav-number">2.5.1.2.3.</span> <span class="nav-text">弱引用 Weak Reference</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#虚引用-Phantom-Reference"><span class="nav-number">2.5.1.2.4.</span> <span class="nav-text">虚引用 Phantom Reference</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回收垃圾"><span class="nav-number">2.5.2.</span> <span class="nav-text">回收垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-清除算法-Mark-Sweep"><span class="nav-number">2.5.2.1.</span> <span class="nav-text">标记-清除算法 Mark-Sweep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-压缩算法-Mark-Compact"><span class="nav-number">2.5.2.2.</span> <span class="nav-text">标记-压缩算法 Mark-Compact</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-复制算法-Copying"><span class="nav-number">2.5.2.3.</span> <span class="nav-text">标记-复制算法 Copying</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分代收集算法-Generational-Collection"><span class="nav-number">2.5.2.4.</span> <span class="nav-text">分代收集算法 Generational Collection</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存泄露"><span class="nav-number">2.5.3.</span> <span class="nav-text">内存泄露</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
