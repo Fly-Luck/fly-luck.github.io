@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2018/02/20/半小时了解TCP/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="TCP Transmission Control Protocol作为传输层的核心协议，为支撑起互联网络作出了重大贡献，如今我们只要使用互联网几乎就离不开TCP。了解TCP的基本原理对我们的软件架构设计、开发、运维测试都有裨益。">
-<meta property="og:updated_time" content="2018-06-19T08:49:23.365Z">
+<meta property="og:updated_time" content="2018-06-19T08:53:16.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="半小时了解TCP">
 <meta name="twitter:description" content="TCP Transmission Control Protocol作为传输层的核心协议，为支撑起互联网络作出了重大贡献，如今我们只要使用互联网几乎就离不开TCP。了解TCP的基本原理对我们的软件架构设计、开发、运维测试都有裨益。">
@@ -358,7 +358,7 @@
 <li>Not received（缓存区剩余空间）</li>
 </ol>
 <h4 id="过程示例"><a href="#过程示例" class="headerlink" title="过程示例"></a>过程示例</h4><p>A-&gt;B: Data, seq = 100<br>B-&gt;A: ACK, seq = 200, ack = 100+1, win = 3<br>A-&gt;B: ACK, seq = 101, ack = 200+1<br>A-&gt;B: Data, seq = 102<br>A-&gt;B: Data, seq = 103<br>A-&gt;B: Data, seq = 104<br>A hold<br>B-&gt;A: ACK, seq = 201, ack = 102+1, win = 1<br>A still hold<br>B-&gt;A: ACK, seq = 202, ack = 103+1, win = 2<br>A-&gt;B: Data, seq = 105<br>A-&gt;B: Data, seq = 106<br>A hold<br>// 窗口变化<br>100 101 | 102 103 104 | 105 106 …<br>100 101 102 103 104 | 105 106 | …</p>
-<h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><p>在网络中突发大量的报文，导致网络中的路由器等传输节点的缓存耗尽，从而造成网络拥塞。</p>
+<h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><p>在网络中突发大量的报文，导致网络中的路由器等传输节点的缓存耗尽，从而造成网络拥塞，因此TCP通过一系列措施对拥塞进行了控制。</p>
 <h4 id="拥塞窗口"><a href="#拥塞窗口" class="headerlink" title="拥塞窗口"></a>拥塞窗口</h4><p>发送端保持一个动态的拥塞窗口（Congestion Window），并尝试将自己的发送窗口（Send Window）与拥塞窗口保持一致，拥塞窗口变化时，发送端将相应地调整发送窗口。</p>
 <h4 id="控制算法"><a href="#控制算法" class="headerlink" title="控制算法"></a>控制算法</h4><ul>
 <li>发送方保存cwnd（Congestion Window）变量及慢启动门限ssthresh（slow-start thresh）变量，初始时使用慢启动算法。</li>
@@ -379,7 +379,7 @@
 <ol>
 <li>立即重新发送重复ACK对应的已丢失报文。</li>
 <li>ssthresh = cwnd/2，cwnd = ssthresh 或 cwnd = ssthresh + 3（某些实现不同）。</li>
-<li>启动快速恢复算法。</li>
+<li>启动快速恢复算法：</li>
 </ol>
 <ul>
 <li>发送端每收到一个重复的ACK，cwnd加1。</li>
