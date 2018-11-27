@@ -1,0 +1,727 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Java,Thread," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="synchronized是一个Java的关键字，在线程同步上发挥着重要作用。熟悉synchronized关键字的用法及原理有助于我们编写并发代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程同步之synchronized">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/05/12/Java Synchronized/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="synchronized是一个Java的关键字，在线程同步上发挥着重要作用。熟悉synchronized关键字的用法及原理有助于我们编写并发代码。">
+<meta property="og:updated_time" content="2018-11-17T17:40:22.146Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程同步之synchronized">
+<meta name="twitter:description" content="synchronized是一个Java的关键字，在线程同步上发挥着重要作用。熟悉synchronized关键字的用法及原理有助于我们编写并发代码。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 线程同步之synchronized | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                线程同步之synchronized
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-12T00:00:00+08:00" content="2018-05-12">
+              2018-05-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>synchronized是一个Java的关键字，在线程同步上发挥着重要作用。熟悉synchronized关键字的用法及原理有助于我们编写并发代码。<br><a id="more"></a></p>
+<h3 id="What"><a href="#What" class="headerlink" title="What"></a>What</h3><p>synchronized关键字用于修饰一“块”代码，这块代码可以是一个方法，也可以是方法中的一段代码，进入这块代码的线程相当于拥有了一把“锁”，其他线程运行到这一行时只能等待锁的释放才能去竞争锁、进入代码块执行，从而避免了多个线程对相同变量的访问，保证了各线程的同步。</p>
+<h3 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h3><p>考虑如下场景：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">0</span>; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        x++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 测试代码</span></span><br><span class="line">Test test = <span class="keyword">new</span> Test();</span><br><span class="line"><span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test.inc();</span><br><span class="line">	&#125;).start();</span><br><span class="line"><span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test.inc();</span><br><span class="line">	&#125;).start();</span><br><span class="line"><span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test.inc();</span><br><span class="line">	&#125;).start();</span><br></pre></td></tr></table></figure></p>
+<p>等三个线程均执行完毕后，<code>test.x</code>的值是多少？答案显然不一定是30000，可能是[10000,30000]的某个值。<br>由于三个线程同时访问x变量，而每个线程中x的自增操作会分解为三步：</p>
+<ol>
+<li>从主内存中将x的值读取到该线程的工作内存中。</li>
+<li>计算x自增的值。</li>
+<li>将x自增的值写回工作内存及主内存。</li>
+</ol>
+<p>而由于这三步中存在着时间差，可能导致以下情况：</p>
+<ol>
+<li>x = 0。</li>
+<li>T1从主内存中读取x的值到其工作内存。</li>
+<li>T1计算x的新值为1。</li>
+<li>T2从主内存中读取x的值到其工作内存，此时T2读到的x为旧值0。</li>
+<li>T2计算x的新值仍为1。</li>
+<li>T1写x的新值1到工作内存及主内存。</li>
+<li>T2写x的新值1到工作内存及主内存。</li>
+<li>T1和T2一共经过了两次循环，x的值却只增加了1。</li>
+</ol>
+<h3 id="How-To"><a href="#How-To" class="headerlink" title="How-To"></a>How-To</h3><p>synchronized关键字可以用来修饰普通方法、静态方法及代码块。</p>
+<h4 id="普通方法"><a href="#普通方法" class="headerlink" title="普通方法"></a>普通方法</h4><p>当修饰类普通方法时，锁只会加在访问同一个对象该方法的那些线程上，如上例中如果<code>inc</code>方法用synchronized关键字修饰，那么所有访问<code>test</code>对象<code>inc</code>方法的线程共用一把锁。其他线程如果访问其他对象的<code>inc</code>方法，使用的是另外的锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">0</span>; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        x++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 测试代码</span></span><br><span class="line">Test test = <span class="keyword">new</span> Test(), test2 = <span class="keyword">new</span> Test();</span><br><span class="line">Thread t1 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test.inc();</span><br><span class="line">	&#125;);</span><br><span class="line">Thread t2 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test.inc();</span><br><span class="line">	&#125;);</span><br><span class="line">Thread t3 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test2.inc();</span><br><span class="line">	&#125;);</span><br><span class="line">Thread t4 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			test2.inc();</span><br><span class="line">	&#125;);	</span><br><span class="line">t1.start();t2.start();t3.start();t4.start();</span><br><span class="line"><span class="comment">// t1, t2共享test.inc()的锁，t3, t4共享test2.inc()的锁</span></span><br></pre></td></tr></table></figure>
+<h4 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h4><p>当修饰静态方法时，由于静态方法独立于对象存在，因此所有访问该静态方法的线程共享一把锁。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        x++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 测试代码</span></span><br><span class="line">Thread t1 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			Test.inc();</span><br><span class="line">	&#125;);</span><br><span class="line">Thread t2 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			Test.inc();</span><br><span class="line">	&#125;);</span><br><span class="line">Thread t3 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			Test.inc();</span><br><span class="line">	&#125;);</span><br><span class="line">Thread t4 = <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)</span><br><span class="line">			Test.inc();</span><br><span class="line">	&#125;);	</span><br><span class="line">t1.start();t2.start();t3.start();t4.start();</span><br><span class="line"><span class="comment">// 所有线程共享Test.inc()的锁</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h4><p>synchronized关键字还能修饰方法中的一段代码，这样做会比锁住整个方法更有效率，因为同时可以有多个线程进入到方法中，进行那些不需上锁的操作。</p>
+<h5 id="普通方法代码块"><a href="#普通方法代码块" class="headerlink" title="普通方法代码块"></a>普通方法代码块</h5><p>与修饰方法不同，当synchronized关键字修饰普通方法内的代码块时，“锁芯”可以是固定的this对象或类的Class对象，也可以更换为其他对象：几乎任意对象，但不能为null。<br>这是因为，“锁芯”对象应为所有访问该方法的线程均能访问的同一个对象，从而确保线程之间互斥。this对象、Class对象及其他final对象能够防止“锁芯”更换，从而避免各线程的锁不一致，因此“锁芯”可以为这三类对象。<br>当代码块范围为整个方法里的代码，且锁住的是this对象时，此锁与锁住整个方法等效。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">		x++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 等价于public synchronized void inc() &#123;x++;&#125;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (Test.class) &#123;</span><br><span class="line">		x++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">		x++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="静态方法代码块"><a href="#静态方法代码块" class="headerlink" title="静态方法代码块"></a>静态方法代码块</h5><p>由于静态方法通常只由与类相关，而与该类的任何对象无关，因此“锁芯”通常由所有直接或间接调用该类静态方法（类名.方法）的线程共享。静态方法代码块与普通方法内代码块的“锁芯”区别在于，前者显然不能是this对象或任何非静态对象，只能是静态对象或类的Class对象。同样的道理，当使用静态对象作为“锁芯”时，为确保“锁芯”不变，通常需对其加final关键字。<br>当代码块范围为整个方法里的代码，且锁住的是当前类的Class对象时，此锁与锁住整个方法等效。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (Test.class) &#123;</span><br><span class="line">		x++;</span><br><span class="line">	&#125; <span class="comment">// 等价于public static synchronized void inc() &#123;x++;&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Object lock = <span class="keyword">new</span> Object();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">		x++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="继承性"><a href="#继承性" class="headerlink" title="继承性"></a>继承性</h5><p>需要注意的是，synchronized修饰的方法在子类中是不会继承同步性的，即多个线程调用该子类继承父类的方法时是不会加锁的，除非重写并加上关键字。</p>
+<h3 id="How-Exactly"><a href="#How-Exactly" class="headerlink" title="How Exactly"></a>How Exactly</h3><h4 id="可重入性"><a href="#可重入性" class="headerlink" title="可重入性"></a>可重入性</h4><p>从一个对象的synchronized方法调用该对象的另一个synchronized方法时，调用的线程共享的只有一把对象锁：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">m1</span><span class="params">(String t)</span> </span>&#123;</span><br><span class="line">	System.out.println(t + <span class="string">"m1"</span>);</span><br><span class="line">	m2(t);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">m2</span><span class="params">(String t)</span> </span>&#123;</span><br><span class="line">	System.out.println(t + <span class="string">"m2"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>即当调用同一个对象的m1方法或m2方法时，所有线程共享一把对象锁；进入该对象m1方法的线程，在进入m2时可以直接获取该锁，这就是可重入性。<br>可重入的代码不能使用静态或全局变量，同时不调用不可重用的代码。</p>
+<h5 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h5><p>synchronized关键字提供的是一个可重入锁。<br>需要注意的是方法实际执行的操作，如：当synchronized方法A调用某个方法B，而B没有上锁的同时可以被其他线程直接调用，就绕过了锁直接进行B方法中的操作，从而造成线程不安全。<br>显然，当调用不同的对象的synchronized方法时，这些线程不会共享对象锁：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SyncTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">m1</span><span class="params">(String t)</span> </span>&#123;</span><br><span class="line">		System.out.println(t + <span class="string">"m1"</span>);</span><br><span class="line">		m2(t);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">m2</span><span class="params">(String t)</span> </span>&#123;</span><br><span class="line">		System.out.println(t + <span class="string">"m2"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		SyncTest t = <span class="keyword">new</span> SyncTest();</span><br><span class="line">		SyncTest t2 = <span class="keyword">new</span> SyncTest();</span><br><span class="line">		<span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">			t.m1(Thread.currentThread().getName());</span><br><span class="line">		&#125;).start();</span><br><span class="line">		<span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">			t.m1(Thread.currentThread().getName());</span><br><span class="line">		&#125;).start();</span><br><span class="line">		<span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">			t.m1(Thread.currentThread().getName());</span><br><span class="line">		&#125;).start();</span><br><span class="line">		<span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">			t2.m1(Thread.currentThread().getName());</span><br><span class="line">		&#125;).start();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 可能的情况</span><br><span class="line">Thread-0m1</span><br><span class="line">Thread-0m2</span><br><span class="line">Thread-1m1</span><br><span class="line">Thread-1m2</span><br><span class="line">Thread-3m1 //另一把锁</span><br><span class="line">Thread-3m2 //另一把锁</span><br><span class="line">Thread-2m1</span><br><span class="line">Thread-2m2</span><br><span class="line">*/</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="Monitor"><a href="#Monitor" class="headerlink" title="Monitor"></a>Monitor</h4><p>在JVM的堆中，每个对象占有一块空间，其中一部分称为对象头，对象头中有一组字段用于表示锁的状态，被称为Monitor，包含一个线程持有者和一个程序计数器，当计数器的值为0时该锁处于开启状态，因此线程先到先得。<br>当线程获取某对象的锁后，JVM记下该线程的信息，并将计数器的值加1。<br>当不是当前持有锁的线程访问该对象的synchronized方法或代码块，且计数器的值大于0时，该线程等待。<br>当锁的持有线程再次访问该对象的synchronized方法或代码块时，再次拿到同样的该锁（重入），并将计数器的值加1，因此计数器的值可以超过1。<br>每当线程退出一个synchronized方法或代码块时，计数器的值减1，直至减到0，此时该线程已将锁释放。</p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/Thread/" rel="tag">#Thread</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/01/Java volatile/" rel="next" title="线程同步之volatile">
+                <i class="fa fa-chevron-left"></i> 线程同步之volatile
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/16/Singleton Pattern/" rel="prev" title="单例模式All in One">
+                单例模式All in One <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#What"><span class="nav-number">1.</span> <span class="nav-text">What</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why"><span class="nav-number">2.</span> <span class="nav-text">Why</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-To"><span class="nav-number">3.</span> <span class="nav-text">How-To</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#普通方法"><span class="nav-number">3.1.</span> <span class="nav-text">普通方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态方法"><span class="nav-number">3.2.</span> <span class="nav-text">静态方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码块"><span class="nav-number">3.3.</span> <span class="nav-text">代码块</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#普通方法代码块"><span class="nav-number">3.3.1.</span> <span class="nav-text">普通方法代码块</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#静态方法代码块"><span class="nav-number">3.3.2.</span> <span class="nav-text">静态方法代码块</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#继承性"><span class="nav-number">3.3.3.</span> <span class="nav-text">继承性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-Exactly"><span class="nav-number">4.</span> <span class="nav-text">How Exactly</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可重入性"><span class="nav-number">4.1.</span> <span class="nav-text">可重入性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#可重入锁"><span class="nav-number">4.1.1.</span> <span class="nav-text">可重入锁</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Monitor"><span class="nav-number">4.2.</span> <span class="nav-text">Monitor</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

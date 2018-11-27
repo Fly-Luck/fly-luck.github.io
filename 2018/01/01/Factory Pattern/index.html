@@ -1,0 +1,716 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Java,Design Pattern," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="工厂模式是一种较为常见的设计模式，主要用于对象的创建。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工厂模式All in One">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/01/01/Factory Pattern/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="工厂模式是一种较为常见的设计模式，主要用于对象的创建。">
+<meta property="og:updated_time" content="2018-11-17T17:40:21.860Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工厂模式All in One">
+<meta name="twitter:description" content="工厂模式是一种较为常见的设计模式，主要用于对象的创建。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 工厂模式All in One | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                工厂模式All in One
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-01T00:00:00+08:00" content="2018-01-01">
+              2018-01-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>工厂模式是一种较为常见的设计模式，主要用于对象的创建。</p>
+<a id="more"></a>
+<h3 id="What"><a href="#What" class="headerlink" title="What"></a>What</h3><p>当我们需要处理对象间的依赖时，如当某接口的实现类对象被依赖，通常需要在代码中利用new创建对象，而其实依赖方只想调用其对象的一些方法，而不关心该对象的创建过程。<br>而且当代码中有多处创建了此类对象，一旦构造方法发生了变化，则需要将多处构造方法同时修改，重复劳动。<br>工厂模式解决的主要就是上述两个问题：</p>
+<ol>
+<li>将调用方与资源解耦，调用方将资源的初始化统一交给工厂，将资源的创建与使用分离。</li>
+<li>避免重复进行复杂对象的初始化。<br>如下，我们以内存产品作为资源为例。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">RAM</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RAM8G</span> <span class="keyword">implements</span> <span class="title">RAM</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RAM8G</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"building 8G RAM"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM16G</span> <span class="keyword">implements</span> <span class="title">RAM</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RAM16G</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"building 16G RAM"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="简单-静态工厂"><a href="#简单-静态工厂" class="headerlink" title="简单/静态工厂"></a>简单/静态工厂</h3><p>静态工厂的思路是一个工厂搞定全部类似对象的请求，实现非常简单，直接将对象的创建交给工厂，由参数来区分调用方具体需要的对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StaticFactory</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> SIZE_8G = <span class="number">8</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> SIZE_16G = <span class="number">16</span>;	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">createRAM</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">switch</span>(size) &#123;</span><br><span class="line">		<span class="keyword">case</span> SIZE_8G: <span class="keyword">return</span> <span class="keyword">new</span> RAM8G();</span><br><span class="line">		<span class="keyword">case</span> SIZE_16G : <span class="keyword">return</span> <span class="keyword">new</span> RAM16G();</span><br><span class="line">		<span class="keyword">default</span>: <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticFactoryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		StaticFactory factory = <span class="keyword">new</span> StaticFactory();</span><br><span class="line">		RAM _8g = factory.createRAM(<span class="number">8</span>);</span><br><span class="line">		RAM _16g = factory.createRAM(<span class="number">16</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也可以用静态的方式去写工厂，连工厂的实例化都省了：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StaticFactory</span> </span>&#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> RAM <span class="title">createRAM</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">switch</span>(size) &#123;</span><br><span class="line">		<span class="keyword">case</span> SIZE_8G: <span class="keyword">return</span> <span class="keyword">new</span> RAM8G();</span><br><span class="line">		<span class="keyword">case</span> SIZE_16G : <span class="keyword">return</span> <span class="keyword">new</span> RAM16G();</span><br><span class="line">		<span class="keyword">default</span>: <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticFactoryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		RAM _8g = StaticFactory.createRAM(<span class="number">8</span>);</span><br><span class="line">		RAM _16g = StaticFactory.createRAM(<span class="number">16</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ol>
+<li>当需要扩展产品时，如加一个32G的内存，需修改工厂类的<code>createRAM</code>方法，不符合开闭原则中的“对修改关闭”原则。</li>
+<li>大量逻辑堆积在工厂类，难以支持创建需要额外参数的产品。</li>
+</ol>
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法模式为不同产品的相同方法创建不同的工厂，可以理解为对简单工厂的抽象，而且更加直观。</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>根据GoF的定义，工厂方法<strong>使用继承，由子类来完成实例的初始化</strong>。</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>针对简单工厂，其实可以适当做些改进，或许我们可以使用更直观的方式来替换<code>switch</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StaticFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> RAM <span class="title">create8GRAM</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> RAM8G();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> RAM <span class="title">create16GRAM</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> RAM16G();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticFactoryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		RAM _8g = StaticFactory.create8GRAM();</span><br><span class="line">		RAM _16g = StaticFactory.create16GRAM();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上述改进是基于方法名来区分不同产品，而工厂方法则用工厂类名来区分。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">RAMFactory</span> </span>&#123;</span><br><span class="line">	<span class="function">RAM <span class="title">createRAM</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM8GFactory</span> <span class="keyword">implements</span> <span class="title">RAMFactory</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">createRAM</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RAM8G();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM16GFactory</span> <span class="keyword">implements</span> <span class="title">RAMFactory</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">createRAM</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RAM16G();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryMethodTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		RAMFactory factory8G = <span class="keyword">new</span> RAM8GFactory();</span><br><span class="line">		RAMFactory factory16G = <span class="keyword">new</span> RAM16GFactory();</span><br><span class="line">		RAM _8g = factory8G.createRAM();</span><br><span class="line">		RAM _16g = factory16G.createRAM();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h4><p>当我们需扩展产品时，如新增一个32G的产品，需新增完整的工厂类实现，因此如果产品很多时会有很多的工厂类。</p>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>当一个大类型的产品下出现多维度的细分，如8G内存可以分为DDR3和DDR4，形成等级结构，此时有产品簇的概念。</p>
+<h4 id="产品簇"><a href="#产品簇" class="headerlink" title="产品簇"></a>产品簇</h4><p>不同等级结构中功能关联的产品，如8G内存及16G内存分为DDR3和DDR4，8G DDR3和16G DDR3就是一个产品簇的。<br>抽象工厂的思路是将不变的属性（分类）作为工厂。如果产品全属于单一等级结构，则退化为工厂方法模式。</p>
+<h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p>根据GoF的说法，在抽象工厂模式中，<strong>使用组合的方式去委派实例的创建任务</strong>。</p>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 产品，出现了新的维度</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM8GDDR3</span> <span class="keyword">extends</span> <span class="title">RAM8G</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RAM8GDDR3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"building 8G DDR3 RAM"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM8GDDR4</span> <span class="keyword">extends</span> <span class="title">RAM8G</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RAM8GDDR4</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"building 8G DDR4 RAM"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM16GDDR3</span> <span class="keyword">extends</span> <span class="title">RAM16G</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RAM16GDDR3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"building 16G DDR3 RAM"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAM16GDDR4</span> <span class="keyword">extends</span> <span class="title">RAM16G</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RAM16GDDR4</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"building 16G DDR4 RAM"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 工厂</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">RAMAbsFactory</span>() </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">create8G</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">create16G</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAMDDR3Factory</span> <span class="keyword">implements</span> <span class="title">RAMAbsFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">create8G</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RAM8GDDR3();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">create16G</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RAM16GDDR3();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RAMDDR4Factory</span> <span class="keyword">implements</span> <span class="title">RAMAbsFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">create8G</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RAM8GDDR4();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> RAM <span class="title">create16G</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RAM16GDDR4();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactoryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		RAMDDR3Factory ddr3Factory = <span class="keyword">new</span> RAMDDR3Factory();</span><br><span class="line">		RAMDDR4Factory ddr4Factory = <span class="keyword">new</span> RAMDDR4Factory();</span><br><span class="line">		RAM _8GDDR3 = ddr3Factory.create8G();</span><br><span class="line">		RAM _8GDDR4 = ddr4Factory.create8G();</span><br><span class="line">		RAM _16GDDR3 = ddr3Factory.create16G();</span><br><span class="line">		RAM _16GDDR4 = ddr4Factory.create16G();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><p>工厂方法模式和抽象工厂模式的调用方式显得比简单工厂更直观，体现在使用方法名或类名来区分不同的产品，而不是通过调用方传的参数。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单工厂</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FooFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Foo</span><span class="params">(<span class="keyword">int</span> withBars)</span> </span>&#123;</span><br><span class="line">		... <span class="comment">// 根据参数switch</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 工厂方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FooFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withoutBar</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withOneBar</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withTwoBars</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 抽象工厂</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NoBarFooFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withBaz</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withoutBaz</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OneBarFooFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withBaz</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withoutBaz</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TwoBarsFooFactory</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withBaz</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Foo <span class="title">withoutBaz</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 调用简单工厂</span></span><br><span class="line">ff.foo(<span class="number">0</span>);</span><br><span class="line">ff.foo(<span class="number">1</span>);</span><br><span class="line">ff.foo(<span class="number">2</span>);</span><br><span class="line"><span class="comment">// 调用工厂方法</span></span><br><span class="line">ff.withoutBar();</span><br><span class="line">ff.withOneBar();</span><br><span class="line">ff.withTwoBars();</span><br><span class="line"><span class="comment">// 调用抽象工厂</span></span><br><span class="line">noBarFF.withBaz();</span><br><span class="line">noBarFF.withoutBaz();</span><br><span class="line">oneBarFF.withBaz();</span><br><span class="line">oneBarFF.withoutBaz();</span><br><span class="line">twoBarsFF.withBaz();</span><br><span class="line">twoBarsFF.withoutBaz();</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/Design-Pattern/" rel="tag">#Design Pattern</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/30/Spring Basics/" rel="next" title="半小时入门Spring">
+                <i class="fa fa-chevron-left"></i> 半小时入门Spring
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/20/TCP Basics/" rel="prev" title="半小时了解TCP">
+                半小时了解TCP <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#What"><span class="nav-number">1.</span> <span class="nav-text">What</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单-静态工厂"><span class="nav-number">2.</span> <span class="nav-text">简单/静态工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题"><span class="nav-number">2.1.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂方法"><span class="nav-number">3.</span> <span class="nav-text">工厂方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">3.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现"><span class="nav-number">3.2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题-1"><span class="nav-number">3.3.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象工厂"><span class="nav-number">4.</span> <span class="nav-text">抽象工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#产品簇"><span class="nav-number">4.1.</span> <span class="nav-text">产品簇</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义-1"><span class="nav-number">4.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现-1"><span class="nav-number">4.3.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比较"><span class="nav-number">5.</span> <span class="nav-text">比较</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

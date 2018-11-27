@@ -1,0 +1,724 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Java,Design Pattern," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="单例模式或许是最简单的设计模式之一，也很常见，但其实现还有许多需要注意的地方。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单例模式All in One">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/05/16/Singleton Pattern/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="单例模式或许是最简单的设计模式之一，也很常见，但其实现还有许多需要注意的地方。">
+<meta property="og:updated_time" content="2018-11-17T17:40:22.082Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单例模式All in One">
+<meta name="twitter:description" content="单例模式或许是最简单的设计模式之一，也很常见，但其实现还有许多需要注意的地方。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 单例模式All in One | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                单例模式All in One
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-16T00:00:00+08:00" content="2018-05-16">
+              2018-05-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>单例模式或许是最简单的设计模式之一，也很常见，但其实现还有许多需要注意的地方。</p>
+<a id="more"></a>
+<h3 id="What"><a href="#What" class="headerlink" title="What"></a>What</h3><p>顾名思义，单例模式在整个JVM的运行期间为单例的类只创建一个实例。<br>因此不难想象有两点需要保证：</p>
+<ol>
+<li>单例的创建不能任由代码随意执行，因此单例类的构造方法应该是private的。</li>
+<li>单例的创建应该只有一次，时机应该在第一次调用该单例对象的方法前。</li>
+</ol>
+<h3 id="创建方式"><a href="#创建方式" class="headerlink" title="创建方式"></a>创建方式</h3><p>从实例创建的时机来划分，单例模式有两种创建方式。</p>
+<h4 id="饿汉"><a href="#饿汉" class="headerlink" title="饿汉"></a>饿汉</h4><p>所谓饿汉式指的是在类加载阶段就将单例类的实例创建出来，不管以后有没有用到，优点是在以后的JVM运行期不会再有创建实例的动作，因此基本可以保证单例的唯一性；缺点是当没有用到时会造成浪费。<br>实现饿汉式的单例很简单，只需持有静态的自身单例类对象，限制构造方法，并提供静态的实例获取方法即可，同时最好用final修饰该单例对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> INSTANCE;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="懒汉"><a href="#懒汉" class="headerlink" title="懒汉"></a>懒汉</h4><p>与饿汉相对，懒汉模式只有当调用该单例的方法时，才涉及到该实例的创建，即延迟加载。优点是由于按需创建实例，不会造成浪费；缺点是难以控制单例唯一性，因为需保证只有第一次获取实例时才创建实例，在多线程环境下需特殊处理。<br>针对懒汉式单例的唯一性控制，通常有如下几种方式。</p>
+<h5 id="方法锁"><a href="#方法锁" class="headerlink" title="方法锁"></a>方法锁</h5><p>我们可以用synchronized关键字修饰获取单例实例的静态方法，这样所有获取单例对象的线程都处于竞争态，每次只有一个线程进入该方法，其他线程将等待锁的释放，因此只有第一个拿到该锁的方法会创建实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton INSTANCE;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == INSTANCE) &#123;</span><br><span class="line">			INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> INSTANCE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是用synchronized修饰方法的粒度实在是太大了，可能会造成效率低下。</p>
+<h5 id="判断锁"><a href="#判断锁" class="headerlink" title="判断锁"></a>判断锁</h5><p>那么如果把锁的粒度下降，把锁下移到方法内的块中会不会好点？下面这种实现看起来很自然：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton INSTANCE;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == INSTANCE) &#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(Singleton.class) &#123;</span><br><span class="line">				INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> INSTANCE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>初看似乎没毛病，但仔细推敲就能发现问题：</p>
+<ol>
+<li>T1进入判断，获取锁，创建一个实例并将INSTANCE引用指向该对象。</li>
+<li>T2同时进入判断，等待T1释放锁后获取锁，也创建一个实例，将INSTANCE指向新对象。</li>
+<li>T3稍后进行判断，发现INSTANCE不为空，直接返回T2创建的实例。<br>由此可见，只有一次判断内的锁并不能保证单例，因此我们需要对其进行一些小修改：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton INSTANCE;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == INSTANCE) &#123;</span><br><span class="line">			<span class="keyword">synchronized</span> (Singleton.cl-ass) &#123;</span><br><span class="line">				<span class="keyword">if</span>(<span class="keyword">null</span> == INSTANCE) &#123;</span><br><span class="line">					INSTANCE = <span class="keyword">new</span> Singleton();		</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> INSTANCE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话，上述情况就没问题了：</p>
+<ol>
+<li>T1进入判断，获取锁，创建一个实例并将INSTANCE引用指向该对象。</li>
+<li>T2同时进入判断，等待T1释放锁后获取锁，这时进行第二次判断，直接返回不为空的INSTANCE。</li>
+<li>T3稍后进行判断，发现INSTANCE不为空，直接返回T1创建的实例。</li>
+</ol>
+<p>至于为什么要使用volatile关键字，可以参考<a href="http://fly-luck.github.io/2018/05/01/线程同步之volatile/#more" target="_blank" rel="external">线程同步之volatile</a>，注意volatile只有在Java 5+才算完善。</p>
+<h5 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h5><p>当一个类中包含静态内部类时，由于两个类没有继承关系，因此在加载外部类时，并不会加载内部类，只有当调用其方法时才会加载，而JVM的类加载能保证线程安全，因此可以用静态内部类实现懒汉式单例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">	 <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	 <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		 <span class="keyword">return</span> SingletonHolder.INSTANCE;</span><br><span class="line">	 &#125;</span><br><span class="line">	 <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;</span><br><span class="line">		 <span class="function"><span class="keyword">private</span> <span class="title">SingletonHolder</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">		 <span class="keyword">private</span> <span class="keyword">static</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">	 &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="反射大魔王"><a href="#反射大魔王" class="headerlink" title="反射大魔王"></a>反射大魔王</h3><p>然而，不管是饿汉也好，懒汉也罢，都将体验被反射大魔王支配的恐惧，让我们看看反射如何一招秒全场。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		Singleton s1 = Singleton.getInstance();</span><br><span class="line">        	Constructor&lt;Singleton&gt; constructor = Singleton.class.getDeclaredConstructor();</span><br><span class="line">        	constructor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        	Singleton s2 = constructor.newInstance();	 </span><br><span class="line">		System.out.println(s1 == s2);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以观察到，s1和s2指向不同的对象。<br>只需要通过反射将构造方法的访问权限放开，锁、静态内部类之流全部失效。</p>
+<h3 id="枚举守护神"><a href="#枚举守护神" class="headerlink" title="枚举守护神"></a>枚举守护神</h3><p>当然，反射也不是万能的，可以采取一些措施来防范，如给实例化添加次数记录，超过1次则抛出异常。但这些方法都需要添加代码逻辑去处理，如果用枚举来实现单例，可以利用JVM的机制去抵御破坏。<br>枚举    <code>Enum</code>其实是一个抽象类，当程序代码中声明一个枚举其实继承了<code>Enum</code>。<br>如下是利用枚举实现单例模式。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方式是饿汉式的，在类加载阶段就会创建单例；同时由于在类加载阶段就创建了对象，又能保证线程安全。<br>使用之前的反射手段尝试改变构造方法权限，调用<code>constructor</code>的<code>newInstance</code>方法时，首先没有无参构造方法，只有带两个参数的构造方法<code>(String.class, int.class)</code>（即name和ordinal属性，分别对应枚举名字及在枚举中的位置）；其次调用时，如发现是枚举类则抛出<code>IllegalArgumentException</code>异常，这是由Java的语言规则限制的。至此，枚举单例成功抵御了反射直接调用构造方法的进攻。</p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/Design-Pattern/" rel="tag">#Design Pattern</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/12/Java Synchronized/" rel="next" title="线程同步之synchronized">
+                <i class="fa fa-chevron-left"></i> 线程同步之synchronized
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/20/Java ThreadLocal/" rel="prev" title="线程安全之ThreadLocal">
+                线程安全之ThreadLocal <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#What"><span class="nav-number">1.</span> <span class="nav-text">What</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建方式"><span class="nav-number">2.</span> <span class="nav-text">创建方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#饿汉"><span class="nav-number">2.1.</span> <span class="nav-text">饿汉</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#懒汉"><span class="nav-number">2.2.</span> <span class="nav-text">懒汉</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法锁"><span class="nav-number">2.2.1.</span> <span class="nav-text">方法锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#判断锁"><span class="nav-number">2.2.2.</span> <span class="nav-text">判断锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#静态内部类"><span class="nav-number">2.2.3.</span> <span class="nav-text">静态内部类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反射大魔王"><span class="nav-number">3.</span> <span class="nav-text">反射大魔王</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#枚举守护神"><span class="nav-number">4.</span> <span class="nav-text">枚举守护神</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
