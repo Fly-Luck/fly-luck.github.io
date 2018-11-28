@@ -55,16 +55,16 @@
 
 
 
-<meta name="description" content="如何5分钟快速搭建一个Kubernetes集群。">
+<meta name="description" content="简单区分Kubernetes中的不同port。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="5分钟搭建Kubernetes集群">
-<meta property="og:url" content="http://luck.luckyluck.info/2018/11/15/Kubernetes Install/index.html">
+<meta property="og:title" content="Kubernetes中的Port">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/04/15/Kubernetes Ports/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
-<meta property="og:description" content="如何5分钟快速搭建一个Kubernetes集群。">
-<meta property="og:updated_time" content="2018-11-27T16:00:10.106Z">
+<meta property="og:description" content="简单区分Kubernetes中的不同port。">
+<meta property="og:updated_time" content="2018-11-28T14:03:30.907Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="5分钟搭建Kubernetes集群">
-<meta name="twitter:description" content="如何5分钟快速搭建一个Kubernetes集群。">
+<meta name="twitter:title" content="Kubernetes中的Port">
+<meta name="twitter:description" content="简单区分Kubernetes中的不同port。">
 
 
 
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title> 5分钟搭建Kubernetes集群 | Luck's Cabin </title>
+  <title> Kubernetes中的Port | Luck's Cabin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +202,7 @@
             
             
               
-                5分钟搭建Kubernetes集群
+                Kubernetes中的Port
               
             
           </h1>
@@ -214,8 +214,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-11-15T00:00:00+08:00" content="2018-11-15">
-              2018-11-15
+            <time itemprop="dateCreated" datetime="2018-04-15T00:00:00+08:00" content="2018-04-15">
+              2018-04-15
             </time>
           </span>
 
@@ -259,85 +259,14 @@
       
 
       
-        <p>如何5分钟快速搭建一个Kubernetes集群。</p>
+        <p>简单区分Kubernetes中的不同port。</p>
 <a id="more"></a>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Key</th>
-<th style="text-align:center">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">OS</td>
-<td style="text-align:center">CentOS 7</td>
-</tr>
-<tr>
-<td style="text-align:center">Docker</td>
-<td style="text-align:center">建议 &gt;= 13.1</td>
-</tr>
-<tr>
-<td style="text-align:center">Kubernetes</td>
-<td style="text-align:center">1.10.1</td>
-</tr>
-<tr>
-<td style="text-align:center">Kubernetes Master</td>
-<td style="text-align:center">无HA, 单机集群</td>
-</tr>
-<tr>
-<td style="text-align:center">Kubernetes etcd</td>
-<td style="text-align:center">etcd容器, 无HA</td>
-</tr>
-<tr>
-<td style="text-align:center">网络</td>
-<td style="text-align:center">flannel</td>
-</tr>
-</tbody>
-</table>
-<h4 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h4><p>安装并启动docker，这里不做赘述。</p>
-<h4 id="Kubernetes组件"><a href="#Kubernetes组件" class="headerlink" title="Kubernetes组件"></a>Kubernetes组件</h4><p>安装kubeadm, kubelet, kubectl。</p>
-<h5 id="yum源安装"><a href="#yum源安装" class="headerlink" title="yum源安装"></a>yum源安装</h5><p>我们可以直接使用Kubernetes Google官方的yum源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://packages.cloud.google.com/yum.repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/dock/rpm-package-key.gpg</span><br></pre></td></tr></table></figure></p>
-<p>但由于一些众所周知的原因，我们需要配置代理才能使用上述yum源。在直连的情况下我们可以使用aliyun的源，但有时更新不够及时：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg</span><br><span class="line">        http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br></pre></td></tr></table></figure></p>
-<p>使用<code>vim /etc/yum.repos.d/kubernets.repo</code>配置好上述一个yum源后，使用<code>yum install -y kubeadm kubectl kubelet</code>安装，但不能保证版本为v1.10.1。</p>
-<h5 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h5><p>也可以通过下载rpm包的方式进行离线安装：<br><a href="https://cherryleo-1253732882.cos.ap-chengdu.myqcloud.com/kubelet-1.10.1-0.x86_64.rpm" target="_blank" rel="external">kubelet</a><br><a href="https://cherryleo-1253732882.cos.ap-chengdu.myqcloud.com/kubectl-1.10.1-0.x86_64.rpm" target="_blank" rel="external">kubectl</a><br><a href="https://cherryleo-1253732882.cos.ap-chengdu.myqcloud.com/kubeadm-1.10.1-0.x86_64.rpm" target="_blank" rel="external">kubeadm</a><br>下载完成后使用<code>yum localinstall *.rpm</code>安装。</p>
-<h4 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h4><p>还有一些额外操作需要完成：</p>
-<ol>
-<li><p>关闭swap。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br><span class="line"># 注释掉有swap的一行</span><br><span class="line">vim /etc/fstab</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>关闭防火墙。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld;systemctl disable firewalld;setenforce 0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>关闭SELINUX。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/selinux/config设置SELINUX=disabled</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启用bridge-nf模式。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl net.bridge.bridge-nf-call-iptables=1</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置docker的cgroup驱动为cgroupfs。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/lib/systemd/system/docker.service</span><br><span class="line">ExecStart=/usr/bin/dockerd-current ...</span><br><span class="line">          --exec-opt native.cgroupdriver=cgroupfs</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改kubelet的cgroup驱动，与docker保持一致为cgroupfs。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/systemd/system/kubelet.service.d/10-kubeadm.conf</span><br><span class="line">Environment=&quot;KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>导入镜像。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">k8s.gcr.io/etcd-amd64:3.1.12 </span><br><span class="line">k8s.gcr.io/kube-apiserver-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/kube-controller-manager-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/kube-proxy-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/kube-scheduler-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/pause-amd64:3.1 </span><br><span class="line">k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8 </span><br><span class="line">k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8 </span><br><span class="line">k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8 </span><br><span class="line">k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3 </span><br><span class="line">quay.io/coreos/flannel:v0.10.0-amd64</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a>启动集群</h4><ol>
-<li><p>使用kubeadm启动集群，设置版本及pod子网网段。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --kubernetes-version=v1.10.1 --pod-network-cidr=10.244.0.0/16</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>拷贝config文件，使本机能通过kubectl操作集群。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line">echo &quot;export KUBECONFIG=/etc/kubernetes/admin.conf&quot; &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建flannel相关资源来接管容器网络。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml</span><br><span class="line">kubectl apply -f kube-flannel.yml</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>（可选）将Master节点的污点去除，使pod能调度到Master节点，但要避免与api server的端口冲突。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 查看到Master的hostname</span><br><span class="line">kubectl get no</span><br><span class="line">kubectl taint no &lt;hostname&gt; node-role.kubernetes.io/master:NoSchedule-</span><br></pre></td></tr></table></figure></li>
-</ol>
+<h4 id="containerPort-vs-hostPort"><a href="#containerPort-vs-hostPort" class="headerlink" title="containerPort vs. hostPort"></a>containerPort vs. hostPort</h4><p>出现在如Deployment、Pod等资源对象描述文件中的容器部分，针对容器端口起类似于<code>docker run -p &lt;containerPort&gt;:&lt;hostPort&gt;</code>的作用：<br><code>containerPort</code>：容器暴露的端口。<br><code>hostPort</code>：容器暴露的端口直接映射到的主机端口。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> extensions/v1beta1</span><br><span class="line"><span class="attr">kind:</span> Deployment</span><br><span class="line">...</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  ...</span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> tomcat</span><br><span class="line"><span class="attr">        image:</span> tomcat:<span class="number">8</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">          hostPort:</span> <span class="number">80</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>此时，用户可以直接访问宿主机的80端口访问容器。</p>
+<h4 id="port-vs-targetPort-vs-nodePort"><a href="#port-vs-targetPort-vs-nodePort" class="headerlink" title="port vs. targetPort vs. nodePort"></a>port vs. targetPort vs. nodePort</h4><p>出现在Service描述文件中，当Service的类型为<code>ClusterIP</code>时：<br><code>port</code>：Service中ClusterIP对应的端口。<br><code>targetport</code>：clusterIP作为负载均衡， 后端目标实例（容器）的端口，与上述<code>containerPort</code>保持一致。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">kind:</span> Service</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  ...</span><br><span class="line"><span class="attr">  name:</span> tomcatapp</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  ...</span><br><span class="line"><span class="attr">  type:</span> ClusterIP</span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - name:</span> app</span><br><span class="line"><span class="attr">    protocol:</span> TCP</span><br><span class="line"><span class="attr">    port:</span> <span class="number">10080</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure></p>
+<p>此时，同一集群的容器可以通过<code>http://tomcatapp:10080</code>访问该Service。</p>
+<p>当Service的类型为<code>NodePort</code>时：<br><code>nodePort</code>：由于ClusterIP只能集群内访问，配置nodePort会在每个运行<code>kubelet</code>节点的宿主机打开一个端口，用于集群外部访问。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">kind:</span> Service</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  ...</span><br><span class="line"><span class="attr">  name:</span> tomcatapp</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  ...</span><br><span class="line"><span class="attr">  type:</span> NodePort</span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - name:</span> app</span><br><span class="line"><span class="attr">    protocol:</span> TCP</span><br><span class="line"><span class="attr">    port:</span> <span class="number">10080</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">    nodePort:</span> <span class="number">30080</span></span><br></pre></td></tr></table></figure></p>
+<p>此时，集群外的用户可以通过<code>http://&lt;宿主机IP&gt;:30080</code>访问；同时，ClusterIP仍然生效，同一集群的容器仍可通过<code>http://tomcatapp:10080</code>访问该Service。<br>当然，上述正常访问的前提条件是：相关节点的<code>kube-proxy</code>正常运行且跨主机容器网络通信正常。</p>
 
       
     </div>
@@ -357,16 +286,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/Proxy Pattern/" rel="next" title="代理模式All in One">
-                <i class="fa fa-chevron-left"></i> 代理模式All in One
+              <a href="/2018/02/20/TCP Basics/" rel="next" title="半小时了解TCP">
+                <i class="fa fa-chevron-left"></i> 半小时了解TCP
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/20/rook/" rel="prev" title="rook使用手册">
-                rook使用手册 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/20/Microservice Basics/" rel="prev" title="微服务二三事">
+                微服务二三事 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -500,7 +429,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker"><span class="nav-number">1.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kubernetes组件"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes组件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#yum源安装"><span class="nav-number">2.1.</span> <span class="nav-text">yum源安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RPM安装"><span class="nav-number">2.2.</span> <span class="nav-text">RPM安装</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他操作"><span class="nav-number">3.</span> <span class="nav-text">其他操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动集群"><span class="nav-number">4.</span> <span class="nav-text">启动集群</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#containerPort-vs-hostPort"><span class="nav-number">1.</span> <span class="nav-text">containerPort vs. hostPort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#port-vs-targetPort-vs-nodePort"><span class="nav-number">2.</span> <span class="nav-text">port vs. targetPort vs. nodePort</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
