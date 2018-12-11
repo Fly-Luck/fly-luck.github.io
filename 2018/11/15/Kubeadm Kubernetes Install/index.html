@@ -39,7 +39,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="tech,Kubernetes," />
+  <meta name="keywords" content="tech,Kubernetes,kubeadm," />
 
 
 
@@ -55,16 +55,16 @@
 
 
 
-<meta name="description" content="简要认识及区分PV、PVC及StorageClass。">
+<meta name="description" content="如何5分钟快速搭建一个Kubernetes集群。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PV、PVC及StorageClass">
-<meta property="og:url" content="http://luck.luckyluck.info/2018/04/18/PV PVC SC/index.html">
+<meta property="og:title" content="5分钟使用kubeadm搭建Kubernetes集群">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/11/15/Kubeadm Kubernetes Install/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
-<meta property="og:description" content="简要认识及区分PV、PVC及StorageClass。">
-<meta property="og:updated_time" content="2018-11-28T15:18:58.106Z">
+<meta property="og:description" content="如何5分钟快速搭建一个Kubernetes集群。">
+<meta property="og:updated_time" content="2018-12-11T15:39:30.530Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PV、PVC及StorageClass">
-<meta name="twitter:description" content="简要认识及区分PV、PVC及StorageClass。">
+<meta name="twitter:title" content="5分钟使用kubeadm搭建Kubernetes集群">
+<meta name="twitter:description" content="如何5分钟快速搭建一个Kubernetes集群。">
 
 
 
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title> PV、PVC及StorageClass | Luck's Cabin </title>
+  <title> 5分钟使用kubeadm搭建Kubernetes集群 | Luck's Cabin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +202,7 @@
             
             
               
-                PV、PVC及StorageClass
+                5分钟使用kubeadm搭建Kubernetes集群
               
             
           </h1>
@@ -214,8 +214,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-18T00:00:00+08:00" content="2018-04-18">
-              2018-04-18
+            <time itemprop="dateCreated" datetime="2018-11-15T00:00:00+08:00" content="2018-11-15">
+              2018-11-15
             </time>
           </span>
 
@@ -259,26 +259,85 @@
       
 
       
-        <p>简要认识及区分PV、PVC及StorageClass。</p>
+        <p>如何5分钟快速搭建一个Kubernetes集群。</p>
 <a id="more"></a>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><h4 id="PV"><a href="#PV" class="headerlink" title="PV"></a>PV</h4><p>PV是集群内网络存储的volume插件，但是生命周期Pod相互独立。PV封装了存储系统的实现细节。</p>
-<h4 id="PVC"><a href="#PVC" class="headerlink" title="PVC"></a>PVC</h4><p>PVC是用户的存储请求，和Pod类似，Pod消耗Node资源，而PVC消耗PV资源。PVC请求指定大小和访问模式。</p>
-<h4 id="StorageClass"><a href="#StorageClass" class="headerlink" title="StorageClass"></a>StorageClass</h4><p>StorageClass描述存储的等级，将不同的等级映射到不同的服务等级、不同的后端策略。</p>
-<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>PV和PVC的相互作用生命周期大致遵循Provisioning-&gt;Binding-&gt;Using-&gt;Releasing-&gt;Recycling。</p>
-<h4 id="Provisioning"><a href="#Provisioning" class="headerlink" title="Provisioning"></a>Provisioning</h4><p>PV有两种提供方式：静态和动态。</p>
-<h5 id="静态PV"><a href="#静态PV" class="headerlink" title="静态PV"></a>静态PV</h5><p>静态PV带有真实存储的详细信息。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">kind:</span> PersistentVolume</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">    name:</span> pv01</span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">"mypvtest"</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">    capacity:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">100</span>Gi</span><br><span class="line"><span class="attr">    accessModes:</span></span><br><span class="line"><span class="bullet">      -</span> ReadWriteOnce</span><br><span class="line"><span class="attr">    persistentVolumeReclaimPolicy:</span> Recycle</span><br><span class="line"><span class="attr">    nfs:</span></span><br><span class="line"><span class="attr">        server:</span> mynfs.example.com</span><br><span class="line"><span class="attr">        path:</span> <span class="string">"/data"</span></span><br></pre></td></tr></table></figure></p>
-<h5 id="动态"><a href="#动态" class="headerlink" title="动态"></a>动态</h5><p>当用户定义的PVC匹配不到任何静态PV时，集群会尝试基于StorageClass专门地提供volume给PVC：PVC请求一个已配置过的StorageClass，设置存储插件等参数，用于提供不同的存储卷。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> StorageClass</span><br><span class="line"><span class="attr">apiVersion:</span> storage.k8s.io/v1beta1</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> slow</span><br><span class="line"><span class="attr">provisioner:</span> kubernetes.io/gce-pd</span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line"><span class="attr">  type:</span> pd-standard</span><br><span class="line"></span><br><span class="line"><span class="attr">kind:</span> StorageClass</span><br><span class="line"><span class="attr">apiVersion:</span> storage.k8s.io/v1beta1</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> fast</span><br><span class="line"><span class="attr">provisioner:</span> kubernetes.io/gce-pd</span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line"><span class="attr">  type:</span> pd-ssd</span><br></pre></td></tr></table></figure></p>
-<h4 id="Binding"><a href="#Binding" class="headerlink" title="Binding"></a>Binding</h4><ol>
-<li>每当Master监听到新的PVC， 查找匹配的PV，并将PVC和PV绑定。</li>
-<li>如果一个PV曾动态绑定给了一个PVC，那么会一直绑定这对PV和PVC。</li>
-<li>如果没有为PVC找到匹配的PV，且PVC没有指定StorageClass，那么PVC会无限期处于<code>unbound</code>状态，一旦有PV可用了，PVC就又变为<code>bound</code>状态。</li>
-<li>当PVC指定了StorageClass，在创建PVC时，集群会自动根据StorageClass的定义创建一个PV，并绑定到PVC，从而不再需要提前手动创建PV。</li>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Key</th>
+<th style="text-align:center">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">OS</td>
+<td style="text-align:center">CentOS 7</td>
+</tr>
+<tr>
+<td style="text-align:center">Docker</td>
+<td style="text-align:center">建议 &gt;= 13.1</td>
+</tr>
+<tr>
+<td style="text-align:center">Kubernetes</td>
+<td style="text-align:center">1.10.1</td>
+</tr>
+<tr>
+<td style="text-align:center">Kubernetes Master</td>
+<td style="text-align:center">无HA, 单机集群</td>
+</tr>
+<tr>
+<td style="text-align:center">Kubernetes etcd</td>
+<td style="text-align:center">etcd容器, 无HA</td>
+</tr>
+<tr>
+<td style="text-align:center">网络</td>
+<td style="text-align:center">flannel</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h4><p>安装并启动docker，这里不做赘述。</p>
+<h4 id="Kubernetes组件"><a href="#Kubernetes组件" class="headerlink" title="Kubernetes组件"></a>Kubernetes组件</h4><p>安装kubeadm, kubelet, kubectl。</p>
+<h5 id="yum源安装"><a href="#yum源安装" class="headerlink" title="yum源安装"></a>yum源安装</h5><p>我们可以直接使用Kubernetes Google官方的yum源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://packages.cloud.google.com/yum.repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/dock/rpm-package-key.gpg</span><br></pre></td></tr></table></figure></p>
+<p>但由于一些众所周知的原因，我们需要配置代理才能使用上述yum源。在直连的情况下我们可以使用aliyun的源，但有时更新不够及时：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg</span><br><span class="line">        http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>vim /etc/yum.repos.d/kubernets.repo</code>配置好上述一个yum源后，使用<code>yum install -y kubeadm kubectl kubelet</code>安装，但不能保证版本为v1.10.1。</p>
+<h5 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h5><p>也可以通过下载rpm包的方式进行离线安装：<br><a href="https://cherryleo-1253732882.cos.ap-chengdu.myqcloud.com/kubelet-1.10.1-0.x86_64.rpm" target="_blank" rel="external">kubelet</a><br><a href="https://cherryleo-1253732882.cos.ap-chengdu.myqcloud.com/kubectl-1.10.1-0.x86_64.rpm" target="_blank" rel="external">kubectl</a><br><a href="https://cherryleo-1253732882.cos.ap-chengdu.myqcloud.com/kubeadm-1.10.1-0.x86_64.rpm" target="_blank" rel="external">kubeadm</a><br>下载完成后使用<code>yum localinstall *.rpm</code>安装。</p>
+<h4 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h4><p>还有一些额外操作需要完成：</p>
+<ol>
+<li><p>关闭swap。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br><span class="line"># 注释掉有swap的一行</span><br><span class="line">vim /etc/fstab</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭防火墙。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld;systemctl disable firewalld;setenforce 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭SELINUX。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/selinux/config设置SELINUX=disabled</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用bridge-nf模式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl net.bridge.bridge-nf-call-iptables=1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置docker的cgroup驱动为cgroupfs。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/lib/systemd/system/docker.service</span><br><span class="line">ExecStart=/usr/bin/dockerd-current ...</span><br><span class="line">          --exec-opt native.cgroupdriver=cgroupfs</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改kubelet的cgroup驱动，与docker保持一致为cgroupfs。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/systemd/system/kubelet.service.d/10-kubeadm.conf</span><br><span class="line">Environment=&quot;KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入镜像。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">k8s.gcr.io/etcd-amd64:3.1.12 </span><br><span class="line">k8s.gcr.io/kube-apiserver-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/kube-controller-manager-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/kube-proxy-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/kube-scheduler-amd64:v1.10.1 </span><br><span class="line">k8s.gcr.io/pause-amd64:3.1 </span><br><span class="line">k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8 </span><br><span class="line">k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8 </span><br><span class="line">k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8 </span><br><span class="line">k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3 </span><br><span class="line">quay.io/coreos/flannel:v0.10.0-amd64</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<p>如下通过指定volumeName及selector来选定上述名为<code>pv01</code>的PV。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> pvc01</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> ReadWriteOnce</span><br><span class="line"><span class="attr">  volumeName:</span> pv01</span><br><span class="line"><span class="attr">  resources:</span> </span><br><span class="line"><span class="attr">    requests:</span> </span><br><span class="line"><span class="attr">      storage:</span> <span class="number">100</span>Gi</span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">"mypvtest"</span></span><br></pre></td></tr></table></figure></p>
-<p>如下通过StorageClass动态创建PV并绑定。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> PersistentVolumeClaim</span><br><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> pvc02</span><br><span class="line"><span class="attr">  namespace:</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> ReadWriteOnce</span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">100</span>Gi</span><br><span class="line"><span class="attr">  storageClassName:</span> fast</span><br></pre></td></tr></table></figure></p>
-<h4 id="Using"><a href="#Using" class="headerlink" title="Using"></a>Using</h4><p>Pod使用PVC就像使用volume一样。集群检查PVC，查找绑定的PV，并映射PV给Pod。对于支持多种访问模式的PV，用户可以指定想用的模式。<br>一旦用户拥有了一个PVC，并且PVC处于<code>bound</code>状态，那么只要用户还需要，PV就一直属于该用户。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> Pod</span><br><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> pod01</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="attr">    - name:</span> storage01</span><br><span class="line"><span class="attr">      persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">        claimName:</span> pvc01</span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">    - name:</span> container01</span><br><span class="line"><span class="attr">      image:</span> tomcat:<span class="number">8</span></span><br><span class="line"><span class="attr">      ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">"app"</span></span><br><span class="line"><span class="attr">      volumeMounts:</span></span><br><span class="line"><span class="attr">        - mountPath:</span> <span class="string">"/var/lib/tomcat"</span></span><br><span class="line"><span class="attr">          name:</span> storage01</span><br></pre></td></tr></table></figure></p>
-<h4 id="Releasing"><a href="#Releasing" class="headerlink" title="Releasing"></a>Releasing</h4><p>当用户使用PV完毕，PVC被删除后，对应的PV进入<code>released</code>状态，但还不能立即被另一个PVC使用。前一个PVC的数据还存在于该PV中，必须根据策略来处理掉。</p>
-<h4 id="Recycling"><a href="#Recycling" class="headerlink" title="Recycling"></a>Recycling</h4><p>PV的回收策略定义了PV被释放之后集群如何处理该PV，PV可以被Retained（保留）、 Recycled（再利用）或Deleted（删除）。</p>
+<h4 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a>启动集群</h4><ol>
+<li><p>使用kubeadm启动集群，设置版本及pod子网网段。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --kubernetes-version=v1.10.1 --pod-network-cidr=10.244.0.0/16</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拷贝config文件，使本机能通过kubectl操作集群。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line">echo &quot;export KUBECONFIG=/etc/kubernetes/admin.conf&quot; &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建flannel相关资源来接管容器网络。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml</span><br><span class="line">kubectl apply -f kube-flannel.yml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>（可选）将Master节点的污点去除，使pod能调度到Master节点，但要避免与api server的端口冲突。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 查看到Master的hostname</span><br><span class="line">kubectl get no</span><br><span class="line">kubectl taint no &lt;hostname&gt; node-role.kubernetes.io/master:NoSchedule-</span><br></pre></td></tr></table></figure></li>
+</ol>
 
       
     </div>
@@ -291,6 +350,8 @@
           
             <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
           
+            <a href="/tags/kubeadm/" rel="tag">#kubeadm</a>
+          
         </div>
       
 
@@ -298,16 +359,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/15/Kubernetes Ports/" rel="next" title="Kubernetes中的Port">
-                <i class="fa fa-chevron-left"></i> Kubernetes中的Port
+              <a href="/2018/06/24/Proxy Pattern/" rel="next" title="代理模式All in One">
+                <i class="fa fa-chevron-left"></i> 代理模式All in One
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/20/Microservice Basics/" rel="prev" title="微服务二三事">
-                微服务二三事 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/20/rook/" rel="prev" title="rook使用手册">
+                rook使用手册 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -441,7 +502,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PV"><span class="nav-number">1.1.</span> <span class="nav-text">PV</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PVC"><span class="nav-number">1.2.</span> <span class="nav-text">PVC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#StorageClass"><span class="nav-number">1.3.</span> <span class="nav-text">StorageClass</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期"><span class="nav-number">2.</span> <span class="nav-text">生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Provisioning"><span class="nav-number">2.1.</span> <span class="nav-text">Provisioning</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#静态PV"><span class="nav-number">2.1.1.</span> <span class="nav-text">静态PV</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#动态"><span class="nav-number">2.1.2.</span> <span class="nav-text">动态</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Binding"><span class="nav-number">2.2.</span> <span class="nav-text">Binding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Using"><span class="nav-number">2.3.</span> <span class="nav-text">Using</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Releasing"><span class="nav-number">2.4.</span> <span class="nav-text">Releasing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Recycling"><span class="nav-number">2.5.</span> <span class="nav-text">Recycling</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker"><span class="nav-number">1.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kubernetes组件"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes组件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#yum源安装"><span class="nav-number">2.1.</span> <span class="nav-text">yum源安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RPM安装"><span class="nav-number">2.2.</span> <span class="nav-text">RPM安装</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他操作"><span class="nav-number">3.</span> <span class="nav-text">其他操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动集群"><span class="nav-number">4.</span> <span class="nav-text">启动集群</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
