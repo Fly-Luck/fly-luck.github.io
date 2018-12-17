@@ -1,0 +1,792 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Kubernetes,kubeadm,etcd," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="如何10分钟快速搭建一个高可用的Kubernetes集群。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10分钟使用kubeadm搭建高可用Kubernetes集群">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/12/15/Kubeadm HA Kubernetes Install/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="如何10分钟快速搭建一个高可用的Kubernetes集群。">
+<meta property="og:updated_time" content="2018-12-17T17:29:10.388Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10分钟使用kubeadm搭建高可用Kubernetes集群">
+<meta name="twitter:description" content="如何10分钟快速搭建一个高可用的Kubernetes集群。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 10分钟使用kubeadm搭建高可用Kubernetes集群 | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                10分钟使用kubeadm搭建高可用Kubernetes集群
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-12-15T00:00:00+08:00" content="2018-12-15">
+              2018-12-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如何10分钟快速搭建一个高可用的Kubernetes集群。</p>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Key</th>
+<th style="text-align:center">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">OS</td>
+<td style="text-align:center">CentOS 7</td>
+</tr>
+<tr>
+<td style="text-align:center">Docker</td>
+<td style="text-align:center">建议 &gt;= 13.1</td>
+</tr>
+<tr>
+<td style="text-align:center">Kubernetes</td>
+<td style="text-align:center">1.13.0</td>
+</tr>
+<tr>
+<td style="text-align:center">Kubernetes Master</td>
+<td style="text-align:center">HA*3</td>
+</tr>
+<tr>
+<td style="text-align:center">Kubernetes etcd</td>
+<td style="text-align:center">HA*3</td>
+</tr>
+<tr>
+<td style="text-align:center">网络</td>
+<td style="text-align:center">flannel</td>
+</tr>
+<tr>
+<td style="text-align:center">LB</td>
+<td style="text-align:center">Nginx或HAProxy</td>
+</tr>
+</tbody>
+</table>
+<h4 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h4><h5 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h5><p>安装并启动docker，这里不做赘述。</p>
+<h5 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h5><p>准备etcd、kubeadm、kubectl、kubelet、kubernetes-cni、cri-tools等安装包。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/etcd-io/etcd/releases/download/v3.2.22/etcd-v3.2.22-linux-amd64.tar.gz</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/yum.repo.d/kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install --downloadonly --downloaddir ./ kubelet kubeadm kubectl kubernetes-cni cri-tools</span><br></pre></td></tr></table></figure>
+<h5 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker pull k8s.gcr.io/kube-proxy:v1.13.0</span><br><span class="line">docker pull k8s.gcr.io/kube-apiserver:v1.13.0</span><br><span class="line">docker pull k8s.gcr.io/kube-controller-manager:v1.13.0</span><br><span class="line">docker pull k8s.gcr.io/kube-scheduler:v1.13.0</span><br><span class="line">docker pull k8s.gcr.io/coredns:1.2.6</span><br><span class="line">docker pull k8s.gcr.io/pause:3.1</span><br></pre></td></tr></table></figure>
+<h5 id="网络插件"><a href="#网络插件" class="headerlink" title="网络插件"></a>网络插件</h5><p>使用部署和运维最简单的flannel。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</span><br></pre></td></tr></table></figure></p>
+<h5 id="LB"><a href="#LB" class="headerlink" title="LB"></a>LB</h5><p>无论使用哪种LB工具，需要保证以下几点：</p>
+<ol>
+<li>分配到三个master节点的权重均等。</li>
+<li>从VIP的6443端口转发到后端的三个master节点的相同端口。</li>
+<li>从VIP的2379和2380端口转发到后端的三个etcd节点的相同端口。</li>
+<li>各个master节点之间、master到VIP、node到VIP的网络需畅通。</li>
+</ol>
+<p>假设此例中的VIP为10.107.105.241。</p>
+<h5 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h5><p>假设master节点的IP如下，同时作为etcd集群的节点：<br>10.107.105.207<br>10.107.116.238<br>10.107.116.213</p>
+<h4 id="etcd安装步骤"><a href="#etcd安装步骤" class="headerlink" title="etcd安装步骤"></a>etcd安装步骤</h4><h5 id="1-安装etcd"><a href="#1-安装etcd" class="headerlink" title="1. 安装etcd"></a>1. 安装etcd</h5><p>采用yum源安装，使用的版本为3.2.22。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y etcd</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-etcd服务配置"><a href="#2-etcd服务配置" class="headerlink" title="2. etcd服务配置"></a>2. etcd服务配置</h5><p>对三台etcd节点的etcd服务均设置相同的数据目录。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /lib/systemd/system/etcd.service</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">workingDirectory=/data/etcd</span><br><span class="line">EnvironmentFile=-/etc/etcd/etcd.conf</span><br><span class="line">User=etcd</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h5 id="3-etcd数据目录"><a href="#3-etcd数据目录" class="headerlink" title="3. etcd数据目录"></a>3. etcd数据目录</h5><p>对三台etcd节点，在外部挂载磁盘的/data路径下创建etcd的数据目录，并赋予正确的权限。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/etcd</span><br><span class="line">chown etcd:etcd</span><br></pre></td></tr></table></figure></p>
+<h5 id="4-etcd详细配置"><a href="#4-etcd详细配置" class="headerlink" title="4. etcd详细配置"></a>4. etcd详细配置</h5><p>假设设置10.107.105.207为etcd集群的leader，则将其<code>ETCD_INITIAL_CLUSTER_STATE</code>设置为<code>&quot;new&quot;</code>，其他两台设置为<code>&quot;exist&quot;</code>；同时他们配置相同的<code>ETCD_INITIAL_CLUSTER</code>和<code>ETCD_INITIAL_CLUSTER_TOKEN</code>。<br>如下为leader 10.107.105.207的<code>/etc/etcd/etcd.conf</code>配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#[Member]</span><br><span class="line">ETCD_DATA_DIR=&quot;/data/etcd/default.etcd&quot;</span><br><span class="line">ETCD_LISTEN_PEER_URLS=&quot;http://10.107.105.207:2380&quot;</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://10.107.105.207:2379,http://127.0.0.1:2379&quot;</span><br><span class="line">ETCD_NAME=&quot;etcd1&quot;</span><br><span class="line">#[Clustering]</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;http://10.107.105.207:2380&quot;</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://10.107.105.207:2379,http://127.0.0.1:2379&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.107.105.207:2380,etcd2=http://10.107.116.238:2380,etcd3=http://10.107.116.213:2380&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;mlss-k8s-etcd&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;new&quot;</span><br></pre></td></tr></table></figure></p>
+<p>如下分别为10.107.116.238及10.107.116.213的<code>/etc/etcd/etcd.conf</code>配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#[Member]</span><br><span class="line">ETCD_DATA_DIR=&quot;/data/etcd/default.etcd&quot;</span><br><span class="line">ETCD_LISTEN_PEER_URLS=&quot;http://10.107.116.238:2380&quot;</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://10.107.116.238:2379,http://127.0.0.1:2379&quot;</span><br><span class="line">ETCD_NAME=&quot;etcd2&quot;</span><br><span class="line">#[Clustering]</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;http://10.107.116.238:2380&quot;</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://10.107.116.238:2379,http://127.0.0.1:2379&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.107.105.207:2380,etcd2=http://10.107.116.238:2380,etcd3=http://10.107.116.213:2380&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;mlss-k8s-etcd&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;exist&quot;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#[Member]</span><br><span class="line">ETCD_DATA_DIR=&quot;/data/etcd/default.etcd&quot;</span><br><span class="line">ETCD_LISTEN_PEER_URLS=&quot;http://10.107.116.213:2380&quot;</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://10.107.116.213:2379,http://127.0.0.1:2379&quot;</span><br><span class="line">ETCD_NAME=&quot;etcd3&quot;</span><br><span class="line">#[Clustering]</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;http://10.107.116.213:2380&quot;</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://10.107.116.213:2379,http://127.0.0.1:2379&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.107.105.207:2380,etcd2=http://10.107.116.238:2380,etcd3=http://10.107.116.213:2380&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;mlss-k8s-etcd&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;exist&quot;</span><br></pre></td></tr></table></figure>
+<h5 id="4-启动etcd"><a href="#4-启动etcd" class="headerlink" title="4. 启动etcd"></a>4. 启动etcd</h5><p>至此etcd集群配置完毕，需要将其启动，在leader及另外两台节点上执行如下操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart etcd</span><br></pre></td></tr></table></figure></p>
+<p>节点全部启动完毕后，在任意一台机器上验证：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl member list</span><br></pre></td></tr></table></figure></p>
+<h4 id="Kubernetes安装步骤"><a href="#Kubernetes安装步骤" class="headerlink" title="Kubernetes安装步骤"></a>Kubernetes安装步骤</h4><p>对于集群中的每个master节点，需进行步骤1-6。</p>
+<h5 id="1-关闭swap"><a href="#1-关闭swap" class="headerlink" title="1. 关闭swap"></a>1. 关闭swap</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br><span class="line">vim /etc/fstab</span><br><span class="line"># 注释掉有swap的一行</span><br></pre></td></tr></table></figure>
+<h5 id="2-关闭防火墙"><a href="#2-关闭防火墙" class="headerlink" title="2. 关闭防火墙"></a>2. 关闭防火墙</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld;systemctl disable firewalld;setenforce 0</span><br></pre></td></tr></table></figure>
+<h5 id="3-禁用selinux"><a href="#3-禁用selinux" class="headerlink" title="3. 禁用selinux"></a>3. 禁用selinux</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/selinux/config</span><br><span class="line"># 设置SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<h5 id="4-启用bridge-nf"><a href="#4-启用bridge-nf" class="headerlink" title="4. 启用bridge-nf"></a>4. 启用bridge-nf</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl net.bridge.bridge-nf-call-iptables=1</span><br></pre></td></tr></table></figure>
+<h5 id="5-cgroup-driver设置"><a href="#5-cgroup-driver设置" class="headerlink" title="5. cgroup driver设置"></a>5. cgroup driver设置</h5><p>理论上，kubelet的cgroup driver与docker的cgroup driver需保持一致。</p>
+<ul>
+<li>如果在docker的配置中（<code>/lib/systemd/system/docker.service</code>或<code>/etc/sysconfig/docker*</code>或<code>/etc/docker/daemon.json</code>），设置了<code>native.cgroupdriver=cgroupfs</code>，则在kubelet的配置中（<code>/etc/systemd/system/kubelet.service.d/10-kubeadm.conf</code>）设置<code>--cgroup-driver=cgroupfs</code>。</li>
+<li>如果docker的<code>native.cgroupdriver=systemd</code>，则在kubelet中设置<code>--cgroup-driver=systemd</code>。</li>
+</ul>
+<p>然而在实际中：</p>
+<ul>
+<li>如果docker中设置了<code>native.cgroupdriver=cgroupfs</code>，kubelet不做任何额外配置，节点可以正常启动Kubelet。</li>
+<li>如果docker中设置了<code>native.cgroupdriver=systemd</code>，kubelet不做任何额外配置，节点仍然可以正常启动Kubelet，但<code>/var/lib/kubelet/config.yaml</code>中显示<code>cgroupDriver: cgroupfs</code>，说明kubelet默认的cgroup driver为<code>cgroupfs</code>。</li>
+</ul>
+<h5 id="6-设置启动参数"><a href="#6-设置启动参数" class="headerlink" title="6. 设置启动参数"></a>6. 设置启动参数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim kubeadm.conf</span><br></pre></td></tr></table></figure>
+<p>创建初始化配置文件设置启动参数。</p>
+<ul>
+<li><code>apiServerCertSANs</code>设置所有master节点的IP、hostname及LB的VIP。</li>
+<li><code>controlPlaneEndpoint</code>设置为<code>&lt;VIP&gt;:6443</code>，6443为apiserver的默认端口。</li>
+<li><code>etcd</code>设置为external，并填写上述所有etcd节点的IP及2379端口。</li>
+<li><code>networking</code>设置pod子网网段，根据CNI的需求而不同。</li>
+<li><code>controllerManagerExtraArgs</code>及<code>schedulerExtraArgs</code>设置<code>address</code>为<code>0.0.0.0</code>，将其暴露给集群，此设置是出于监控采集controller-manager及scheduler的metrics的考虑。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: kubeadm.k8s.io/v1alpha3</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: 1.13.0</span><br><span class="line">apiServerCertSANs:</span><br><span class="line">- 10.107.105.241</span><br><span class="line">- 10.107.105.207</span><br><span class="line">- 10.107.116.238</span><br><span class="line">- 10.107.116.213</span><br><span class="line">- mlssdi010001</span><br><span class="line">- mlssdi010004</span><br><span class="line">- mlssdi010005</span><br><span class="line">controlPlaneEndpoint: &quot;10.107.105.241:6443&quot;</span><br><span class="line">etcd:</span><br><span class="line">  external:</span><br><span class="line">    endpoints:</span><br><span class="line">    - http://10.107.105.207:2379</span><br><span class="line">    - http://10.107.116.238:2379</span><br><span class="line">    - http://10.107.116.213:2379</span><br><span class="line">networking:</span><br><span class="line">  podSubnet: 10.244.0.0/16</span><br><span class="line">controllerManagerExtraArgs:</span><br><span class="line">  address: 0.0.0.0</span><br><span class="line">schedulerExtraArgs:</span><br><span class="line">  address: 0.0.0.0</span><br></pre></td></tr></table></figure>
+<h5 id="7-启动第一个master"><a href="#7-启动第一个master" class="headerlink" title="7. 启动第一个master"></a>7. 启动第一个master</h5><p>在第一台节点上使用该配置启动集群。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --config kubeadm.conf</span><br></pre></td></tr></table></figure></p>
+<p>记录下最后输出的<code>kubeadm join</code>命令。</p>
+<h5 id="8-启动其他master"><a href="#8-启动其他master" class="headerlink" title="8. 启动其他master"></a>8. 启动其他master</h5><p>待第一个master节点完成初始化后，将<code>/etc/kubernetes/pki</code>目录下的所有文件拷贝至其他两个节点的相同目录下。<br>使用相同的配置依次启动其他两个master。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --config kubeadm.conf</span><br></pre></td></tr></table></figure></p>
+<p>记录下最后输出的<code>kubeadm join</code>命令。</p>
+<h5 id="9-kubectl"><a href="#9-kubectl" class="headerlink" title="9. kubectl"></a>9. kubectl</h5><p>在任意一台master节点上，使用以下命令来给kubectl添加配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">chown $(id -u):$(id -g) $HOME/.kube/config</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>kubectl get no</code>验证，应该能看到三台NotReady的master。</p>
+<h5 id="10-CNI"><a href="#10-CNI" class="headerlink" title="10. CNI"></a>10. CNI</h5><p>这里我们采用flannel作为CNI插件，使用以下命令创建网络组件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f kube-flannel.yml</span><br></pre></td></tr></table></figure></p>
+<h5 id="11-加入node"><a href="#11-加入node" class="headerlink" title="11. 加入node"></a>11. 加入node</h5><p>步骤7和8生成的join命令格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 10.107.105.241:6443 --token &lt;token&gt; --discovery-token-ca-cert-hash sha256:&lt;hash&gt;</span><br></pre></td></tr></table></figure></p>
+<p>三个master节点初始化后的<code>token</code>是不同的，但<code>discovery-token-ca-cert-hash</code>是相同的，因此对于node来说，使用任意一台master生成的token来join即可。</p>
+<h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><h5 id="coredns启动失败"><a href="#coredns启动失败" class="headerlink" title="coredns启动失败"></a>coredns启动失败</h5><p>coredns处于CrashLoopBackoff，这是由于coredns的默认配置的问题，执行以下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system get deployment coredns -o yaml | \</span><br><span class="line">sed &apos;s/allowPrivilegeEscalation: false/allowPrivilegeEscalation: true/g&apos; | \</span><br><span class="line">kubectl apply -f -</span><br></pre></td></tr></table></figure></p>
+<h4 id="清理"><a href="#清理" class="headerlink" title="清理"></a>清理</h4><h5 id="1-重置数据"><a href="#1-重置数据" class="headerlink" title="1. 重置数据"></a>1. 重置数据</h5><p>在所有机器上使用kubeadm清理数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubeadm reset</span><br><span class="line">rm -rf /etc/kubernetes</span><br><span class="line">rm -rf $HOME/.kube</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-重置网络"><a href="#2-重置网络" class="headerlink" title="2. 重置网络"></a>2. 重置网络</h5><p>在所有机器上需要清理掉CNI网络的相关内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig flannel.1 down &amp;&amp; ip link delete flannel.1</span><br><span class="line">ifconfig cni0 down &amp;&amp; ip link delete cni0</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-清空etcd"><a href="#3-清空etcd" class="headerlink" title="3. 清空etcd"></a>3. 清空etcd</h5><p>在etcd节点上，直接删除etcd存放的Kubernetes集群数据即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /data/etcd/default.etcd</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
+          
+            <a href="/tags/kubeadm/" rel="tag">#kubeadm</a>
+          
+            <a href="/tags/etcd/" rel="tag">#etcd</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/10/gpu-monitoring-tools Prometheus/" rel="next" title="基于GPU集群的Kubernetes机器学习平台监控方案">
+                <i class="fa fa-chevron-left"></i> 基于GPU集群的Kubernetes机器学习平台监控方案
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前置准备"><span class="nav-number">1.</span> <span class="nav-text">前置准备</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Docker"><span class="nav-number">1.1.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装包"><span class="nav-number">1.2.</span> <span class="nav-text">安装包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#镜像"><span class="nav-number">1.3.</span> <span class="nav-text">镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#网络插件"><span class="nav-number">1.4.</span> <span class="nav-text">网络插件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LB"><span class="nav-number">1.5.</span> <span class="nav-text">LB</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#节点"><span class="nav-number">1.6.</span> <span class="nav-text">节点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#etcd安装步骤"><span class="nav-number">2.</span> <span class="nav-text">etcd安装步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-安装etcd"><span class="nav-number">2.1.</span> <span class="nav-text">1. 安装etcd</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-etcd服务配置"><span class="nav-number">2.2.</span> <span class="nav-text">2. etcd服务配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-etcd数据目录"><span class="nav-number">2.3.</span> <span class="nav-text">3. etcd数据目录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-etcd详细配置"><span class="nav-number">2.4.</span> <span class="nav-text">4. etcd详细配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-启动etcd"><span class="nav-number">2.5.</span> <span class="nav-text">4. 启动etcd</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kubernetes安装步骤"><span class="nav-number">3.</span> <span class="nav-text">Kubernetes安装步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-关闭swap"><span class="nav-number">3.1.</span> <span class="nav-text">1. 关闭swap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-关闭防火墙"><span class="nav-number">3.2.</span> <span class="nav-text">2. 关闭防火墙</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-禁用selinux"><span class="nav-number">3.3.</span> <span class="nav-text">3. 禁用selinux</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-启用bridge-nf"><span class="nav-number">3.4.</span> <span class="nav-text">4. 启用bridge-nf</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-cgroup-driver设置"><span class="nav-number">3.5.</span> <span class="nav-text">5. cgroup driver设置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-设置启动参数"><span class="nav-number">3.6.</span> <span class="nav-text">6. 设置启动参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-启动第一个master"><span class="nav-number">3.7.</span> <span class="nav-text">7. 启动第一个master</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-启动其他master"><span class="nav-number">3.8.</span> <span class="nav-text">8. 启动其他master</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-kubectl"><span class="nav-number">3.9.</span> <span class="nav-text">9. kubectl</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-CNI"><span class="nav-number">3.10.</span> <span class="nav-text">10. CNI</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#11-加入node"><span class="nav-number">3.11.</span> <span class="nav-text">11. 加入node</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见问题"><span class="nav-number">4.</span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#coredns启动失败"><span class="nav-number">4.1.</span> <span class="nav-text">coredns启动失败</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#清理"><span class="nav-number">5.</span> <span class="nav-text">清理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-重置数据"><span class="nav-number">5.1.</span> <span class="nav-text">1. 重置数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-重置网络"><span class="nav-number">5.2.</span> <span class="nav-text">2. 重置网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-清空etcd"><span class="nav-number">5.3.</span> <span class="nav-text">3. 清空etcd</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

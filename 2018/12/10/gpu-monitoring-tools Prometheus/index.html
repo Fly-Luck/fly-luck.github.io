@@ -1,0 +1,795 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Kubernetes,gpu-monitoring-tools,Nvidia,Prometheus," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="使用gpu-monitoring-tools，基于Prometheus Operator及kube-prometheus，来监控运行在Nvidia GPU节点集群上、基于Kubernetes的机器学习平台。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于GPU集群的Kubernetes机器学习平台监控方案">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/12/10/gpu-monitoring-tools Prometheus/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="使用gpu-monitoring-tools，基于Prometheus Operator及kube-prometheus，来监控运行在Nvidia GPU节点集群上、基于Kubernetes的机器学习平台。">
+<meta property="og:updated_time" content="2018-12-17T17:38:25.553Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于GPU集群的Kubernetes机器学习平台监控方案">
+<meta name="twitter:description" content="使用gpu-monitoring-tools，基于Prometheus Operator及kube-prometheus，来监控运行在Nvidia GPU节点集群上、基于Kubernetes的机器学习平台。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 基于GPU集群的Kubernetes机器学习平台监控方案 | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                基于GPU集群的Kubernetes机器学习平台监控方案
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-12-10T00:00:00+08:00" content="2018-12-10">
+              2018-12-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用<a href="https://github.com/NVIDIA/gpu-monitoring-tools" target="_blank" rel="external">gpu-monitoring-tools</a>，基于Prometheus Operator及kube-prometheus，来监控运行在Nvidia GPU节点集群上、基于Kubernetes的机器学习平台。</p>
+<a id="more"></a>
+<h4 id="监控方案"><a href="#监控方案" class="headerlink" title="监控方案"></a>监控方案</h4><ol>
+<li>gpu-monitoring-tools（以下简称gmt）的metrics采集包含多套方案：<ol>
+<li>NVML Go Bindings（C API）。</li>
+<li>DCGM exporter（Prometheus metrics on DCGM）。</li>
+</ol>
+</li>
+<li>gmt的监控框架提供了多套方案：<ol>
+<li>直接利用DCGM exporter的Prometheus DaemonSet，只有采集和监控。</li>
+<li>Prometheus Operator + Kube-Prometheus（经Nvidia修改），包含完整的采集、监控、告警、图形化等组件。</li>
+</ol>
+</li>
+</ol>
+<p>我们采用第二套监控框架方案，且这套方案的功能对于没有GPU的CPU机器仍然有效。<br>经验证，这套方案可以同时监控宿主机硬件（CPU、GPU、内存、磁盘等）、Kubernetes核心组件（apiserver、controller-manager、scheduler等）以及运行在Kubernetes上的业务服务的运行状态。</p>
+<h4 id="什么是Operator"><a href="#什么是Operator" class="headerlink" title="什么是Operator"></a>什么是Operator</h4><ol>
+<li>对于无状态的应用，原生Kubernetes的资源（如Deployment）能很好地支持自动扩缩容、自动重启以及升级。</li>
+<li>对于有状态的应用，如数据库、缓存、监控系统等，需要根据特定的应用进行不同的运维操作。</li>
+<li>Operator针对特定的应用将运维操作封装进软件，并将Kubernetes API通过第三方资源进行扩展，允许用户创建、配置、管理应用，通常包含一系列Kubernetes CRD的集合。</li>
+<li>与Kubernetes的Controller和Resource对应关系类似，Operator根据用户提交给Controller的请求，将实际的实例数和实例状态维持在与用户期望相同的效果，但封装了许多细节的操作。</li>
+</ol>
+<h4 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h4><h5 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h5><p>将下列镜像导入到集群的所有节点上：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 如果使用原始的kubernetes搭建Prometheus，使用这两个镜像创建资源，但仅能获取metrics，没有对接监控告警</span><br><span class="line"># docker pull nvidia/dcgm-exporter:1.4.6</span><br><span class="line"># docker pull quay.io/prometheus/node-exporter:v0.16.0</span><br><span class="line"></span><br><span class="line"># operator基础镜像</span><br><span class="line">docker pull quay.io/coreos/prometheus-operator:v0.17.0</span><br><span class="line">docker pull quay.io/coreos/hyperkube:v1.7.6_coreos.0 </span><br><span class="line"></span><br><span class="line"># exporters</span><br><span class="line">docker pull nvidia/dcgm-exporter:1.4.3</span><br><span class="line">docker pull quay.io/prometheus/node-exporter:v0.15.2</span><br><span class="line"></span><br><span class="line"># prometheus组件</span><br><span class="line">docker pull quay.io/coreos/configmap-reload:v0.0.1</span><br><span class="line">docker pull quay.io/coreos/prometheus-config-reloader:v0.0.3</span><br><span class="line">docker pull gcr.io/google_containers/addon-resizer:1.7</span><br><span class="line">docker pull gcr.io/google_containers/kube-state-metrics:v1.2.0</span><br><span class="line">docker pull quay.io/coreos/grafana-watcher:v0.0.8</span><br><span class="line">docker pull grafana/grafana:5.0.0</span><br><span class="line">docker pull quay.io/prometheus/prometheus:v2.2.1</span><br></pre></td></tr></table></figure></p>
+<h5 id="helm模板"><a href="#helm模板" class="headerlink" title="helm模板"></a>helm模板</h5><p>下载并解压下列helm模板：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://nvidia.github.io/gpu-monitoring-tools/helm-charts/kube-prometheus-0.0.43.tgz</span><br><span class="line">tar zxvf kube-prometheus-0.0.43.tgz</span><br><span class="line">wget https://nvidia.github.io/gpu-monitoring-tools/helm-charts/prometheus-operator-0.0.15.tgz</span><br><span class="line">tar zxvf prometheus-operator-0.0.15.tgz</span><br></pre></td></tr></table></figure></p>
+<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><h5 id="1-配置"><a href="#1-配置" class="headerlink" title="1. 配置"></a>1. 配置</h5><h6 id="节点标签"><a href="#节点标签" class="headerlink" title="节点标签"></a>节点标签</h6><p>对于需要监控的GPU node打上标签。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label no &lt;nodename&gt; hardware-type=NVIDIAGPU</span><br></pre></td></tr></table></figure></p>
+<h6 id="暴露端口"><a href="#暴露端口" class="headerlink" title="暴露端口"></a>暴露端口</h6><p>暴露prometheus、alertmanager、grafana的访问端口，以备排障。这些端口需要能从开发VPC直接访问。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim kube-prometheus/values.yaml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">alertmanager:</span><br><span class="line">  ...</span><br><span class="line">  service:</span><br><span class="line">    ...</span><br><span class="line">    nodePort: 30779</span><br><span class="line">    type: NodePort</span><br><span class="line">prometheus:</span><br><span class="line">  ...</span><br><span class="line">  service:</span><br><span class="line">    ...</span><br><span class="line">    nodePort: 30778</span><br><span class="line">    type: NodePort</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim kube-prometheus/charts/grafana/values.yaml</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service:</span><br><span class="line">  nodePort: 30780</span><br><span class="line">  type: NodePort</span><br></pre></td></tr></table></figure>
+<h6 id="告警接收器"><a href="#告警接收器" class="headerlink" title="告警接收器"></a>告警接收器</h6><p>配置告警接收器，通常我们选择在同一个集群内的ControlCenter Service来接收，并将告警信息转换格式后转发给IMS。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim kube-prometheus/values.yaml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">alertmanager:</span><br><span class="line">  config:</span><br><span class="line">    route:</span><br><span class="line">      receiver: &apos;webhook_test&apos;</span><br><span class="line">      routes:</span><br><span class="line">      - match:</span><br><span class="line">          alertname: DeadMansSwitch</span><br><span class="line">        receiver: &apos;webhook_test&apos;</span><br><span class="line">      - match:</span><br><span class="line">          severity: critical</span><br><span class="line">        receiver: &apos;webhook_test&apos;</span><br><span class="line">      - match:</span><br><span class="line">          severity: warning</span><br><span class="line">        receiver: &apos;webhook_test&apos;</span><br><span class="line">    receivers:</span><br><span class="line">    - name: &apos;webhook_test&apos;</span><br><span class="line">      webhook_configs:</span><br><span class="line">      - send_resolved: true</span><br><span class="line">        # short for controlcenter.default.svc or controlcenter.default.svc.cluster.local</span><br><span class="line">        url: &quot;http://controlcenter.default:7777/api/alerts&quot;</span><br></pre></td></tr></table></figure>
+<h6 id="告警规则（待补充）"><a href="#告警规则（待补充）" class="headerlink" title="告警规则（待补充）"></a>告警规则（待补充）</h6><h5 id="2-启动"><a href="#2-启动" class="headerlink" title="2. 启动"></a>2. 启动</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd prometheus-operator</span><br><span class="line">helm install . --name prometheus-operator --namespace monitoring</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd kube-prometheus</span><br><span class="line">helm install . --name kube-prometheus --namespace monitoring</span><br></pre></td></tr></table></figure>
+<h5 id="3-清理"><a href="#3-清理" class="headerlink" title="3. 清理"></a>3. 清理</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm delete --purge kube-prometheus</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm delete --purge prometheus-operator</span><br></pre></td></tr></table></figure>
+<h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><h5 id="无法暴露Kubelet-metrics"><a href="#无法暴露Kubelet-metrics" class="headerlink" title="无法暴露Kubelet metrics"></a>无法暴露Kubelet metrics</h5><p>在1.13.0版本的kubernetes未出现此问题。</p>
+<ol>
+<li>对于1.13.0之前的版本，需将获取kubelet metrics的方式由https改为http，否则Prometheus的kubelet targets将down掉。[<a href="https://github.com/coreos/prometheus-operator/issues/926" target="_blank" rel="external">github issue 926</a>]<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim kube-prometheus/charts/exporter-kubelets/templates/servicemonitor.yaml</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">spec:</span><br><span class="line">  endpoints:</span><br><span class="line">#  - port: https-metrics</span><br><span class="line">#    scheme: https</span><br><span class="line">  - port: http-metrics</span><br><span class="line">    scheme: http</span><br><span class="line">    ...</span><br><span class="line">#  - port: https-metrics</span><br><span class="line">#    scheme: https</span><br><span class="line">  - port: http-metrics</span><br><span class="line">    scheme: http</span><br><span class="line">    path: /metrics/cadvisor</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<ol>
+<li>验证<br>在Prometheus页面可以看到kubelet target。</li>
+</ol>
+<h5 id="无法暴露controller-manager及scheduler的metrics"><a href="#无法暴露controller-manager及scheduler的metrics" class="headerlink" title="无法暴露controller-manager及scheduler的metrics"></a>无法暴露controller-manager及scheduler的metrics</h5><h6 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h6><p>针对Kubernetes v1.13.0。</p>
+<ol>
+<li><p>将下述内容添加到kubeadm.conf，并在kubeadm初始化时kubeadm init –config kubeadm.conf。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: kubeadm.k8s.io/v1alpha3</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: 1.13.0</span><br><span class="line">networking:</span><br><span class="line">  podSubnet: 10.244.0.0/16</span><br><span class="line">controllerManagerExtraArgs:</span><br><span class="line">  address: 0.0.0.0</span><br><span class="line">schedulerExtraArgs:</span><br><span class="line">  address: 0.0.0.0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为pod打上label。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl get po -n kube-system</span><br><span class="line">kubectl -n kube-system label po kube-controller-manager-&lt;nodename&gt; k8s-app=kube-controller-manager</span><br><span class="line">kubectl -n kube-system label po kube-scheduler-&lt;nodename&gt; k8s-app=kube-scheduler</span><br><span class="line">kubectl get po -n kube-system --show-labels</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证<br>在Prometheus页面可以看到kube-controller-manager及kube-scheduler两个target。<br>在grafana页面可以看到controller-manager及scheduler的状态监控。</p>
+</li>
+</ol>
+<h6 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h6><p><a href="https://github.com/coreos/prometheus-operator/blob/v0.17.0/contrib/kube-prometheus/docs/kube-prometheus-on-kubeadm.md" target="_blank" rel="external">guide</a><br>针对1.13.0之前的Kubernetes。</p>
+<ol>
+<li>修改kubeadm的核心配置。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm config view</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>将上述输出保存为newConfig.yaml，并添加以下两行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">controllerManagerExtraArgs:</span><br><span class="line">  address: 0.0.0.0</span><br><span class="line">schedulerExtraArgs:</span><br><span class="line">  address: 0.0.0.0</span><br></pre></td></tr></table></figure></p>
+<p>应用新配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm config upload from-file --config newConfig.yaml</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>为pod打上label。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl get po -n kube-system</span><br><span class="line">kubectl label po kube-controller-manager-&lt;nodename&gt; k8s-app=kube-controller-manager</span><br><span class="line">kubectl label po kube-scheduler-&lt;nodename&gt; k8s-app=kube-scheduler</span><br><span class="line">kubectl get po -n kube-system --show-labels</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重建exporters。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system get svc</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>可以看到以下两个没有CLUSTER-IP的Service：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kube-prometheus-exporter-kube-controller-manager</span><br><span class="line">kube-prometheus-exporter-kube-scheduler</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system get svc kube-prometheus-exporter-kube-controller-manager -o yaml</span><br><span class="line">kubectl -n kube-system get svc kube-prometheus-exporter-kube-scheduler -o yaml</span><br></pre></td></tr></table></figure>
+<p>将上述输出分别保存为newKubeControllerManagerSvc.yaml和newKubeSchedulerSvc.yaml，删除一些非必要信息（如uid、selfLink、resourceVersion、creationTimestamp等）后重建。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete -n kube-system svc kube-prometheus-exporter-kube-controller-manager kube-prometheus-exporter-kube-scheduler</span><br><span class="line">kubectl apply -f newKubeControllerManagerSvc.yaml</span><br><span class="line">kubectl apply -f newKubeSchedulerSvc.yaml</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>确保Prometheus pod到kube-controller-manager和kube-scheduler的NodePort 10251/10252的访问是通畅的。</p>
+</li>
+<li><p>验证与方法一相同。</p>
+</li>
+</ol>
+<h5 id="无法暴露coredns"><a href="#无法暴露coredns" class="headerlink" title="无法暴露coredns"></a>无法暴露coredns</h5><p>在Kubernetes v1.13.0中，集群DNS组件默认为coredns，因此需修改kube-prometheus的配置，才能监控到DNS服务的状态。</p>
+<h6 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h6><ol>
+<li>修改配置中的selectorLabel值与coredns的pod标签对应。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system get po --show-labels | grep coredns</span><br><span class="line"># 输出</span><br><span class="line">coredns    k8s-app=kube-dns</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim kube-prometheus/charts/exporter-coredns/values.yaml</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#selectorLabel: coredns</span><br><span class="line">selectorLabel: kube-dns</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>重启kube-prometheus。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">helm delete --purge kube-prometheus</span><br><span class="line">helm install --name kube-prometheus --namespace monitoring kube-prometheus</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证<br>在Prometheus可以看到kube-dns target。</p>
+</li>
+</ol>
+<h6 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h6><ol>
+<li><p>修改pod的标签与配置中的一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system label po</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证与方法一相同。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
+          
+            <a href="/tags/gpu-monitoring-tools/" rel="tag">#gpu-monitoring-tools</a>
+          
+            <a href="/tags/Nvidia/" rel="tag">#Nvidia</a>
+          
+            <a href="/tags/Prometheus/" rel="tag">#Prometheus</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/20/rook/" rel="next" title="rook使用手册">
+                <i class="fa fa-chevron-left"></i> rook使用手册
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/15/Kubeadm HA Kubernetes Install/" rel="prev" title="10分钟使用kubeadm搭建高可用Kubernetes集群">
+                10分钟使用kubeadm搭建高可用Kubernetes集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#监控方案"><span class="nav-number">1.</span> <span class="nav-text">监控方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是Operator"><span class="nav-number">2.</span> <span class="nav-text">什么是Operator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前置准备"><span class="nav-number">3.</span> <span class="nav-text">前置准备</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#镜像"><span class="nav-number">3.1.</span> <span class="nav-text">镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#helm模板"><span class="nav-number">3.2.</span> <span class="nav-text">helm模板</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装步骤"><span class="nav-number">4.</span> <span class="nav-text">安装步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-配置"><span class="nav-number">4.1.</span> <span class="nav-text">1. 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#节点标签"><span class="nav-number">4.1.1.</span> <span class="nav-text">节点标签</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#暴露端口"><span class="nav-number">4.1.2.</span> <span class="nav-text">暴露端口</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#告警接收器"><span class="nav-number">4.1.3.</span> <span class="nav-text">告警接收器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#告警规则（待补充）"><span class="nav-number">4.1.4.</span> <span class="nav-text">告警规则（待补充）</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-启动"><span class="nav-number">4.2.</span> <span class="nav-text">2. 启动</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-清理"><span class="nav-number">4.3.</span> <span class="nav-text">3. 清理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见问题"><span class="nav-number">5.</span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#无法暴露Kubelet-metrics"><span class="nav-number">5.1.</span> <span class="nav-text">无法暴露Kubelet metrics</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#无法暴露controller-manager及scheduler的metrics"><span class="nav-number">5.2.</span> <span class="nav-text">无法暴露controller-manager及scheduler的metrics</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#方法一"><span class="nav-number">5.2.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法二"><span class="nav-number">5.2.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#无法暴露coredns"><span class="nav-number">5.3.</span> <span class="nav-text">无法暴露coredns</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#方法一-1"><span class="nav-number">5.3.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法二-1"><span class="nav-number">5.3.2.</span> <span class="nav-text">方法二</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
