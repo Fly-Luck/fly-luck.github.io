@@ -1,0 +1,764 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Java,Kubernetes,Spring,Docker," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="一个Spring Boot应用容器化及Kubernetes部署全记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot应用容器化及Kubernetes部署">
+<meta property="og:url" content="http://luck.luckyluck.info/2018/11/10/Spring Boot App on Kubernetes/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="一个Spring Boot应用容器化及Kubernetes部署全记录。">
+<meta property="og:updated_time" content="2018-12-19T13:59:16.212Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Boot应用容器化及Kubernetes部署">
+<meta name="twitter:description" content="一个Spring Boot应用容器化及Kubernetes部署全记录。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Spring Boot应用容器化及Kubernetes部署 | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spring Boot应用容器化及Kubernetes部署
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-11-10T00:00:00+08:00" content="2018-11-10">
+              2018-11-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一个Spring Boot应用容器化及Kubernetes部署全记录。<br><a id="more"></a></p>
+<h4 id="Docker-amp-Kubernetes"><a href="#Docker-amp-Kubernetes" class="headerlink" title="Docker &amp; Kubernetes"></a>Docker &amp; Kubernetes</h4><p>Docker是一种容器技术，它能将应用所需的所有内容打包成一个Docker镜像，其目标是使开发者能方便地创建、部署、运行应用。Docker很像虚拟技术，其依赖的基础镜像通常是超精简版的OS镜像，但最关键的一点就是能保证在不同的宿主机环境下容器运行效果的一致性。<br>Kubernetes则是一种容器编排平台，且不仅仅支持Docker容器，当然主流的用户还是使用Docker容器。Kubernetes的强大之处在于它能支持大量容器应用协同运行的同时减少运维负担，如能根据硬件资源的状况在宿主机集群上调度容器、根据用户需求自动快速扩缩容等。</p>
+<h4 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h4><p>这是一个真实的项目，涵盖了大部分常见的Spring Boot使用方式。</p>
+<ol>
+<li>出于脱敏的目的，项目名以Test替代。</li>
+<li><p>项目的结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Test</span><br><span class="line">- src</span><br><span class="line">  - main</span><br><span class="line">    - java</span><br><span class="line">    - resources</span><br><span class="line">  - test</span><br><span class="line">    - java</span><br><span class="line">- target</span><br><span class="line">- .gitignore</span><br><span class="line">- application.yml</span><br><span class="line">- Dockerfile</span><br><span class="line">- pom.xml</span><br><span class="line">- README.md</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>项目根据环境不同需要读取不同的<code>application.yml</code>。</p>
+</li>
+<li>项目使用logback作为日志工具，需要读取一个<code>logback-spring.xml</code>的配置文件。</li>
+<li>项目还需要读取一个properties文件。</li>
+<li>为方便期间，所有Kubernetes资源均在default namespace下。</li>
+</ol>
+<h5 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a>namespace</h5><p>Kubernetes的许多资源对象都隶属于某个namespace，namespace是对资源的逻辑划分，不同namespace下的资源可以做到简单隔离。</p>
+<h4 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h4><h5 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h5><p>针对项目jar包，我们需要将其打成一个Docker镜像，而<code>Dockerfile</code>就是打包过程的指导文件，类似于<code>make</code>过程中的<code>Makefile</code>。</p>
+<h6 id="jar-gt-Docker镜像"><a href="#jar-gt-Docker镜像" class="headerlink" title="jar-&gt;Docker镜像"></a>jar-&gt;Docker镜像</h6><p>以下是我们需要的Dockerfile内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">8</span>-jdk-alpine</span><br><span class="line"><span class="keyword">VOLUME</span> /tmp</span><br><span class="line"><span class="keyword">ADD</span> target/test.jar test.jar</span><br><span class="line"><span class="keyword">ENTRYPOINT</span> ["java","-Djava.security.egd=file:/dev/./urandom","-jar", \</span><br><span class="line">    "-Dspring.config.location=/etc/config/application.yml", \</span><br><span class="line">    "-Dlogging.config=/etc/config/logback-spring.xml", \</span><br><span class="line">    "-DconfPath=/etc/config", \</span><br><span class="line">    "/test.jar"]</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>FROM</code>表示要生产的镜像的基础镜像，我们使用jdk8。</li>
+<li><code>VOLUME</code>表示定义一个匿名卷，也可以理解为创建一个目录，这里的<code>/tmp</code>是由于tomcat的需要。</li>
+<li><code>ADD</code>表示将项目编译后的jar包拷贝到镜像里，默认为根目录<code>/</code>。</li>
+<li><code>ENTRYPOINT</code>表示入口点，即容器启动时执行的命令，通过上述组合，实际执行的命令为：<code>java -Djava.security.egd=file:/dev/./urandom -jar -Dspring.config.location=/etc/config/application.yml -Dlogging.config=/etc/config/logback-spring.xml -DconfPath=/etc/config /test.jar</code><br>注意这里的配置路径<code>/etc/config</code>还不存在，下文中会创建和用到。</li>
+</ol>
+<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><h6 id="Kubernetes-ConfigMap"><a href="#Kubernetes-ConfigMap" class="headerlink" title="Kubernetes ConfigMap"></a>Kubernetes ConfigMap</h6><p>ConfigMap可以用来保存单个的键值对，也可以保存配置文件。</p>
+<h6 id="配置文件-gt-ConfigMap"><a href="#配置文件-gt-ConfigMap" class="headerlink" title="配置文件-&gt;ConfigMap"></a>配置文件-&gt;ConfigMap</h6><p>针对项目配置，需要做的改造就是把配置文件（应用、日志、业务）转化成ConfigMap对象，从而让Kubernetes化后的应用能够读取。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim test-config.yml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> v1</span><br><span class="line"><span class="attr">kind:</span> ConfigMap</span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> test-config</span><br><span class="line"><span class="attr">  namespace:</span> default</span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  application-yml:</span> <span class="string">|</span><br><span class="line">    ... // 应用配置内容</span><br><span class="line"></span><span class="attr">  logback-spring-xml:</span> <span class="string">|</span><br><span class="line">    ... // 日志配置内容</span><br><span class="line"></span><span class="attr">  other-config:</span> <span class="string">|</span><br><span class="line">    ... // 业务配置内容</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>注意配置文件按照yaml规范缩进。</li>
+<li><code>data</code>属性里记录实际的配置，本质上仍是键值对，如第一个数据的key为application-yml，内容为其配置内容。</li>
+</ol>
+<h5 id="应用部署定义"><a href="#应用部署定义" class="headerlink" title="应用部署定义"></a>应用部署定义</h5><h6 id="Kubernetes-Deployment"><a href="#Kubernetes-Deployment" class="headerlink" title="Kubernetes Deployment"></a>Kubernetes Deployment</h6><p>Deployment是一种控制容器组的对象，在Deployment中定义一个期望的容器组的数量，Deployment在创建后会维持这个数量，当数量少于期望时会新建容器组，反之会停止超额的容器组。</p>
+<h6 id="部署-gt-Deployment"><a href="#部署-gt-Deployment" class="headerlink" title="部署-&gt;Deployment"></a>部署-&gt;Deployment</h6><p>针对本项目，对应的Deployment配置如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim test-deployment.yml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: test-deployment</span><br><span class="line">  labels:</span><br><span class="line">    app: test-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: test-app</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: test-app</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: test</span><br><span class="line">        image: test:latest</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 7777</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: config-volume</span><br><span class="line">          mountPath: /etc/config</span><br><span class="line">        - name: log-volume</span><br><span class="line">          mountPath: /var/log/test</span><br><span class="line">      volumes:</span><br><span class="line">      - name: config-volume</span><br><span class="line">        configMap:</span><br><span class="line">          name: test-config</span><br><span class="line">          items:</span><br><span class="line">          - key: application-yml</span><br><span class="line">            path: application.yml</span><br><span class="line">          - key: logback-spring-xml</span><br><span class="line">            path: logback-spring.xml</span><br><span class="line">          - key: other-config</span><br><span class="line">            path: other.config</span><br><span class="line">      - name: log-volume</span><br><span class="line">        hostPath:</span><br><span class="line">          path: /var/log/test</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>replicas</code>即为此Deployment期望的容器组的数量。</li>
+<li><code>metadata</code>.<code>labels</code>用于跟下文中的Service对接。</li>
+<li><code>spec</code>.<code>selector</code>.<code>matchLabels</code>与容器组的<code>spec</code>.<code>template</code>.<code>metadata</code>.<code>labels</code>对接。</li>
+<li><code>spec</code>.<code>template</code>.<code>spec</code>.<code>volumes</code>定义了一些卷，<code>name</code>为卷名。<ul>
+<li>如果定义了<code>configMap</code>属性，则<code>items</code>属性的<code>key</code>对应上文中ConfigMap对象的名称，<code>path</code>则为要输出的文件，如第一个item的行为是读取ConfigMap对象<code>test-config</code>的第一个数据的内容（key=application-yml），并将其保存为<code>application.yml</code>配置文件。</li>
+<li>如果定义了<code>hostPath</code>属性，则是宿主机上的同名目录，如此处将容器日志输出到宿主机的<code>/var/log/test</code>路路径。</li>
+</ul>
+</li>
+<li><code>spec</code>.<code>template</code>.<code>spec</code>.<code>containers</code>定义了容器组中的容器，包括容器名、镜像、容器暴露的端口，以及要挂载的卷，在<code>volumeMounts</code>中，<code>name</code>为上述卷名，<code>mountPath</code>为挂载路径，从而容器内部存在<code>/etc/config</code>路径，且可以读取到上述配置文件。</li>
+</ol>
+<h5 id="服务定义"><a href="#服务定义" class="headerlink" title="服务定义"></a>服务定义</h5><h6 id="Kubernetes-Service"><a href="#Kubernetes-Service" class="headerlink" title="Kubernetes Service"></a>Kubernetes Service</h6><p>默认情况下，Kubernetes集群内的容器是不能被集群外访问的。此时我们需要将应用连接到Service，Service可以对集群内部暴露，也可以对外暴露宿主机端口，还能通过LB VIP暴露服务。</p>
+<h6 id="外部访问-gt-Service"><a href="#外部访问-gt-Service" class="headerlink" title="外部访问-&gt;Service"></a>外部访问-&gt;Service</h6><p>针对本项目，对应的Service配置如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim test-service.yml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: test-service</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: test-app</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - protocol: TCP</span><br><span class="line">    port: 7777</span><br><span class="line">    targetPort: 7777</span><br><span class="line">    nodePort: 30777</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>spec</code>.<code>selector</code>用于连接容器组，与上文中Deployment定义的容器组的<code>labels</code>对应。</li>
+<li><code>spec</code>.<code>type</code>定义Service的暴露方式，<code>NodePort</code>为对集群外暴露，用户通过宿主机端口访问应用，即：<ul>
+<li>用户-&gt;宿主机IP:30777-&gt;Service:7777-&gt;容器:7777</li>
+</ul>
+</li>
+</ol>
+<h4 id="部署工作"><a href="#部署工作" class="headerlink" title="部署工作"></a>部署工作</h4><h5 id="编译jar包"><a href="#编译jar包" class="headerlink" title="编译jar包"></a>编译jar包</h5><p>不论使用Maven还是Gradle，生成jar包，此处不细说。</p>
+<h5 id="生成Docker镜像"><a href="#生成Docker镜像" class="headerlink" title="生成Docker镜像"></a>生成Docker镜像</h5><p>使用以下命令生成Docker镜像，当然，前提是生成镜像的机器上需要有基础镜像<code>openjdk:8-jdk-alpine</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd Test</span><br><span class="line">docker build -t test:latest .</span><br></pre></td></tr></table></figure></p>
+<p>同时，需要让所有Kubernetes的Node能获取到该镜像，有两种途径：</p>
+<ol>
+<li><p>将该镜像打包并在所有Node上加载。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker save -o test.tar test:latest</span><br><span class="line">docker load -i test.tar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将该镜像推送到所有Node均能访问的镜像仓库里。</p>
+</li>
+</ol>
+<h5 id="创建Kubernetes资源"><a href="#创建Kubernetes资源" class="headerlink" title="创建Kubernetes资源"></a>创建Kubernetes资源</h5><p>分别创建ConfigMap、Deployment、Service。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f test-config.yml</span><br><span class="line">kubectl apply -f test-deployment.yml</span><br><span class="line">kubectl apply -f test-service.yml</span><br></pre></td></tr></table></figure></p>
+<h5 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h5><p>查看资源对象是否正常。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get po | grep test</span><br><span class="line">kubectl get deploy | grep test</span><br><span class="line">kubectl get svc | grep test</span><br></pre></td></tr></table></figure></p>
+<p>访问服务。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl &lt;宿主机IP&gt;:30777</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
+          
+            <a href="/tags/Spring/" rel="tag">#Spring</a>
+          
+            <a href="/tags/Docker/" rel="tag">#Docker</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/24/Proxy Pattern/" rel="next" title="代理模式All in One">
+                <i class="fa fa-chevron-left"></i> 代理模式All in One
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/15/Kubeadm Kubernetes Install/" rel="prev" title="5分钟使用kubeadm搭建Kubernetes集群">
+                5分钟使用kubeadm搭建Kubernetes集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-amp-Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Docker & Kubernetes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#项目"><span class="nav-number">2.</span> <span class="nav-text">项目</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#namespace"><span class="nav-number">2.1.</span> <span class="nav-text">namespace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#准备工作"><span class="nav-number">3.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#镜像"><span class="nav-number">3.1.</span> <span class="nav-text">镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#jar-gt-Docker镜像"><span class="nav-number">3.1.1.</span> <span class="nav-text">jar->Docker镜像</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-ConfigMap"><span class="nav-number">3.2.1.</span> <span class="nav-text">Kubernetes ConfigMap</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#配置文件-gt-ConfigMap"><span class="nav-number">3.2.2.</span> <span class="nav-text">配置文件->ConfigMap</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#应用部署定义"><span class="nav-number">3.3.</span> <span class="nav-text">应用部署定义</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Deployment"><span class="nav-number">3.3.1.</span> <span class="nav-text">Kubernetes Deployment</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#部署-gt-Deployment"><span class="nav-number">3.3.2.</span> <span class="nav-text">部署->Deployment</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务定义"><span class="nav-number">3.4.</span> <span class="nav-text">服务定义</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Service"><span class="nav-number">3.4.1.</span> <span class="nav-text">Kubernetes Service</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#外部访问-gt-Service"><span class="nav-number">3.4.2.</span> <span class="nav-text">外部访问->Service</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部署工作"><span class="nav-number">4.</span> <span class="nav-text">部署工作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#编译jar包"><span class="nav-number">4.1.</span> <span class="nav-text">编译jar包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#生成Docker镜像"><span class="nav-number">4.2.</span> <span class="nav-text">生成Docker镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建Kubernetes资源"><span class="nav-number">4.3.</span> <span class="nav-text">创建Kubernetes资源</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#验证"><span class="nav-number">4.4.</span> <span class="nav-text">验证</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
