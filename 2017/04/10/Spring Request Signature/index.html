@@ -1,0 +1,708 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Java,Spring," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="如何利用对称加密实现简单的请求鉴权。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何实现简单的请求鉴权">
+<meta property="og:url" content="http://luck.luckyluck.info/2017/04/10/Spring Request Signature/index.html">
+<meta property="og:site_name" content="Luck's Cabin">
+<meta property="og:description" content="如何利用对称加密实现简单的请求鉴权。">
+<meta property="og:image" content="http://luck.luckyluck.info/img/system-auth-server.png">
+<meta property="og:image" content="http://luck.luckyluck.info/img/system-auth-client.png">
+<meta property="og:updated_time" content="2018-12-24T15:25:56.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何实现简单的请求鉴权">
+<meta name="twitter:description" content="如何利用对称加密实现简单的请求鉴权。">
+<meta name="twitter:image" content="http://luck.luckyluck.info/img/system-auth-server.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 如何实现简单的请求鉴权 | Luck's Cabin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Luck's Cabin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Amateur Programmer + Tentative Start-uper</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何实现简单的请求鉴权
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-10T00:00:00+08:00" content="2017-04-10">
+              2017-04-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如何利用对称加密实现简单的请求鉴权。</p>
+<a id="more"></a>
+<h4 id="前期沟通"><a href="#前期沟通" class="headerlink" title="前期沟通"></a>前期沟通</h4><p>服务端与客户端需要在前期敲定以下内容：</p>
+<ol>
+<li>秘钥对（apiKey和secretKey），由服务端通过安全的途径交给客户端，如邮件、IM等内部渠道。</li>
+<li>头部名称，包括APIKey、时间戳、签名及业务相关的头部。</li>
+<li>加签算法，即根据业务参数及secretKey如何生成加密签名，客户端与服务端需保持一致。由客户端加密后的内容，在服务端用同样的秘钥加密应该是一模一样的。</li>
+</ol>
+<h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><h5 id="验签流程"><a href="#验签流程" class="headerlink" title="验签流程"></a>验签流程</h5><p>大致流程如下图所示。<br><img src="/img/system-auth-server.png" alt="img"></p>
+<h5 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h5><p>通过Interceptor来做拦截，并根据验签结果来决定对请求是否放行。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserInterceptor</span> <span class="keyword">implements</span> <span class="title">HandlerInterceptor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_APIKEY = <span class="string">"X-Header-APIKey"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_TIMESTAMP = <span class="string">"X-Header-Timestamp"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_SIGNATURE= <span class="string">"X-Header-Signature"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_USERID = <span class="string">"X-Header-UserID"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(UserInterceptor.class);</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandler</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> checkSystemAuth(request, response);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">checkSystemAuth</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 检查头部完整</span></span><br><span class="line">        String reqApiKey = request.getHeader(AUTH_HEADER_APIKEY);</span><br><span class="line">        String reqTimestamp = request.getHeader(AUTH_HEADER_TIMESTAMP);</span><br><span class="line">        String reqSign = request.getHeader(AUTH_HEADER_SIGNATURE);</span><br><span class="line">        String userId = request.getHeader(AUTH_HEADER_USERID);</span><br><span class="line">        <span class="keyword">if</span>(StringUtils.isEmpty(reqApiKey) || StringUtils.isEmpty(reqTimestamp) || StringUtils.isEmpty(reqSign) || StringUtils.isEmpty(userId)) &#123;</span><br><span class="line">            logger.error(<span class="string">"missing apikey or timestamp or signature or userid header"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 2. 检查timestamp超时</span></span><br><span class="line">        <span class="keyword">if</span>(!isInTime(reqTimestamp)) &#123;</span><br><span class="line">            logger.error(<span class="string">"timestamp header timedout"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 3. 根据apikey，从DB中找到对应的secretkey，keypairMapper为DAO对象</span></span><br><span class="line">        KeyPair keyStore = keypairMapper.getOneByApiKey(reqApiKey);</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == keyStore) &#123;</span><br><span class="line">            logger.error(<span class="string">"cannot find secretkey from apikey"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        String secretKey = keyStore.getSecretKey();</span><br><span class="line">        <span class="comment">// 4. 将除签名外的头部生成有序map</span></span><br><span class="line">        SortedMap&lt;String, String&gt; reqForm = <span class="keyword">new</span> TreeMap&lt;&gt;();</span><br><span class="line">        reqForm.put(AUTH_HEADER_APIKEY, reqApiKey);</span><br><span class="line">        reqForm.put(AUTH_HEADER_TIMESTAMP, reqTimestamp);</span><br><span class="line">        reqForm.put(AUTH_HEADER_USERID, userId);</span><br><span class="line">        <span class="comment">// 5. 计算出签名并与传来的签名比对</span></span><br><span class="line">        String calculatedSign = sign(reqForm, secretKey);</span><br><span class="line">        <span class="keyword">if</span>(!reqSign.equals(calculatedSign)) &#123;</span><br><span class="line">            logger.error(<span class="string">"mismatched signatures"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        logger.debug(<span class="string">"system auth passed"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isInTime</span><span class="params">(String timeStr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">long</span> time = Long.parseLong(timeStr);</span><br><span class="line">            <span class="keyword">if</span> (System.currentTimeMillis() - time &lt;= interceptorProperties.getDefaultTimestampTimeout()) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                logger.error(<span class="string">"Timestamp in request timed out."</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"Invalid timestamp: &#123;&#125;"</span>, e.getMessage());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">sign</span><span class="params">(SortedMap&lt;String, String&gt; reqForm, String secretKey)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 1. 将有序map组合成url串</span></span><br><span class="line">            List&lt;String&gt; kvList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; paramEntry : reqForm.entrySet()) &#123;</span><br><span class="line">                kvList.add(paramEntry.getKey() + <span class="string">"="</span> + URLEncoder.encode(</span><br><span class="line">                        StringUtils.isEmpty(</span><br><span class="line">                                paramEntry.getValue()) ? <span class="string">""</span> : paramEntry.getValue(), Charsets.UTF_8.name()</span><br><span class="line">                        )</span><br><span class="line">                );</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 2. 计算签名</span></span><br><span class="line">            String queryString = StringUtils.join(kvList, <span class="string">'&amp;'</span>).toLowerCase();</span><br><span class="line">            String signature = Base64.encodeBase64String(<span class="keyword">new</span> HmacUtils(HmacAlgorithms.HMAC_SHA_1, secretKey).hmac(queryString));</span><br><span class="line">            <span class="comment">// 3. 二次encode</span></span><br><span class="line">            String encodedSign = URLEncoder.encode(signature, Charsets.UTF_8.name());</span><br><span class="line">            <span class="keyword">return</span> encodedSign;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	        logger.error(<span class="string">"Signature error: &#123;&#125;"</span>, e.getMessage());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><h5 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h5><p>客户端的加签过程如下图所示。<br><img src="/img/system-auth-client.png" alt="img"></p>
+<h5 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h5><p>Java版的客户端代码如下。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthTest</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_APIKEY = <span class="string">"X-Header-APIKey"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_TIMESTAMP = <span class="string">"X-Header-Timestamp"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_SIGNATURE= <span class="string">"X-Header-Signature"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String AUTH_HEADER_USERID = <span class="string">"X-Header-UserID"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	    String url;</span><br><span class="line">	    ...<span class="comment">// 构造server url</span></span><br><span class="line">	    <span class="comment">// apikey及secretkey，由服务端提供并由客户端保存</span></span><br><span class="line">        String apiKey = <span class="string">"xxx"</span>;</span><br><span class="line">        String secretKey = <span class="string">"yyy"</span>;</span><br><span class="line"></span><br><span class="line">        RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">        Long timestamp = System.currentTimeMillis();</span><br><span class="line">        <span class="comment">// 1. 构造模拟请求参数列</span></span><br><span class="line">        String sortedHeaders = <span class="keyword">new</span> StringBuilder(<span class="string">"?"</span>)</span><br><span class="line">                .append(AUTH_HEADER_APIKEY)</span><br><span class="line">                .append(<span class="string">"="</span>)</span><br><span class="line">                .append(apiKey)</span><br><span class="line">                .append(<span class="string">"&amp;"</span>)</span><br><span class="line">                .append(AUTH_HEADER_TIMESTAMP)</span><br><span class="line">                .append(<span class="string">"="</span>)</span><br><span class="line">                .append(timestamp)</span><br><span class="line">                .append(<span class="string">"&amp;"</span>)</span><br><span class="line">                .append(AUTH_HEADER_USERID)</span><br><span class="line">                .append(<span class="string">"=luckliu"</span>).toString();</span><br><span class="line">        SortedMap&lt;String, String&gt; paramMap = extractFromUrlParamToMap(sortedHeaders);</span><br><span class="line">        <span class="comment">// 2. 计算签名</span></span><br><span class="line">        String signature = sign(paramMap, secretKey);</span><br><span class="line">        <span class="comment">// 3. 放置头部</span></span><br><span class="line">        HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">        headers.set(AUTH_HEADER_APIKEY, apiKey);</span><br><span class="line">        headers.set(AUTH_HEADER_TIMESTAMP, Long.toString(timestamp));</span><br><span class="line">        headers.set(AUTH_HEADER_SIGNATURE, signature);</span><br><span class="line">        headers.set(AUTH_HEADER_USERID, <span class="string">"luckliu"</span>);</span><br><span class="line">        String body = <span class="string">"!dlrow olleH"</span>;</span><br><span class="line">        HttpEntity&lt;String&gt; request = <span class="keyword">new</span> HttpEntity&lt;String&gt;(body, headers);</span><br><span class="line">        <span class="comment">// 4. 发起请求</span></span><br><span class="line">        ResponseEntity&lt;Void&gt; responseEntity = restTemplate.postForEntity(url, request, Void.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 截取url问号后面的参数, 并转换成SortedMap</span><br><span class="line">     * <span class="doctag">@param</span> url</span><br><span class="line">     * <span class="doctag">@return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SortedMap&lt;String, String&gt; <span class="title">extractFromUrlParamToMap</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// TODO 需考虑参数为空等异常情况</span></span><br><span class="line">        String[] paramArr = url.substring(url.indexOf(<span class="string">"?"</span>)+<span class="number">1</span>).split(<span class="string">"&amp;"</span>);</span><br><span class="line">        SortedMap&lt;String, String&gt; paramMap = Maps.newTreeMap();</span><br><span class="line">        Arrays.stream(paramArr).forEach(</span><br><span class="line">                p-&gt;paramMap.put(p.substring(<span class="number">0</span>,p.indexOf(<span class="string">"="</span>)), p.substring(p.indexOf(<span class="string">"="</span>)+<span class="number">1</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">return</span> paramMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 此处的sign方法应与服务端的保持一致</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">sign</span><span class="params">(SortedMap&lt;String, String&gt; reqForm, String secretKey)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 组合成url串</span></span><br><span class="line">            List&lt;String&gt; kvList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; paramEntry : reqForm.entrySet()) &#123;</span><br><span class="line">                kvList.add(paramEntry.getKey() + <span class="string">"="</span> + URLEncoder.encode(</span><br><span class="line">                        StringUtils.isEmpty(</span><br><span class="line">                                paramEntry.getValue()) ? <span class="string">""</span> : paramEntry.getValue(), Charsets.UTF_8.name()</span><br><span class="line">                        )</span><br><span class="line">                );</span><br><span class="line">            &#125;</span><br><span class="line">            String queryString = StringUtils.join(kvList, <span class="string">'&amp;'</span>).toLowerCase();</span><br><span class="line">            <span class="comment">// 计算签名</span></span><br><span class="line">            String signature = Base64.encodeBase64String(<span class="keyword">new</span> HmacUtils(HmacAlgorithms.HMAC_SHA_1, secretKey).hmac(queryString));</span><br><span class="line">            <span class="comment">// 二次encode</span></span><br><span class="line">            String encodedSign = URLEncoder.encode(signature, Charsets.UTF_8.name());</span><br><span class="line">            <span class="keyword">return</span> encodedSign;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再来一个golang版本的。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/hmac"</span></span><br><span class="line">	<span class="string">"crypto/sha1"</span></span><br><span class="line">	<span class="string">"encoding/base64"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">	<span class="string">"net/url"</span></span><br><span class="line">	<span class="string">"strconv"</span></span><br><span class="line">	<span class="string">"strings"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加签算法</span></span><br><span class="line"><span class="keyword">func</span> Hmac(key, data []<span class="keyword">byte</span>) <span class="keyword">string</span> &#123;</span><br><span class="line">	mac := hmac.New(sha1.New, key)</span><br><span class="line">	mac.Write(data)</span><br><span class="line">	<span class="keyword">return</span> url.QueryEscape(base64.StdEncoding.EncodeToString(mac.Sum([]<span class="keyword">byte</span>(<span class="string">""</span>))))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line">	...<span class="comment">// 构造server url</span></span><br><span class="line">	body := <span class="string">"!dlroW olleH"</span></span><br><span class="line">	<span class="comment">// 1. 通过设置系统校验头部来调用接口</span></span><br><span class="line">	apikey := <span class="string">"xxx"</span></span><br><span class="line">	secretKey := <span class="string">"yyy"</span></span><br><span class="line">	timestamp := time.Now().UnixNano() / <span class="number">1000000</span></span><br><span class="line">	<span class="comment">// 2. 省略排序等步骤，将校验参数组织成有序的请求列</span></span><br><span class="line">	sortedHeaders := []<span class="keyword">byte</span>(strings.ToLower(<span class="string">"X-Header-APIKey="</span> + apikey + <span class="string">"&amp;X-Header-Timestamp="</span> + strconv.FormatInt(timestamp, <span class="number">10</span>) + <span class="string">"&amp;MLSS-DI-UserID=luckliu"</span>))</span><br><span class="line">	<span class="comment">// 3. 计算签名</span></span><br><span class="line">	signature := Hmac([]<span class="keyword">byte</span>(secretKey), sortedHeaders)</span><br><span class="line">	fmt.Println(<span class="string">"final sorted headers: "</span>, <span class="keyword">string</span>(sortedHeaders))</span><br><span class="line">	fmt.Println(<span class="string">"calculated signature: "</span> + signature)</span><br><span class="line">	<span class="comment">// 4. 放置请求头部并发起请求</span></span><br><span class="line">	client := &amp;http.Client&#123;&#125;</span><br><span class="line">	request, _ := http.NewRequest(<span class="string">"POST"</span>, url, strings.NewReader(body))</span><br><span class="line">	request.Header.Set(<span class="string">"X-Header-APIKey"</span>, apikey)</span><br><span class="line">	request.Header.Set(<span class="string">"X-Header-Timestamp"</span>, strconv.FormatInt(timestamp, <span class="number">10</span>))</span><br><span class="line">	request.Header.Set(<span class="string">"X-Header-Signature"</span>, signature)</span><br><span class="line">	request.Header.Set(<span class="string">"X-Header-UserID"</span>, <span class="string">"luckliu"</span>)</span><br><span class="line">	response, _ := client.Do(request)</span><br><span class="line">	fmt.Println(<span class="string">"response status: "</span> + response.Status)</span><br><span class="line">	<span class="keyword">defer</span> response.Body.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/Spring/" rel="tag">#Spring</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/10/Spring Log/" rel="next" title="Spring Boot之统一日志服务">
+                <i class="fa fa-chevron-left"></i> Spring Boot之统一日志服务
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/01/Factory Pattern/" rel="prev" title="工厂模式All in One">
+                工厂模式All in One <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/avatar.jpg"
+               alt="Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu" />
+          <p class="site-author-name" itemprop="name">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</p>
+          <p class="site-description motion-element" itemprop="description">You can do anything, but not everything.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://mars.run/" target="_blank">Mars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hetaotao.net/" target="_blank">Daniel</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/ericnie" target="_blank">Eric</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前期沟通"><span class="nav-number">1.</span> <span class="nav-text">前期沟通</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端"><span class="nav-number">2.</span> <span class="nav-text">服务端</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#验签流程"><span class="nav-number">2.1.</span> <span class="nav-text">验签流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码"><span class="nav-number">2.2.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端"><span class="nav-number">3.</span> <span class="nav-text">客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#流程"><span class="nav-number">3.1.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码-1"><span class="nav-number">3.2.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Luck a.k.a. Zeon Git. Lau a.k.a. Jun Jie Liu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
