@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2018/05/01/Java volatile/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="volatile是一个Java语言的关键字，在线程同步上有一席之地。相较于其他线程同步方法，volatile的使用简单，性能较好，同时也有其局限性。">
-<meta property="og:updated_time" content="2018-11-17T17:40:22.214Z">
+<meta property="og:updated_time" content="2019-02-13T14:52:05.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程同步之volatile">
 <meta name="twitter:description" content="volatile是一个Java语言的关键字，在线程同步上有一席之地。相较于其他线程同步方法，volatile的使用简单，性能较好，同时也有其局限性。">
@@ -282,7 +282,7 @@
 <ul>
 <li>多线程时，当依赖某个变量来判断语句的执行时，可能会因为指令重排序出错。</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// T1</span></span><br><span class="line">context = loadContext(); <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">boolean</span> inited = <span class="keyword">true</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="comment">// T2</span></span><br><span class="line"><span class="keyword">while</span>(!inited) sleep(); <span class="comment">// 1</span></span><br><span class="line">postInit(context); <span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 出错：T1.2-&gt;T2.1-&gt;T2.2-&gt;T1.2</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// T1</span></span><br><span class="line">context = loadContext(); <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">boolean</span> inited = <span class="keyword">true</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="comment">// T2</span></span><br><span class="line"><span class="keyword">while</span>(!inited) sleep(); <span class="comment">// 1</span></span><br><span class="line">postInit(context); <span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 出错：T1.2-&gt;T2.1-&gt;T2.2-&gt;T1.1</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>JVM有序性原则：happens-before（共8条）<ol>
 <li>单线程内执行结果“看起来”顺序（仍可能重排序）。</li>
