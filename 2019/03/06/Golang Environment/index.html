@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2019/03/06/Golang Environment/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。">
-<meta property="og:updated_time" content="2019-12-23T14:50:56.432Z">
+<meta property="og:updated_time" content="2020-01-07T16:49:34.179Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Golang环境构建">
 <meta name="twitter:description" content="搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。">
@@ -261,16 +261,24 @@
       
         <p>搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。<br><a id="more"></a></p>
 <h2 id="Golang环境配置"><a href="#Golang环境配置" class="headerlink" title="Golang环境配置"></a>Golang环境配置</h2><h3 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h3><h4 id="GOROOT"><a href="#GOROOT" class="headerlink" title="GOROOT"></a>GOROOT</h4><p>Golang的安装目录，默认为<code>C:\go</code>或<code>/usr/local/go</code>，<code>$GOPATH/bin</code>下有各种工具，通常会自动加入到<code>$PATH</code>变量中，从而可以全局使用各种golang的命令。</p>
-<h4 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h4><p>Golang项目的开发工作区，默认为<code>%USERPROFILE%\go</code>或<code>$home/go</code>，<code>$GOPATH</code>不能与<code>$GOROOT相同</code>，可以设置多个工作区，如<code>export GOPATH=/opt/go;$home/go</code>。</p>
+<h4 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h4><p>Golang项目的开发工作区，默认为<code>%USERPROFILE%\go</code>或<code>$home/go</code>，<code>$GOPATH</code>不能与<code>$GOROOT相同</code>，可以设置多个工作区，如<code>GOPATH=/opt/go;$home/go</code>。</p>
 <h5 id="项目目录"><a href="#项目目录" class="headerlink" title="项目目录"></a>项目目录</h5><p>一个常见的go项目目录如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bin/</span><br><span class="line">src/</span><br><span class="line">    config/</span><br><span class="line">        config.go</span><br><span class="line">    hello/</span><br><span class="line">        hello.go</span><br><span class="line">    test/</span><br><span class="line">        test.go</span><br><span class="line">pkg/</span><br><span class="line">install.bat</span><br><span class="line">install.sh</span><br></pre></td></tr></table></figure></p>
 <p>bin：编译生成的可执行文件目录。<br>src：源码目录。<br>pkg：编译生成的包、库静态文件，根据操作系统及CPU架构区分不同目录。</p>
+<h5 id="基于GOPATH的依赖管理"><a href="#基于GOPATH的依赖管理" class="headerlink" title="基于GOPATH的依赖管理"></a>基于GOPATH的依赖管理</h5><p>在golang 1.11之前，被诟病得最多的是其极弱的包依赖管理功能：</p>
+<ul>
+<li>依赖包需用<code>go get</code>手动下载。</li>
+<li>所有依赖包和项目都放<code>$GOPATH/src</code>，如<code>C:\go\src\company\foo\bar</code>与依赖的包<code>C:\go\src\github.io\x\y</code>在同一个父目录下，比较混乱。</li>
+<li>依赖包没有版本概念，因此协作开发时，需将各成员本地<code>$GOPATH/src</code>的包统一，或使用第三方包管理工具所依靠的<code>vendor</code>目录。</li>
+<li>若部分依赖包依赖于已经失效的包，比如在github上已经更换地址，需要手动修改该依赖包的依赖。</li>
+</ul>
+<p>下文会介绍用于改善这种状况的<code>go module</code>。</p>
 <h4 id="GOBIN"><a href="#GOBIN" class="headerlink" title="GOBIN"></a>GOBIN</h4><p>通常是<code>$GOPATH/bin</code>，指向可执行文件的目录。</p>
 <h4 id="GOOS与GOARCH"><a href="#GOOS与GOARCH" class="headerlink" title="GOOS与GOARCH"></a>GOOS与GOARCH</h4><p>当前操作系统和CPU架构，这两个环境变量涉及到交叉编译。</p>
 <h5 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h5><p>即在当前环境编译不同操作系统及CPU架构的可执行文件，如：<br><code>GOOS=linux GOARCH=amd64 go build main.go</code><br>则编译为linux-amd64的可执行文件。</p>
 <h3 id="常用go命令"><a href="#常用go命令" class="headerlink" title="常用go命令"></a>常用go命令</h3><h4 id="go-build"><a href="#go-build" class="headerlink" title="go build"></a>go build</h4><p>用于测试编译过程，如有必要会编译关联的包。</p>
 <ul>
 <li>如果编译普通包，不会有任何效果。</li>
-<li>如果编译<code>main</code>包，会在当前路径下生成一个当前环境的可执行文件，如果带上<code>-o</code>参数则生成到指定的路径。</li>
+<li>如果编译<code>main</code>包，格式形如<code>go build &lt;项目名&gt;/&lt;package&gt;</code>，会在当前路径下生成一个当前环境的可执行文件，如果带上<code>-o</code>参数则生成到指定的路径。</li>
 <li>如果只想编译单个go文件，在<code>go build</code>后加上文件名。</li>
 <li>会忽略<code>_</code>及<code>.</code>开头的go文件。</li>
 </ul>
@@ -282,6 +290,19 @@
 <li>如果编译普通包，在<code>pkg</code>目录下生成静态文件（<code>.a</code>文件）。</li>
 <li>如果编译<code>main</code>包，在<code>bin</code>目录下生成可执行文件。</li>
 </ul>
+<h4 id="go-mod"><a href="#go-mod" class="headerlink" title="go mod"></a>go mod</h4><p>在golang 1.12之后，设置环境变量<code>GO111MODULE=on</code>或<code>GO111MODULE=auto</code>:</p>
+<ul>
+<li>若设置为<code>on</code>，则使用go module来管理依赖。</li>
+<li>若设置为<code>auto</code>，若项目位于<code>$GOPATH/src</code>下，则仍使用旧的依靠<code>GOPATH</code>环境变量的依赖管理模式（即依赖于<code>$GOPATH/src</code>下的各个包），否则与设置为<code>on</code>相同。</li>
+</ul>
+<p>接着在项目的根目录使用<code>go mod init &lt;项目名或模块名&gt;</code>生成<code>go.mod</code>文件，则会：</p>
+<ul>
+<li>自动下载依赖包且有准确的版本号，下载的包放在<code>$GOPATH/pkg/mod</code>下，可以理解为maven的<code>.m2</code>目录。</li>
+<li>可以将项目放到任意路径下，不必再放<code>$GOPATH/src</code>下。</li>
+<li>生成的<code>go.mod</code>文件会列出依赖关系。</li>
+<li>对于已转移的包，可以用<code>go.mod</code>文件里的<code>replace</code>语句替换，不用再手动改代码里的依赖了。</li>
+</ul>
+<p>需要注意：<code>go.mod</code>及<code>go.sum</code>文件需纳入版本控制，从而保持一致防止篡改。</p>
 <h4 id="go-test"><a href="#go-test" class="headerlink" title="go test"></a>go test</h4><p>读取源码目录下<code>*_test.go</code>的文件，并编译出测试所需的可执行文件。</p>
 <h4 id="go-doc"><a href="#go-doc" class="headerlink" title="go doc"></a>go doc</h4><p>按照包内函数的排序，读取包文档。</p>
 
@@ -396,7 +417,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
@@ -444,7 +465,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Golang环境配置"><span class="nav-number">1.</span> <span class="nav-text">Golang环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境变量配置"><span class="nav-number">1.1.</span> <span class="nav-text">环境变量配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GOROOT"><span class="nav-number">1.1.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOPATH"><span class="nav-number">1.1.2.</span> <span class="nav-text">GOPATH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#项目目录"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">项目目录</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOBIN"><span class="nav-number">1.1.3.</span> <span class="nav-text">GOBIN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOOS与GOARCH"><span class="nav-number">1.1.4.</span> <span class="nav-text">GOOS与GOARCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#交叉编译"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">交叉编译</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用go命令"><span class="nav-number">1.2.</span> <span class="nav-text">常用go命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#go-build"><span class="nav-number">1.2.1.</span> <span class="nav-text">go build</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-clean"><span class="nav-number">1.2.2.</span> <span class="nav-text">go clean</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-fmt"><span class="nav-number">1.2.3.</span> <span class="nav-text">go fmt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-get"><span class="nav-number">1.2.4.</span> <span class="nav-text">go get</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-install"><span class="nav-number">1.2.5.</span> <span class="nav-text">go install</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-test"><span class="nav-number">1.2.6.</span> <span class="nav-text">go test</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-doc"><span class="nav-number">1.2.7.</span> <span class="nav-text">go doc</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Golang环境配置"><span class="nav-number">1.</span> <span class="nav-text">Golang环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境变量配置"><span class="nav-number">1.1.</span> <span class="nav-text">环境变量配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GOROOT"><span class="nav-number">1.1.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOPATH"><span class="nav-number">1.1.2.</span> <span class="nav-text">GOPATH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#项目目录"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">项目目录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基于GOPATH的依赖管理"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">基于GOPATH的依赖管理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOBIN"><span class="nav-number">1.1.3.</span> <span class="nav-text">GOBIN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOOS与GOARCH"><span class="nav-number">1.1.4.</span> <span class="nav-text">GOOS与GOARCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#交叉编译"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">交叉编译</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用go命令"><span class="nav-number">1.2.</span> <span class="nav-text">常用go命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#go-build"><span class="nav-number">1.2.1.</span> <span class="nav-text">go build</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-clean"><span class="nav-number">1.2.2.</span> <span class="nav-text">go clean</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-fmt"><span class="nav-number">1.2.3.</span> <span class="nav-text">go fmt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-get"><span class="nav-number">1.2.4.</span> <span class="nav-text">go get</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-install"><span class="nav-number">1.2.5.</span> <span class="nav-text">go install</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-mod"><span class="nav-number">1.2.6.</span> <span class="nav-text">go mod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-test"><span class="nav-number">1.2.7.</span> <span class="nav-text">go test</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-doc"><span class="nav-number">1.2.8.</span> <span class="nav-text">go doc</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -466,7 +487,7 @@
         <div class="copyright" >
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
