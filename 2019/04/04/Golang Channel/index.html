@@ -55,16 +55,16 @@
 
 
 
-<meta name="description" content="搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。">
+<meta name="description" content="Do not communicate by sharing memory; instead, share memory by communicating.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Golang环境构建">
-<meta property="og:url" content="http://luck.luckyluck.info/2019/03/06/Golang Environment/index.html">
+<meta property="og:title" content="Go Channel">
+<meta property="og:url" content="http://luck.luckyluck.info/2019/04/04/Golang Channel/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
-<meta property="og:description" content="搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。">
-<meta property="og:updated_time" content="2020-01-07T16:49:34.179Z">
+<meta property="og:description" content="Do not communicate by sharing memory; instead, share memory by communicating.">
+<meta property="og:updated_time" content="2021-04-08T15:06:07.539Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Golang环境构建">
-<meta name="twitter:description" content="搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。">
+<meta name="twitter:title" content="Go Channel">
+<meta name="twitter:description" content="Do not communicate by sharing memory; instead, share memory by communicating.">
 
 
 
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title> Golang环境构建 | Luck's Cabin </title>
+  <title> Go Channel | Luck's Cabin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +202,7 @@
             
             
               
-                Golang环境构建
+                Go Channel
               
             
           </h1>
@@ -214,8 +214,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-03-06T00:00:00+08:00" content="2019-03-06">
-              2019-03-06
+            <time itemprop="dateCreated" datetime="2019-04-04T00:00:00+08:00" content="2019-04-04">
+              2019-04-04
             </time>
           </span>
 
@@ -259,53 +259,27 @@
       
 
       
-        <p>搭建一个Golang开发环境，并理解一些相关的基础知识。关于Go安装及IDE的内容本文不会涉及。<br><a id="more"></a></p>
-<h2 id="Golang环境配置"><a href="#Golang环境配置" class="headerlink" title="Golang环境配置"></a>Golang环境配置</h2><h3 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h3><h4 id="GOROOT"><a href="#GOROOT" class="headerlink" title="GOROOT"></a>GOROOT</h4><p>Golang的安装目录，默认为<code>C:\go</code>或<code>/usr/local/go</code>，<code>$GOPATH/bin</code>下有各种工具，通常会自动加入到<code>$PATH</code>变量中，从而可以全局使用各种golang的命令。</p>
-<h4 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h4><p>Golang项目的开发工作区，默认为<code>%USERPROFILE%\go</code>或<code>$home/go</code>，<code>$GOPATH</code>不能与<code>$GOROOT相同</code>，可以设置多个工作区，如<code>GOPATH=/opt/go;$home/go</code>。</p>
-<h5 id="项目目录"><a href="#项目目录" class="headerlink" title="项目目录"></a>项目目录</h5><p>一个常见的go项目目录如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bin/</span><br><span class="line">src/</span><br><span class="line">    config/</span><br><span class="line">        config.go</span><br><span class="line">    hello/</span><br><span class="line">        hello.go</span><br><span class="line">    test/</span><br><span class="line">        test.go</span><br><span class="line">pkg/</span><br><span class="line">install.bat</span><br><span class="line">install.sh</span><br></pre></td></tr></table></figure></p>
-<p>bin：编译生成的可执行文件目录。<br>src：源码目录。<br>pkg：编译生成的包、库静态文件，根据操作系统及CPU架构区分不同目录。</p>
-<h5 id="基于GOPATH的依赖管理"><a href="#基于GOPATH的依赖管理" class="headerlink" title="基于GOPATH的依赖管理"></a>基于GOPATH的依赖管理</h5><p>在golang 1.11之前，被诟病得最多的是其极弱的包依赖管理功能：</p>
+        <p>Do not communicate by sharing memory; instead, share memory by communicating.<br><a id="more"></a></p>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><h4 id="不同类型"><a href="#不同类型" class="headerlink" title="不同类型"></a>不同类型</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ch := make(&lt;-chan int) // 只读</span><br><span class="line">ch := make(chan&lt;- int) // 只写</span><br><span class="line">ch := make(chan)</span><br><span class="line">ch := make(chan, 0) // 可读写, 不带buffer</span><br><span class="line">ch := make(chan, 100)</span><br></pre></td></tr></table></figure>
+<h4 id="发送"><a href="#发送" class="headerlink" title="发送"></a>发送</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch &lt;- v</span><br></pre></td></tr></table></figure>
+<h4 id="接收"><a href="#接收" class="headerlink" title="接收"></a>接收</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data := &lt;- ch // 阻塞式</span><br><span class="line">&lt;- ch // 忽略返回数据, 阻塞</span><br><span class="line">data, ok := &lt;- ch // 非阻塞式</span><br></pre></td></tr></table></figure>
+<h4 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">close(ch)</span><br></pre></td></tr></table></figure>
+<h3 id="buffered-vs-non-buffered"><a href="#buffered-vs-non-buffered" class="headerlink" title="buffered vs non-buffered"></a>buffered vs non-buffered</h3><h4 id="non-buffered"><a href="#non-buffered" class="headerlink" title="non-buffered"></a>non-buffered</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch1 := make(chan int)</span><br><span class="line">ch&lt;-1</span><br><span class="line">// 向ch放1后要等别的routine用&lt;-ch接收了这个参数，ch&lt;-1才会继续，否则一直阻塞</span><br></pre></td></tr></table></figure>
+<h4 id="buffered"><a href="#buffered" class="headerlink" title="buffered"></a>buffered</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch2 := make(chan int, 1)</span><br><span class="line">ch&lt;-1</span><br><span class="line">// 因为buffer为1，只有当放第二个值且第一个值没有被读取时阻塞</span><br></pre></td></tr></table></figure>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><h4 id="简单同步"><a href="#简单同步" class="headerlink" title="简单同步"></a>简单同步</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    ch := make(chan int)</span><br><span class="line">    go F(ch) // 丢进去</span><br><span class="line">    fmt.Printf(&quot;%d&quot;, &lt;-chs) // 接回来</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func F(ch chan&lt;- int) &#123;</span><br><span class="line">    // do sth</span><br><span class="line">    time.Sleep(time.Second)</span><br><span class="line">    ch &lt;- 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><p>语法类似于switch，但功能与select/poll/epoll类似</p>
+<h5 id="任意case"><a href="#任意case" class="headerlink" title="任意case"></a>任意case</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ch1 := make(chan int, 1)</span><br><span class="line">ch2 := make(chan int, 1)</span><br><span class="line">select &#123;</span><br><span class="line">  case &lt;-ch1:</span><br><span class="line">    fmt.Pringf(&quot;ch1&quot;)</span><br><span class="line">  case &lt;-ch2:</span><br><span class="line">    fmt.Printf(&quot;ch2&quot;)</span><br><span class="line">&#125;</span><br><span class="line">// 一直等待到任意一个case的语句完成</span><br></pre></td></tr></table></figure>
+<h5 id="简单超时"><a href="#简单超时" class="headerlink" title="简单超时"></a>简单超时</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">to := make(chan bool, 1)</span><br><span class="line">ch := make(chan int, 1)</span><br><span class="line">go func() &#123;</span><br><span class="line">  time.Sleep(time.Second)</span><br><span class="line">  to &lt;- true</span><br><span class="line">&#125;</span><br><span class="line">go func() &#123;</span><br><span class="line">  // do sth with long time</span><br><span class="line">  ch &lt;- 1</span><br><span class="line">&#125;</span><br><span class="line">select &#123;</span><br><span class="line">  case &lt;-ch:</span><br><span class="line">    fmt.Printf(&quot;done&quot;)</span><br><span class="line">  case &lt;-to:</span><br><span class="line">    fmt.Printf(&quot;timed out&quot;)</span><br><span class="line">&#125;</span><br><span class="line">// 1秒内执行完则done，超过1s则超时</span><br></pre></td></tr></table></figure>
+<h5 id="buffer池"><a href="#buffer池" class="headerlink" title="buffer池"></a>buffer池</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ch := make(chan int, 1)</span><br><span class="line">ch &lt;- 1</span><br><span class="line">select &#123;</span><br><span class="line">  case ch&lt;-2:</span><br><span class="line">  default:</span><br><span class="line">    fmt.Printf(&quot;chan full&quot;)</span><br><span class="line">&#125;</span><br><span class="line">// ch写入1未被读取则ch满</span><br><span class="line">// 当ch要写入2时发现已满，则case阻塞住</span><br><span class="line">// 没有case匹配则执行default，打印chan full</span><br></pre></td></tr></table></figure>
+<p>应用场景：</p>
 <ul>
-<li>依赖包需用<code>go get</code>手动下载。</li>
-<li>所有依赖包和项目都放<code>$GOPATH/src</code>，如<code>C:\go\src\company\foo\bar</code>与依赖的包<code>C:\go\src\github.io\x\y</code>在同一个父目录下，比较混乱。</li>
-<li>依赖包没有版本概念，因此协作开发时，需将各成员本地<code>$GOPATH/src</code>的包统一，或使用第三方包管理工具所依靠的<code>vendor</code>目录。</li>
-<li>若部分依赖包依赖于已经失效的包，比如在github上已经更换地址，需要手动修改该依赖包的依赖。</li>
+<li>有一个服务，当请求进来的时候我们会生成一个job扔进channel，由其他协程从channel中获取job去执行。</li>
+<li>但当channel满时，将该job抛弃并回复【服务繁忙，请稍后再试】，或是将该job放入任务队列。</li>
 </ul>
-<p>下文会介绍用于改善这种状况的<code>go module</code>。</p>
-<h4 id="GOBIN"><a href="#GOBIN" class="headerlink" title="GOBIN"></a>GOBIN</h4><p>通常是<code>$GOPATH/bin</code>，指向可执行文件的目录。</p>
-<h4 id="GOOS与GOARCH"><a href="#GOOS与GOARCH" class="headerlink" title="GOOS与GOARCH"></a>GOOS与GOARCH</h4><p>当前操作系统和CPU架构，这两个环境变量涉及到交叉编译。</p>
-<h5 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h5><p>即在当前环境编译不同操作系统及CPU架构的可执行文件，如：<br><code>GOOS=linux GOARCH=amd64 go build main.go</code><br>则编译为linux-amd64的可执行文件。</p>
-<h3 id="常用go命令"><a href="#常用go命令" class="headerlink" title="常用go命令"></a>常用go命令</h3><h4 id="go-build"><a href="#go-build" class="headerlink" title="go build"></a>go build</h4><p>用于测试编译过程，如有必要会编译关联的包。</p>
-<ul>
-<li>如果编译普通包，不会有任何效果。</li>
-<li>如果编译<code>main</code>包，格式形如<code>go build &lt;项目名&gt;/&lt;package&gt;</code>，会在当前路径下生成一个当前环境的可执行文件，如果带上<code>-o</code>参数则生成到指定的路径。</li>
-<li>如果只想编译单个go文件，在<code>go build</code>后加上文件名。</li>
-<li>会忽略<code>_</code>及<code>.</code>开头的go文件。</li>
-</ul>
-<h4 id="go-clean"><a href="#go-clean" class="headerlink" title="go clean"></a>go clean</h4><p>移除当前源码包里面编译生成的文件。</p>
-<h4 id="go-fmt"><a href="#go-fmt" class="headerlink" title="go fmt"></a>go fmt</h4><p>等同于<code>gofmt -w</code>命令，用于将代码格式标准化。</p>
-<h4 id="go-get"><a href="#go-get" class="headerlink" title="go get"></a>go get</h4><p>动态获取远程包，是下载包和<code>go install</code>两步的结合。</p>
-<h4 id="go-install"><a href="#go-install" class="headerlink" title="go install"></a>go install</h4><p>编译包，如有必要会编译关联的包。</p>
-<ul>
-<li>如果编译普通包，在<code>pkg</code>目录下生成静态文件（<code>.a</code>文件）。</li>
-<li>如果编译<code>main</code>包，在<code>bin</code>目录下生成可执行文件。</li>
-</ul>
-<h4 id="go-mod"><a href="#go-mod" class="headerlink" title="go mod"></a>go mod</h4><p>在golang 1.12之后，设置环境变量<code>GO111MODULE=on</code>或<code>GO111MODULE=auto</code>:</p>
-<ul>
-<li>若设置为<code>on</code>，则使用go module来管理依赖。</li>
-<li>若设置为<code>auto</code>，若项目位于<code>$GOPATH/src</code>下，则仍使用旧的依靠<code>GOPATH</code>环境变量的依赖管理模式（即依赖于<code>$GOPATH/src</code>下的各个包），否则与设置为<code>on</code>相同。</li>
-</ul>
-<p>接着在项目的根目录使用<code>go mod init &lt;项目名或模块名&gt;</code>生成<code>go.mod</code>文件，则会：</p>
-<ul>
-<li>自动下载依赖包且有准确的版本号，下载的包放在<code>$GOPATH/pkg/mod</code>下，可以理解为maven的<code>.m2</code>目录。</li>
-<li>可以将项目放到任意路径下，不必再放<code>$GOPATH/src</code>下。</li>
-<li>生成的<code>go.mod</code>文件会列出依赖关系。</li>
-<li>对于已转移的包，可以用<code>go.mod</code>文件里的<code>replace</code>语句替换，不用再手动改代码里的依赖了。</li>
-</ul>
-<p>需要注意：<code>go.mod</code>及<code>go.sum</code>文件需纳入版本控制，从而保持一致防止篡改。</p>
-<h4 id="go-test"><a href="#go-test" class="headerlink" title="go test"></a>go test</h4><p>读取源码目录下<code>*_test.go</code>的文件，并编译出测试所需的可执行文件。</p>
-<h4 id="go-doc"><a href="#go-doc" class="headerlink" title="go doc"></a>go doc</h4><p>按照包内函数的排序，读取包文档。</p>
-
+<h3 id="timer-channel-Timer-Ticker"><a href="#timer-channel-Timer-Ticker" class="headerlink" title="timer channel: Timer/Ticker"></a>timer channel: Timer/Ticker</h3><h4 id="timer"><a href="#timer" class="headerlink" title="timer"></a>timer</h4><p>时间到了就通道返回。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">timer := time.NewTimer(time.Second*2)</span><br><span class="line">defer timer.Stop() // 注意保险</span><br><span class="line">go func() &#123;</span><br><span class="line">  &lt;-timer.C  // 等待一秒后channel返回</span><br><span class="line">&#125;()</span><br><span class="line">&lt;-timer.Stop() // 立即停止</span><br></pre></td></tr></table></figure>
+<h4 id="ticker"><a href="#ticker" class="headerlink" title="ticker"></a>ticker</h4><p>与timer类似，但会重复进行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ticker := time.NewTicker(time.Millisecond * 500) // 每半秒一次计时</span><br><span class="line">defer ticker.Stop() // 注意保险</span><br><span class="line">go func() &#123;</span><br><span class="line">    for t := range ticker.C &#123;</span><br><span class="line">        fmt.Println(&quot;Tick at&quot;, t)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -326,17 +300,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/04/Nginx Auth/" rel="next" title="基于Nginx的应用鉴权架构">
-                <i class="fa fa-chevron-left"></i> 基于Nginx的应用鉴权架构
+              <a href="/2019/03/06/Golang Environment/" rel="next" title="Golang环境构建">
+                <i class="fa fa-chevron-left"></i> Golang环境构建
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/04/Golang Channel/" rel="prev" title="Go Channel">
-                Go Channel <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -469,7 +439,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Golang环境配置"><span class="nav-number">1.</span> <span class="nav-text">Golang环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境变量配置"><span class="nav-number">1.1.</span> <span class="nav-text">环境变量配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GOROOT"><span class="nav-number">1.1.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOPATH"><span class="nav-number">1.1.2.</span> <span class="nav-text">GOPATH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#项目目录"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">项目目录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基于GOPATH的依赖管理"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">基于GOPATH的依赖管理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOBIN"><span class="nav-number">1.1.3.</span> <span class="nav-text">GOBIN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOOS与GOARCH"><span class="nav-number">1.1.4.</span> <span class="nav-text">GOOS与GOARCH</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#交叉编译"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">交叉编译</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用go命令"><span class="nav-number">1.2.</span> <span class="nav-text">常用go命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#go-build"><span class="nav-number">1.2.1.</span> <span class="nav-text">go build</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-clean"><span class="nav-number">1.2.2.</span> <span class="nav-text">go clean</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-fmt"><span class="nav-number">1.2.3.</span> <span class="nav-text">go fmt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-get"><span class="nav-number">1.2.4.</span> <span class="nav-text">go get</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-install"><span class="nav-number">1.2.5.</span> <span class="nav-text">go install</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-mod"><span class="nav-number">1.2.6.</span> <span class="nav-text">go mod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-test"><span class="nav-number">1.2.7.</span> <span class="nav-text">go test</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go-doc"><span class="nav-number">1.2.8.</span> <span class="nav-text">go doc</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本语法"><span class="nav-number">1.</span> <span class="nav-text">基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不同类型"><span class="nav-number">1.1.</span> <span class="nav-text">不同类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发送"><span class="nav-number">1.2.</span> <span class="nav-text">发送</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收"><span class="nav-number">1.3.</span> <span class="nav-text">接收</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关闭"><span class="nav-number">1.4.</span> <span class="nav-text">关闭</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#buffered-vs-non-buffered"><span class="nav-number">2.</span> <span class="nav-text">buffered vs non-buffered</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#non-buffered"><span class="nav-number">2.1.</span> <span class="nav-text">non-buffered</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#buffered"><span class="nav-number">2.2.</span> <span class="nav-text">buffered</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用"><span class="nav-number">3.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单同步"><span class="nav-number">3.1.</span> <span class="nav-text">简单同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#select"><span class="nav-number">3.2.</span> <span class="nav-text">select</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#任意case"><span class="nav-number">3.2.1.</span> <span class="nav-text">任意case</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#简单超时"><span class="nav-number">3.2.2.</span> <span class="nav-text">简单超时</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#buffer池"><span class="nav-number">3.2.3.</span> <span class="nav-text">buffer池</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#timer-channel-Timer-Ticker"><span class="nav-number">4.</span> <span class="nav-text">timer channel: Timer/Ticker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#timer"><span class="nav-number">4.1.</span> <span class="nav-text">timer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ticker"><span class="nav-number">4.2.</span> <span class="nav-text">ticker</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
