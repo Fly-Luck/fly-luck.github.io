@@ -61,7 +61,7 @@
 <meta property="og:url" content="http://luck.luckyluck.info/2019/06/01/HTTPS/index.html">
 <meta property="og:site_name" content="Luck's Cabin">
 <meta property="og:description" content="HTTPS = HTTP + TLS/SSL">
-<meta property="og:updated_time" content="2021-04-20T16:59:53.193Z">
+<meta property="og:updated_time" content="2021-04-20T17:07:29.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTPS in 5 mins">
 <meta name="twitter:description" content="HTTPS = HTTP + TLS/SSL">
@@ -262,46 +262,38 @@
         <p>HTTPS = HTTP + TLS/SSL</p>
 <a id="more"></a>
 <ol>
-<li>客户端请求服务端域名，包含内容：</li>
-</ol>
-<ul>
+<li>客户端请求服务端域名，包含内容：<ul>
 <li>客户端生成的随机数r0</li>
 <li>支持的加密通信协议版本，如TLS 1.0</li>
 <li>支持的加密算法，如RSA</li>
 <li>支持的压缩算法</li>
 </ul>
-<ol>
-<li>服务端返回公钥，包含内容：</li>
-</ol>
-<ul>
+</li>
+<li>服务端返回公钥，包含内容：<ul>
 <li>服务端生成的随机数r1</li>
 <li>确认协议版本</li>
 <li>确认加密算法</li>
 <li>服务器证书</li>
 </ul>
-<ol>
-<li>客户端验证服务器证书</li>
-</ol>
-<ul>
+</li>
+<li>客户端验证服务器证书<ul>
 <li>验证：可信机构颁布、域名一致、是否过期等</li>
 <li>验证完后从证书中取出公钥</li>
 </ul>
-<ol>
-<li>客户端握手结束，包含内容：</li>
-</ol>
-<ul>
+</li>
+<li>客户端握手结束，包含内容：<ul>
 <li>客户端生成的随机数r2，用服务器公钥加密防止窃听</li>
 <li>编码改变通知，表示后续交互的加密方法及密钥</li>
 <li>客户端握手结束通知，对之前发送的所有内容hash</li>
 </ul>
-<ol>
-<li>服务端回应</li>
-</ol>
-<ul>
+</li>
+<li>服务端回应<ul>
 <li>根据r0, r1, 及用私钥解密出的r2计算会话密钥</li>
 <li>编码改变通知，确认加密方法及密钥</li>
 <li>服务端握手结束通知，对之前发送的所有内容hash</li>
 </ul>
+</li>
+</ol>
 
       
     </div>
